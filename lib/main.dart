@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/authentication/authentication_state.dart';
-import 'package:mfc_app/blocs/measurement/measurement_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/navigation/router_delegate.dart';
+import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/color_generator.dart';
@@ -41,8 +41,6 @@ class MyApp extends StatelessWidget {
             AppRouterDelegate routerDelegate = AppRouterDelegate();
             FirebaseAuth auth = FirebaseAuth.instance;
             UserRepository userRepo = UserRepository(firebaseAuth: auth);
-            // MeasurementRepository measurementRepo =
-            //     MeasurementRepository(firestore: FirebaseFirestore.instance);
             NavigationBloc navigationBloc = NavigationBloc();
             BlocProvider<NavigationBloc> navProvider =
                 BlocProvider<NavigationBloc>(
@@ -71,20 +69,26 @@ class MyApp extends StatelessWidget {
               providers: [authProvider, navProvider],
               child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
-                  List<RepositoryProvider> providers = [
+                  List<RepositoryProvider> repoProviders = [
                     RepositoryProvider<UserRepository>(
                         create: (context) => userRepo),
                   ];
                   if (state is AuthenticationSuccess) {
-                    providers.add(
+                    repoProviders.add(
                       RepositoryProvider<MeasurementRepository>(
                         create: (context) =>
                             MeasurementRepository(user: state.firebaseUser),
                       ),
                     );
+                    repoProviders.add(
+                      RepositoryProvider<CourseRepository>(
+                        create: (context) =>
+                            CourseRepository(user: state.firebaseUser),
+                      ),
+                    );
                   }
                   return MultiRepositoryProvider(
-                    providers: providers,
+                    providers: repoProviders,
                     child: router,
                   );
                 },

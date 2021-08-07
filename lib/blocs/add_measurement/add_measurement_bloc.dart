@@ -84,6 +84,7 @@ class AddMeasurementBloc
         waist: event.waist,
         note: event.note,
       ));
+      yield AddMeasurementState.success();
     } catch (_) {
       yield AddMeasurementState.failure();
     }

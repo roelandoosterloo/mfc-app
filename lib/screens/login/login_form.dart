@@ -110,6 +110,7 @@ class _LoginFormState extends State<LoginForm> {
           BlocProvider.of<AuthenticationBloc>(context).add(
             AuthenticationLoggedIn(),
           );
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(

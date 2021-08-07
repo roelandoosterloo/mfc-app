@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -11,7 +10,6 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
   @override
   Stream<NavigationState> mapEventToState(NavigationEvent event) async* {
-    print(event);
     if (event is NavigatedBack) {
       yield* _mapBackToState();
     } else if (event is NavigatedToRegister) {
@@ -21,10 +19,15 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     } else if (event is NavigatedToHome) {
       yield* _mapHomeToState();
     } else if (event is NavigatedToMeasurements) {
-      print("right");
       yield* _mapMeasurementsToState();
     } else if (event is NavigatedToAddMeasurement) {
       yield* _mapAddMeasurementToState();
+    } else if (event is NavigatedToCourse) {
+      yield* _mapCourseToState(event.courseId);
+    } else if (event is NavigatedToModule) {
+      yield* _mapModuleToState(event.moduleId);
+    } else if (event is NavigatedToCourseList) {
+      yield* _mapCourseListToState();
     }
   }
 
@@ -45,11 +48,26 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   }
 
   Stream<NavigationState> _mapMeasurementsToState() async* {
-    print("yielding state");
     yield AppNavigation(isMeasurments: true);
   }
 
   Stream<NavigationState> _mapAddMeasurementToState() async* {
     yield AppNavigation.addMeasurement();
+  }
+
+  Stream<NavigationState> _mapCourseListToState() async* {
+    yield CourseNavigation.courseList();
+  }
+
+  Stream<NavigationState> _mapCourseToState(String courseId) async* {
+    yield CourseNavigation.course(courseId);
+  }
+
+  Stream<NavigationState> _mapModuleToState(String moduleId) async* {
+    if (state is CourseNavigation) {
+      yield (state as CourseNavigation).update(moduleId: moduleId);
+    } else {
+      yield CourseNavigation.module(moduleId);
+    }
   }
 }

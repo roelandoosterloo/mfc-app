@@ -30,8 +30,8 @@ class Measurement {
       : this(
           date: (json['date']! as Timestamp).toDate(),
           weight: Parser.readDouble(json['weight']!)!,
-          hips: Parser.readDouble(['hips']),
-          waist: Parser.readDouble(['waist']),
+          hips: Parser.readDouble(json['hips']),
+          waist: Parser.readDouble(json['waist']),
           note: json['note'] as String,
         );
 

@@ -12,74 +12,28 @@ class MeasurementChart extends StatelessWidget {
       : _measurements = measurements,
         super(key: key);
 
+  final f = new DateFormat('yyyy-MM-dd');
+
   @override
   Widget build(BuildContext context) {
-    return LineChart(
-      LineChartData(
-        gridData: FlGridData(show: false),
-        titlesData: FlTitlesData(
-          bottomTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 22,
-            margin: 10,
-            getTitles: (value) => value.toString(),
-          ),
-          leftTitles: SideTitles(
-              showTitles: true,
-              getTitles: (value) => value.toString(),
-              margin: 8,
-              reservedSize: 30),
-        ),
-        borderData: FlBorderData(
-          show: true,
-        ),
-        lineBarsData: [
-          LineChartBarData(
-            // spots: [FlSpot(1, 1), FlSpot(2, 2), FlSpot(3, 3)],
-            spots: _measurements
-                .map((e) =>
-                    FlSpot(e.date.microsecondsSinceEpoch.toDouble(), e.weight))
-                .toList(),
-            isCurved: true,
-            colors: [const Color(0xff2b8474)],
-            barWidth: 8,
-            isStrokeCapRound: true,
-            dotData: FlDotData(show: false),
-          )
-        ],
+    List<charts.Series<Measurement, DateTime>> series = [
+      charts.Series<Measurement, DateTime>(
+        id: 'Weight',
+        domainFn: (measurement, index) => measurement.date,
+        measureFn: (measurement, _) => measurement.weight,
+        data: _measurements,
+        colorFn: (datum, index) => charts.Color.fromHex(code: "#2b8474"),
+      ),
+    ];
+
+    return charts.TimeSeriesChart(
+      series,
+      animate: true,
+      dateTimeFactory: charts.LocalDateTimeFactory(),
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+        tickProviderSpec:
+            new charts.BasicNumericTickProviderSpec(zeroBound: false),
       ),
     );
   }
-
-  // final f = new DateFormat('yyyy-MM-dd');
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   List<charts.Series<Measurement, DateTime>> series = [
-  //     charts.Series<Measurement, DateTime>(
-  //       id: 'Weight',
-  //       domainFn: (measurement, index) => measurement.date,
-  //       measureFn: (measurement, _) => measurement.weight,
-  //       data: _measurements,
-  //     ),
-  //     charts.Series<Measurement, DateTime>(
-  //       id: 'Hips',
-  //       domainFn: (measurement, index) => measurement.date,
-  //       measureFn: (measurement, _) => measurement.hips,
-  //       data: _measurements,
-  //     ),
-  //     charts.Series<Measurement, DateTime>(
-  //       id: 'Waist',
-  //       domainFn: (measurement, index) => measurement.date,
-  //       measureFn: (measurement, _) => measurement.waist,
-  //       data: _measurements,
-  //     ),
-  //   ];
-
-  //   return charts.TimeSeriesChart(
-  //     series,
-  //     animate: true,
-  //     dateTimeFactory: charts.LocalDateTimeFactory(),
-  //   );
-  // }
 }

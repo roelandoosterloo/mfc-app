@@ -18,3 +18,24 @@ class NavigatedToHome extends NavigationEvent {}
 class NavigatedToMeasurements extends NavigationEvent {}
 
 class NavigatedToAddMeasurement extends NavigationEvent {}
+
+class NavigatedToCourseList extends NavigationEvent {}
+
+class NavigatedToCourse extends NavigationEvent {
+  final String courseId;
+
+  NavigatedToCourse(this.courseId);
+
+  @override
+  List<Object> get props => [courseId];
+}
+
+class NavigatedToModule extends NavigationEvent {
+  final String courseId;
+  final String moduleId;
+
+  NavigatedToModule(this.courseId, this.moduleId);
+
+  @override
+  List<Object> get props => [courseId, moduleId];
+}

@@ -25,6 +25,13 @@ class HomeScreen extends StatelessWidget {
                   _navBloc.add(event);
                 },
                 child: Text("Measurements"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  NavigationEvent event = NavigatedToCourseList();
+                  _navBloc.add(event);
+                },
+                child: Text("Course"),
               )
             ],
           ),

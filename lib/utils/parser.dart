@@ -1,5 +1,5 @@
 class Parser {
-  static double? readDouble(Object value) {
+  static double? readDouble(Object? value) {
     if (value is double) {
       return value;
     }
