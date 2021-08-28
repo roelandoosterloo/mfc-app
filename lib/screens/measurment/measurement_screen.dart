@@ -12,12 +12,14 @@ class MeasurementScreen extends StatelessWidget {
 
     MeasurementRepository _measurementRepo =
         context.read<MeasurementRepository>();
+    MeasurementBloc bloc = MeasurementBloc(measurementRepo: _measurementRepo);
+    bloc.add(MeasurementsDataRequested());
     return Scaffold(
       appBar: AppBar(
         title: Text("Measurements"),
       ),
       body: BlocProvider<MeasurementBloc>(
-        create: (context) => MeasurementBloc(measurementRepo: _measurementRepo),
+        create: (context) => bloc,
         child: MeasurementOverview(),
       ),
       floatingActionButton: FloatingActionButton(

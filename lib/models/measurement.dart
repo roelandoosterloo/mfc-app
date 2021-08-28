@@ -1,47 +1,81 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mfc_app/utils/parser.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
-class Measurement {
-  DateTime _date;
-  double _weight;
-  double? _hips;
-  double? _waist;
-  String? _note;
+import 'Model.dart';
 
-  Measurement({
-    required DateTime date,
-    required double weight,
-    double? hips,
-    double? waist,
-    String? note,
-  })  : _date = date,
+@immutable
+class Measurement extends Model {
+  final String id;
+  final DateTime _date;
+  final double _weight;
+  final String? _note;
+
+  static final DateFormat _dateFormat = new DateFormat('yyyy-MM-dd');
+
+  @override
+  String getId() {
+    return id;
+  }
+
+  DateTime get date {
+    return _date;
+  }
+
+  String get formatDate {
+    return _dateFormat.format(_date);
+  }
+
+  double get weight {
+    return _weight;
+  }
+
+  String? get note {
+    return _note;
+  }
+
+  const Measurement._internal(
+      {required this.id, required date, required weight, note})
+      : _date = date,
         _weight = weight,
-        _hips = hips,
-        _waist = waist,
         _note = note;
 
-  DateTime get date => _date;
-  double get weight => _weight;
-  double? get hips => _hips;
-  double? get waist => _waist;
-  String? get note => _note;
-
-  Measurement.fromJson(Map<String, Object?> json)
-      : this(
-          date: (json['date']! as Timestamp).toDate(),
-          weight: Parser.readDouble(json['weight']!)!,
-          hips: Parser.readDouble(json['hips']),
-          waist: Parser.readDouble(json['waist']),
-          note: json['note'] as String,
-        );
-
-  Map<String, Object?> toJson() {
-    return {
-      'date': date,
-      'weight': weight,
-      'hips': hips,
-      'waist': waist,
-      'note': note,
-    };
+  factory Measurement(
+      {String? id,
+      required DateTime date,
+      required double weight,
+      String? note}) {
+    return Measurement._internal(
+        id: id == null ? UUID.getUUID() : id,
+        date: date,
+        weight: weight,
+        note: note);
   }
+
+  @override
+  String toString() {
+    var buffer = new StringBuffer();
+
+    buffer.write("Measurement {");
+    buffer.write("id=" + "$id" + ", ");
+    buffer.write("date=" + _dateFormat.format(date) + ", ");
+    buffer.write("weight=" + _weight.toString() + ", ");
+    buffer.write("note=" + "$_note");
+    buffer.write("}");
+
+    return buffer.toString();
+  }
+
+  Measurement.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _date = DateTime.parse(json['date']),
+        _weight = json['weight'],
+        _note = json['note'];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'date': _dateFormat.format(_date),
+        'weight': _weight,
+        'note': _note
+      };
 }

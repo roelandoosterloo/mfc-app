@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/course/list/course_list_bloc.dart';
+import 'package:mfc_app/blocs/course/single/single_course_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course.dart';
+import 'package:mfc_app/models/course/Course.dart';
+import 'package:mfc_app/widgets/loading.dart';
 
 class CourseListScreen extends StatefulWidget {
   @override
@@ -12,9 +14,8 @@ class CourseListScreen extends StatefulWidget {
 class _CourseListScreenState extends State<CourseListScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    BlocProvider.of<CourseListBloc>(context).refresh();
+    BlocProvider.of<CourseListBloc>(context).add(CourseListRequested());
   }
 
   @override
@@ -25,6 +26,9 @@ class _CourseListScreenState extends State<CourseListScreen> {
       ),
       body: BlocBuilder<CourseListBloc, CourseListState>(
         builder: (context, state) {
+          if (state is CourseLoading) {
+            return Loading();
+          }
           if (state is CourseListAvailable) {
             return Container(
               child: ListView.builder(
@@ -36,6 +40,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                   return Card(
                     clipBehavior: Clip.antiAlias,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           width: double.infinity,
@@ -43,7 +48,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                           child: Hero(
                             tag: index,
                             child: Image.network(
-                              course.coverImageUrl ??
+                              course.coverImage ??
                                   "https://placeimg.com/1000/600/any",
                               fit: BoxFit.cover,
                             ),
@@ -72,26 +77,6 @@ class _CourseListScreenState extends State<CourseListScreen> {
                         Divider(
                           indent: 10,
                           endIndent: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                "Modules: ",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text("3"),
-                              SizedBox(width: 24),
-                              if (course.duration != null)
-                                Text(
-                                  "Duur: ",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              if (course.duration != null)
-                                Text(course.duration!),
-                            ],
-                          ),
                         ),
                         ButtonBar(
                           alignment: MainAxisAlignment.start,

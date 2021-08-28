@@ -1,32 +1,56 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify.dart';
 
 class UserRepository {
-  final FirebaseAuth _firebaseAuth;
-
-  UserRepository({FirebaseAuth? firebaseAuth})
-      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
-
-  Future<User?> createUser(String email, String password) async {
-    var result = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    return result.user;
+  Future<SignUpResult> createUser(String email, String password) async {
+    SignUpResult result = await Amplify.Auth.signUp(
+      username: 'roelandoosterloo2',
+      password: password.trim(),
+      options: CognitoSignUpOptions(
+        userAttributes: {'email': email},
+      ),
+    );
+    return result;
   }
 
-  Future<User?> signIn(String email, String password) async {
-    var result = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
-    return result.user;
+  Future<SignUpResult> confirmSignUp(String email, String code) async {
+    SignUpResult result = await Amplify.Auth.confirmSignUp(
+      username: email.trim(),
+      confirmationCode: code,
+    );
+    return result;
+  }
+
+  Future<SignInResult> signIn(String email, String password) async {
+    SignInResult result = await Amplify.Auth.signIn(
+      username: 'roelandoosterloo2',
+      password: password.trim(),
+    );
+    return result;
+  }
+
+  Future<SignInResult> confirmSignIn(String code) async {
+    SignInResult result = await Amplify.Auth.confirmSignIn(
+      confirmationValue: code,
+    );
+    return result;
   }
 
   Future<void> signOut() async {
-    return await _firebaseAuth.signOut();
+    await Amplify.Auth.signOut();
+    return;
   }
 
   Future<bool> isSignedIn() async {
-    return _firebaseAuth.currentUser != null;
+    try {
+      await getUser();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  Future<User?> getUser() async {
-    return _firebaseAuth.currentUser;
+  Future<AuthUser> getUser() async {
+    return await Amplify.Auth.getCurrentUser();
   }
 }

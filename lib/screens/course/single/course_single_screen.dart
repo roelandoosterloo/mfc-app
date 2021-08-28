@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/course/single/single_course_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course.dart';
+import 'package:mfc_app/models/course/Module.dart';
+import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/widgets/loading.dart';
 
 class CourseSingleScreen extends StatefulWidget {
@@ -67,13 +68,13 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
                       leading: Hero(
                         tag: module.id,
                         child: Image.network(
-                          module.coverImageUrl ??
+                          module.coverImage ??
                               "https://placeimg.com/600/600/any",
                           fit: BoxFit.cover,
                         ),
                       ),
                       title: Text(module.name),
-                      subtitle: Text(module.topic ?? ""),
+                      subtitle: Text(module.name),
                       onTap: () => BlocProvider.of<NavigationBloc>(context)
                           .add(NavigatedToModule(course.id, module.id)),
                     );
@@ -158,8 +159,20 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
           );
         } else {
           return Scaffold(
-            body: Container(
-              child: Text("Weird..."),
+            body: SafeArea(
+              child: Container(
+                child: Column(
+                  children: [
+                    Text("Weird..."),
+                    MaterialButton(
+                      onPressed: () =>
+                          BlocProvider.of<SingleCourseBloc>(context)
+                              .add(CourseSelected(courseId)),
+                      child: Text("reload"),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         }

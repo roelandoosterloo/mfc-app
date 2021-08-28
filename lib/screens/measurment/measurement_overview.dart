@@ -35,11 +35,7 @@ class MeasurementOverview extends StatelessWidget {
                           f.format(state.measurements[index].date.toLocal()),
                         ),
                         subtitle: Text("Weight: " +
-                            state.measurements[index].weight.toString() +
-                            ", Hips: " +
-                            state.measurements[index].hips.toString() +
-                            ", Waist: " +
-                            state.measurements[index].waist.toString()),
+                            state.measurements[index].weight.toString()),
                       ),
                     );
                   },

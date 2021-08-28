@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/authentication/authentication_state.dart';
@@ -12,7 +13,7 @@ class AuthenticationBloc
   AuthenticationBloc({
     required UserRepository userRepo,
     required NavigationBloc navigationBloc,
-  })   : _userRepo = userRepo,
+  })  : _userRepo = userRepo,
         _navigationBloc = navigationBloc,
         super(AuthenticationInitial());
 
@@ -29,11 +30,11 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
-    final user = await _userRepo.getUser();
-    if (user != null) {
+    try {
+      AuthUser user = await _userRepo.getUser();
       yield AuthenticationSuccess(user);
       _navigationBloc.add(NavigatedToHome());
-    } else {
+    } catch (e) {
       yield AuthenticationFailure();
       _navigationBloc.add(NavigatedToLogin());
     }
@@ -48,16 +49,12 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAuthenticationStartedToState() async* {
     final isSignedIn = await _userRepo.isSignedIn();
     if (isSignedIn) {
-      final user = await _userRepo.getUser();
-      if (user != null) {
-        yield AuthenticationSuccess(user);
-        _navigationBloc.add(NavigatedToHome());
-      } else {
-        yield AuthenticationFailure();
-        _navigationBloc.add(NavigatedToLogin());
-      }
+      AuthUser user = await _userRepo.getUser();
+      yield AuthenticationSuccess(user);
+      _navigationBloc.add(NavigatedToHome());
     } else {
       yield AuthenticationFailure();
+      _navigationBloc.add(NavigatedToLogin());
     }
   }
 }

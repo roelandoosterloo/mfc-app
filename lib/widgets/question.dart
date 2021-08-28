@@ -1,32 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:mfc_app/models/quiz.dart' as quiz;
+import 'package:mfc_app/models/course/Option.dart';
+import 'package:mfc_app/models/course/Question.dart';
+import 'package:mfc_app/models/course/QuestionType.dart';
 
-class Question extends StatelessWidget {
-  final quiz.Question question;
+class QuestionW extends StatelessWidget {
+  final Question question;
 
-  const Question({Key? key, required this.question}) : super(key: key);
+  const QuestionW({Key? key, required this.question}) : super(key: key);
 
   Widget renderAnswerSection() {
-    if (question.type == quiz.QuestionType.shortText) {
+    if (question.type == QuestionType.SHORT_TEXT) {
       return TextFormField(
         decoration: InputDecoration(
-          labelText: question.questionText,
+          labelText: question.question,
         ),
       );
-    } else if (question.type == quiz.QuestionType.longText) {
+    } else if (question.type == QuestionType.LONG_TEXT) {
       return TextFormField(
         decoration: InputDecoration(
-          labelText: question.questionText,
+          labelText: question.question,
         ),
         keyboardType: TextInputType.multiline,
         maxLines: null,
       );
-    } else if (question.type == quiz.QuestionType.singleChoice) {
+    } else if (question.type == QuestionType.SINGLE_CHOICE) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            question.questionText,
+            question.question,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -34,9 +36,9 @@ class Question extends StatelessWidget {
           ),
           ...(question.options ?? [])
               .map(
-                (quiz.Option opt) => RadioListTile(
+                (Option opt) => RadioListTile(
                   value: opt.value,
-                  title: Text(opt.label),
+                  title: Text(opt.label ?? opt.value),
                   groupValue: "answer",
                   onChanged: (value) => null,
                 ),
@@ -44,12 +46,12 @@ class Question extends StatelessWidget {
               .toList()
         ],
       );
-    } else if (question.type == quiz.QuestionType.multipleChoice) {
+    } else if (question.type == QuestionType.MULTIPLE_CHOICE) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            question.questionText,
+            question.question,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -57,9 +59,9 @@ class Question extends StatelessWidget {
           ),
           ...(question.options ?? [])
               .map(
-                (quiz.Option opt) => CheckboxListTile(
+                (Option opt) => CheckboxListTile(
                   value: false,
-                  title: Text(opt.label),
+                  title: Text(opt.label ?? opt.value),
                   onChanged: (value) => null,
                   controlAffinity: ListTileControlAffinity.leading,
                 ),

@@ -14,18 +14,18 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
   MeasurementBloc({required MeasurementRepository measurementRepo})
       : _measureRepo = measurementRepo,
         super(MeasurementInitial()) {
-    refresh();
+    // refresh();
   }
 
   dispose() {}
 
-  refresh() {
-    _measureRepo.refresh().listen((data) {
-      add(MeasurementsFound(data));
-    }, onError: (error) {
-      add(MeasurementLoadingFailed(error));
-    });
-  }
+  // refresh() {
+  //   _measureRepo.refresh().listen((data) {
+  //     add(MeasurementsFound(data));
+  //   }, onError: (error) {
+  //     add(MeasurementLoadingFailed(error));
+  //   });
+  // }
 
   @override
   Stream<MeasurementState> mapEventToState(MeasurementEvent event) async* {
@@ -40,7 +40,8 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
 
   Stream<MeasurementState> _mapDataRequestedToState() async* {
     yield MeasurementLoading();
-    refresh();
+    List<Measurement> measurements = await _measureRepo.listMeasurements();
+    add(MeasurementsFound(measurements));
   }
 
   Stream<MeasurementState> _mapFoundToState(

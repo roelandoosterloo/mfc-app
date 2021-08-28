@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/measurement.dart';
@@ -24,10 +25,6 @@ class AddMeasurementBloc
       yield* _mapDateChangedToState(event.date);
     } else if (event is MeasurementWeightChanged) {
       yield* _mapWeightChangedToState(event.weight);
-    } else if (event is MeasurementWaistChanged) {
-      yield* _mapWaistChangedToState(event.waist);
-    } else if (event is MeasurementHipsChanged) {
-      yield* _mapHipsChangedToState(event.hips);
     } else if (event is MeasurementNoteChanged) {
       yield* _mapNoteChangedToState(event.note);
     } else if (event is MeasurementSubmitted) {
@@ -49,24 +46,6 @@ class AddMeasurementBloc
     );
   }
 
-  Stream<AddMeasurementState> _mapWaistChangedToState(double waist) async* {
-    yield state.update(
-      isWaistValid: Validators.isNumberInRange(
-        value: waist,
-        lower: 0,
-      ),
-    );
-  }
-
-  Stream<AddMeasurementState> _mapHipsChangedToState(double hips) async* {
-    yield state.update(
-      isHipsValid: Validators.isNumberInRange(
-        value: hips,
-        lower: 0,
-      ),
-    );
-  }
-
   Stream<AddMeasurementState> _mapNoteChangedToState(String note) async* {
     yield state.update(
       isWaistValid: true,
@@ -80,8 +59,6 @@ class AddMeasurementBloc
       _measureRepo.addMeasurement(Measurement(
         date: event.date,
         weight: event.weight,
-        hips: event.hips,
-        waist: event.waist,
         note: event.note,
       ));
       yield AddMeasurementState.success();

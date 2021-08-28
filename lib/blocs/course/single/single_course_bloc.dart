@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mfc_app/models/course.dart';
+import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 
 part 'single_course_event.dart';

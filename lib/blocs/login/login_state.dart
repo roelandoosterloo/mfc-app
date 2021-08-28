@@ -1,10 +1,14 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+
 class LoginState {
   final bool isEmailValid;
   final bool isPasswordValid;
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
+  final bool needsConfirmation;
   final String error;
+  final AuthNextSignInStep? nextStep;
 
   LoginState({
     required this.isEmailValid,
@@ -12,7 +16,9 @@ class LoginState {
     required this.isSubmitting,
     required this.isSuccess,
     required this.isFailure,
+    required this.needsConfirmation,
     this.error = "",
+    this.nextStep,
   });
 
   factory LoginState.initial() {
@@ -22,6 +28,7 @@ class LoginState {
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
+      needsConfirmation: false,
     );
   }
   factory LoginState.loading() {
@@ -31,6 +38,7 @@ class LoginState {
       isSubmitting: true,
       isSuccess: false,
       isFailure: false,
+      needsConfirmation: false,
     );
   }
   factory LoginState.success() {
@@ -40,6 +48,7 @@ class LoginState {
       isSubmitting: false,
       isSuccess: true,
       isFailure: false,
+      needsConfirmation: false,
     );
   }
   factory LoginState.failure({String? error}) {
@@ -49,7 +58,19 @@ class LoginState {
       isSubmitting: false,
       isSuccess: false,
       isFailure: true,
+      needsConfirmation: false,
       error: error ?? "",
+    );
+  }
+  factory LoginState.confirmationNeeded(AuthNextSignInStep? nextStep) {
+    return LoginState(
+      isEmailValid: true,
+      isPasswordValid: true,
+      isSubmitting: false,
+      isSuccess: false,
+      isFailure: false,
+      needsConfirmation: true,
+      nextStep: nextStep,
     );
   }
 
@@ -60,6 +81,7 @@ class LoginState {
       isSubmitting: false,
       isFailure: false,
       isSuccess: false,
+      needsConfirmation: false,
     );
   }
 
@@ -69,6 +91,7 @@ class LoginState {
     bool? isSubmitting,
     bool? isSuccess,
     bool? isFailure,
+    bool? needsConfirmation,
     String? error,
   }) {
     return LoginState(
@@ -77,6 +100,7 @@ class LoginState {
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       isFailure: isFailure ?? this.isFailure,
+      needsConfirmation: needsConfirmation ?? this.needsConfirmation,
       error: error ?? this.error,
     );
   }

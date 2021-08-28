@@ -32,3 +32,12 @@ class LoginWithCredentialsSubmitted extends LoginEvent {
   @override
   List<Object> get props => [email, password];
 }
+
+class LoginConfirmationSubmitted extends LoginEvent {
+  final String code;
+
+  LoginConfirmationSubmitted({required this.code});
+
+  @override
+  List<Object> get props => [code];
+}

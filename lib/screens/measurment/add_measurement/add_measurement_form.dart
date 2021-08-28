@@ -14,8 +14,6 @@ class AddMeasurementForm extends StatefulWidget {
 class _AddMeasurementFormState extends State<AddMeasurementForm> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
-  final TextEditingController _hipsController = TextEditingController();
-  final TextEditingController _waistController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
 
   late AddMeasurementBloc _measurementBloc;
@@ -32,8 +30,6 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
     super.dispose();
     _dateController.dispose();
     _weightController.dispose();
-    _hipsController.dispose();
-    _waistController.dispose();
     _noteController.dispose();
   }
 
@@ -141,41 +137,6 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                 ],
               ),
               TextFormField(
-                controller: _waistController,
-                keyboardType: TextInputType.number,
-                autocorrect: false,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) =>
-                    !state.isWaistValid ? 'Invalid waist circumference' : null,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.straighten),
-                  suffix: Text("cm"),
-                  labelText: "Waist circumference",
-                ),
-                inputFormatters: [
-                  buildDecimalFormatter(precision: 1),
-                ],
-              ),
-              TextFormField(
-                controller: _hipsController,
-                keyboardType: TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: false,
-                ),
-                autocorrect: false,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) =>
-                    !state.isHipsValid ? 'Invalid hips circumference' : null,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.straighten),
-                  suffix: Text("cm"),
-                  labelText: "Hip circumference",
-                ),
-                inputFormatters: [
-                  buildDecimalFormatter(precision: 1),
-                ],
-              ),
-              TextFormField(
                 controller: _noteController,
                 keyboardType: TextInputType.text,
                 autocorrect: false,
@@ -197,8 +158,6 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                       MeasurementSubmitted(
                         date: DateTime.now(),
                         weight: double.parse(_weightController.text),
-                        hips: double.parse(_hipsController.text),
-                        waist: double.parse(_waistController.text),
                         note: _noteController.text,
                       ),
                     ),

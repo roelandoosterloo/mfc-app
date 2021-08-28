@@ -1,0 +1,130 @@
+type Task
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete] }
+      { allow: groups, groups: ["Employees"], queries: [get, list], mutations: null }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  description: String
+  status: String
+}
+type PrivateNote @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  content: String!
+}
+type Course
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+  id: ID!
+  name: String!
+  description: String
+  coverImage: String
+  modules: [Module!] @connection( keyName: "ofCourse", fields: ["id"] )
+}
+type Module
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}])
+  @key(name: "ofCourse", fields: ["courseId"]) {
+  id: ID!
+  courseId: ID!
+  name: String!
+  index: Int
+  description: String!
+  coverImage: String
+  videoUrl: String!
+  assignments: [Question!] @connection( keyName: "ofModule", fields: ["id"] )
+}
+enum QuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+}
+type Question
+  @model 
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}])
+  @key(name: "ofModule", fields: ["moduleId"]) {
+  id: ID!
+  moduleId: ID!
+  type: QuestionType!
+  question: String!
+  options: [Option!] @connection( keyName: "ofQuestion", fields: ["id"] )
+}
+
+type Option 
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) 
+  @key(name: "ofQuestion", fields: ["questionId"] ){
+  id: ID!
+  questionId: ID!
+  label: String
+  value: String!
+}
+type Measurement
+  @model 
+  @auth(rules: [{allow: owner}, {allow: groups, groups: ["admin"]}]) {
+  id: ID!
+  date: AWSDate!
+  weight: Float!
+  note: String
+}
+enum ContentState {
+  LIVE
+  DRAFT
+  PENDING
+  OFFLINE
+}
+type Recipe
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+    id: ID!
+    date: AWSDate!
+    state: ContentState!
+    name: String!
+    totalMinutes: Int!
+    preparationMinutes: Int!
+    imageUrl: String!
+    instructionVideoUrl: String
+    steps: [RecipeStep!] @connection( keyName: "forRecipe", fields: ["id"])
+    ingredients: [Ingredient!] @connection( keyName: "forRecipe", fields: ["id"])
+  }
+type Ingredient
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) 
+  @key(name: "forRecipe", fields: ["recipeId"])
+  @key(name: "forProduct", fields: ["productId"]){
+    id: ID!
+    recipeId: ID!
+    productId: ID!
+    amount: Float!
+    unit: Unit! @connection
+    recipe: Recipe! @connection(fields: ["recipeId"])
+    product: Product! @connection(fields: ["productId"])
+  }
+type Product
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+    id: ID!
+    name: String!
+    namePlural: String!
+    ingredients: [Ingredient!] @connection(keyName: "forProduct", fields: ["id"])
+  }
+type Unit
+  @model 
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+    id: ID!
+    name: String!
+    sign: String
+  }
+type RecipeStep
+  @model 
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) 
+  @key(name: "forRecipe", fields: ["recipeId"]) {
+    id: ID!
+    recipeId: ID!
+    index: Int!
+    instructionText: String!
+  }

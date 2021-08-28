@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/login/login_event.dart';
 import 'package:mfc_app/blocs/login/login_state.dart';
@@ -22,6 +23,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         event.email,
         event.password,
       );
+    } else if (event is LoginConfirmationSubmitted) {
+      yield* _mapLoginConfirmationSubmttedToState(event.code);
     }
   }
 
@@ -37,11 +40,30 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       String email, String password) async* {
     yield LoginState.loading();
     try {
-      await _userRepo.signIn(email, password);
-      yield LoginState.success();
+      SignInResult result = await _userRepo.signIn(email, password);
+      if (result.isSignedIn) {
+        yield LoginState.success();
+      } else {
+        yield LoginState.confirmationNeeded(result.nextStep);
+      }
     } catch (ex) {
       print(ex);
       yield LoginState.failure();
+    }
+  }
+
+  Stream<LoginState> _mapLoginConfirmationSubmttedToState(String code) async* {
+    yield LoginState.loading();
+    try {
+      SignInResult result = await _userRepo.confirmSignIn(code);
+      if (result.isSignedIn) {
+        yield LoginState.success();
+      } else {
+        yield LoginState.failure(error: "Login not confirmed");
+      }
+    } catch (ex) {
+      print(ex);
+      yield LoginState.failure(error: ex.toString());
     }
   }
 }

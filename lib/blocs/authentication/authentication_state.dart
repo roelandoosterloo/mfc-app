@@ -1,5 +1,5 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthenticationState extends Equatable {
   AuthenticationState();
@@ -11,12 +11,12 @@ abstract class AuthenticationState extends Equatable {
 class AuthenticationInitial extends AuthenticationState {}
 
 class AuthenticationSuccess extends AuthenticationState {
-  final User firebaseUser;
+  final AuthUser user;
 
-  AuthenticationSuccess(this.firebaseUser);
+  AuthenticationSuccess(this.user);
 
   @override
-  List<Object> get props => [firebaseUser];
+  List<Object> get props => [user];
 }
 
 class AuthenticationFailure extends AuthenticationState {}
