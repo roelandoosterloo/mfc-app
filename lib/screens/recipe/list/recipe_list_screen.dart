@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/recipe/list_recipe/list_recipe_bloc.dart';
 import 'package:mfc_app/models/recipe/Recipe.dart';
 import 'package:mfc_app/widgets/loading.dart';
+import 'package:mfc_app/widgets/s3_image.dart';
 
 class RecipeListScreen extends StatefulWidget {
   const RecipeListScreen({Key? key}) : super(key: key);
@@ -45,7 +46,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                           height: 150,
                           child: Hero(
                             tag: index,
-                            child: Image.network(
+                            child: S3Image(
                               recipe.imageUrl,
                               fit: BoxFit.cover,
                             ),

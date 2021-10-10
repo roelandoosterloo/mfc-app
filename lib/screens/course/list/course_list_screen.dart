@@ -5,6 +5,7 @@ import 'package:mfc_app/blocs/course/single/single_course_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/widgets/loading.dart';
+import 'package:mfc_app/widgets/s3_image.dart';
 
 class CourseListScreen extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                           height: 150,
                           child: Hero(
                             tag: index,
-                            child: Image.network(
+                            child: S3Image(
                               course.coverImage ??
                                   "https://placeimg.com/1000/600/any",
                               fit: BoxFit.cover,

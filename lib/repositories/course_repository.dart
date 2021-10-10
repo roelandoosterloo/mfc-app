@@ -80,7 +80,6 @@ class CourseRepository {
             options {
               items {
                 id
-                value
                 label
               }
             }

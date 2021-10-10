@@ -1,6 +1,6 @@
 {
     "identityPoolName": "mfcappf4fdfc42_identitypool_f4fdfc42",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "mfcappf4fdfc42",
     "userPoolName": "mfcappf4fdfc42_userpool_f4fdfc42",
     "autoVerifiedAttributes": [

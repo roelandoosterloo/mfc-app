@@ -1,6 +1,7 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -131,6 +132,7 @@ class _MainPageState extends State<MainPage> {
 
   final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
   final AmplifyAPI _apiPlugin = AmplifyAPI();
+  final AmplifyStorageS3 _storagePlugin = AmplifyStorageS3();
 
   @override
   void initState() {
@@ -156,6 +158,7 @@ class _MainPageState extends State<MainPage> {
       await Amplify.addPlugins([
         _authPlugin,
         _apiPlugin,
+        _storagePlugin,
       ]);
       await Amplify.configure(amplifyconfig);
     } catch (e) {

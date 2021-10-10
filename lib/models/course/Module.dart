@@ -13,6 +13,8 @@ class Module extends Model {
   final String _description;
   final String? _coverImage;
   final String _videoUrl;
+  final int _delayNumber;
+  final String _delayUOM;
   final List<Question>? _assignments;
 
   @override
@@ -44,6 +46,14 @@ class Module extends Model {
     return _videoUrl;
   }
 
+  int get delayNumber {
+    return _delayNumber;
+  }
+
+  String get delayUOM {
+    return _delayUOM;
+  }
+
   List<Question>? get assignments {
     return _assignments;
   }
@@ -56,6 +66,8 @@ class Module extends Model {
       description,
       coverImage,
       required videoUrl,
+      required delayNumber,
+      required delayUOM,
       assignments})
       : _courseId = courseId,
         _name = name,
@@ -63,6 +75,8 @@ class Module extends Model {
         _description = description,
         _coverImage = coverImage,
         _videoUrl = videoUrl,
+        _delayNumber = delayNumber,
+        _delayUOM = delayUOM,
         _assignments = assignments;
 
   factory Module(
@@ -73,6 +87,8 @@ class Module extends Model {
       String? description,
       String? coverImage,
       required String videoUrl,
+      required int delayNumber,
+      required String delayUOM,
       List<Question>? assignments}) {
     return Module._internal(
         id: id == null ? UUID.getUUID() : id,
@@ -82,6 +98,8 @@ class Module extends Model {
         description: description,
         coverImage: coverImage,
         videoUrl: videoUrl,
+        delayNumber: delayNumber,
+        delayUOM: delayUOM,
         assignments: assignments != null
             ? List<Question>.unmodifiable(assignments)
             : assignments);
@@ -113,6 +131,8 @@ class Module extends Model {
         _description = json['description'],
         _coverImage = json['coverImage'],
         _videoUrl = json['videoUrl'],
+        _delayNumber = json['delayNumber'],
+        _delayUOM = json['delayUOM'],
         _assignments = json['assignments']?["items"] is List
             ? (json['assignments']["items"] as List)
                 .map((e) => Question.fromJson(new Map<String, dynamic>.from(e)))
@@ -127,6 +147,8 @@ class Module extends Model {
         'description': _description,
         'coverImage': _coverImage,
         'videoUrl': _videoUrl,
+        'delayNumber': _delayNumber,
+        'delayUOM': _delayUOM,
         'assignments': _assignments?.map((e) => e.toJson()).toList()
       };
 }

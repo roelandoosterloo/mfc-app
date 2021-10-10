@@ -37,8 +37,8 @@ class QuestionW extends StatelessWidget {
           ...(question.options ?? [])
               .map(
                 (Option opt) => RadioListTile(
-                  value: opt.value,
-                  title: Text(opt.label ?? opt.value),
+                  value: opt.label,
+                  title: Text(opt.label),
                   groupValue: "answer",
                   onChanged: (value) => null,
                 ),
@@ -61,7 +61,7 @@ class QuestionW extends StatelessWidget {
               .map(
                 (Option opt) => CheckboxListTile(
                   value: false,
-                  title: Text(opt.label ?? opt.value),
+                  title: Text(opt.label),
                   onChanged: (value) => null,
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
@@ -79,7 +79,12 @@ class QuestionW extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.all(8),
-      child: renderAnswerSection(),
+      child: Column(
+        children: [
+          if (question.introduction != null) Text(question.introduction ?? ""),
+          renderAnswerSection(),
+        ],
+      ),
     );
   }
 }

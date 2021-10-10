@@ -6,8 +6,7 @@ import 'package:mfc_app/models/Model.dart';
 class Option extends Model {
   final String id;
   final String _questionId;
-  final String? _label;
-  final String _value;
+  final String _label;
 
   @override
   String getId() {
@@ -18,30 +17,21 @@ class Option extends Model {
     return _questionId;
   }
 
-  String? get label {
+  String get label {
     return _label;
   }
 
-  String get value {
-    return _value;
-  }
-
   const Option._internal(
-      {required this.id, required questionId, label, required value})
+      {required this.id, required questionId, required label})
       : _questionId = questionId,
-        _label = label,
-        _value = value;
+        _label = label;
 
   factory Option(
-      {String? id,
-      required String questionId,
-      String? label,
-      required String value}) {
+      {String? id, required String questionId, required String label}) {
     return Option._internal(
         id: id == null ? UUID.getUUID() : id,
         questionId: questionId,
-        label: label,
-        value: value);
+        label: label);
   }
 
   @override
@@ -52,7 +42,6 @@ class Option extends Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("questionId=" + "$_questionId" + ", ");
     buffer.write("label=" + "$_label" + ", ");
-    buffer.write("value=" + "$_value");
     buffer.write("}");
 
     return buffer.toString();
@@ -61,9 +50,8 @@ class Option extends Model {
   Option.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         _questionId = json['questionId'],
-        _label = json['label'],
-        _value = json['value'];
+        _label = json['label'];
 
   Map<String, dynamic> toJson() =>
-      {'id': id, 'questionId': _questionId, 'label': _label, 'value': _value};
+      {'id': id, 'questionId': _questionId, 'label': _label};
 }

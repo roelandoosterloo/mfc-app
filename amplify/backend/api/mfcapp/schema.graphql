@@ -15,6 +15,22 @@ type PrivateNote @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   content: String!
 }
+type User
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: owner }]) {
+  id: ID!
+  cognitoId: String!
+}
+type Enrollment
+  @model
+  @auth(rules: [{allow: groups, groups: ["admin"], { allow: owner}}]) 
+  @key(name: "ofUser", fields: ["userId"] )
+  @key(name: "ofCourse" fields: ["courseId"] ){
+  id: ID!
+  userId: ID!
+  courseId: ID!
+  startDate: AWSDate!
+}
 type Course
   @model
   @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
@@ -35,6 +51,8 @@ type Module
   description: String!
   coverImage: String
   videoUrl: String!
+  delayNumber: Int!
+  delayUOM: String!
   assignments: [Question!] @connection( keyName: "ofModule", fields: ["id"] )
 }
 enum QuestionType {
@@ -49,8 +67,10 @@ type Question
   @key(name: "ofModule", fields: ["moduleId"]) {
   id: ID!
   moduleId: ID!
+  index: Int!
   type: QuestionType!
   question: String!
+  introduction: String
   options: [Option!] @connection( keyName: "ofQuestion", fields: ["id"] )
 }
 
@@ -60,8 +80,7 @@ type Option
   @key(name: "ofQuestion", fields: ["questionId"] ){
   id: ID!
   questionId: ID!
-  label: String
-  value: String!
+  label: String!
 }
 type Measurement
   @model 

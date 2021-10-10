@@ -31,6 +31,7 @@ dependencies:
   amplify_datastore: ^0.2.0
   amplify_auth_cognito: ^0.2.0
   amplify_api: ^0.2.0
+  amplify_storage_s3: ^0.2.0
 
   flutter_bloc: ^7.1.0
   equatable: ^2.0.3

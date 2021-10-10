@@ -5,6 +5,7 @@ import 'package:mfc_app/models/course/Module.dart';
 // import 'package:mfc_app/models/quiz.dart' as quiz;
 import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/question.dart';
+import 'package:mfc_app/widgets/s3_image.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class ModuleSingleScreen extends StatefulWidget {
@@ -132,7 +133,7 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                               width: double.infinity,
                               child: Hero(
                                 tag: module.id,
-                                child: Image.network(
+                                child: S3Image(
                                   module.coverImage ??
                                       "https://placeimg.com/1000/600/any",
                                   fit: BoxFit.cover,
