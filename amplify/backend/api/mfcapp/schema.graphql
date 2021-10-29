@@ -1,40 +1,42 @@
-type Task
+type Profile
   @model
-  @auth(
-    rules: [
-      { allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete] }
-      { allow: groups, groups: ["Employees"], queries: [get, list], mutations: null }
-    ]
-  ) {
-  id: ID!
-  title: String!
-  description: String
-  status: String
-}
-type PrivateNote @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  content: String!
-}
-type User
-  @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: owner }]) {
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: owner, ownerField: "cognitoId" }]) {
   id: ID!
   cognitoId: String!
+  firstName: String
+  lastName: String
+  email: String
 }
 type Enrollment
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"], { allow: owner}}]) 
-  @key(name: "ofUser", fields: ["userId"] )
+  @auth(rules: [
+    { allow: groups, groups: ["admin"] }, 
+    { allow: owner, ownerField: "cognitoId" }]) 
   @key(name: "ofCourse" fields: ["courseId"] ){
   id: ID!
-  userId: ID!
+  cognitoId: ID!
   courseId: ID!
   startDate: AWSDate!
+  moduleSchedule: [ModuleProgress!] @connection(keyName: "ofEnrollment", fields: ["id"])
+}
+type ModuleProgress 
+  @model 
+  @auth(rules: [
+    { allow: groups, groups: ["admin"] }, 
+    { allow: owner} ])
+  @key(name: "ofEnrollment", fields: ["enrollmentId"]){
+  moduleId: ID!
+  enrollmentId: ID!
+  availableAt: AWSDateTime!
+  module: [Module] @connection(fields: ["moduleId"])
 }
 type Course
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+  @auth(rules: [
+    { allow: groups, groups: ["admin"] },
+    { allow: groups, groupsField: "accessGroup", queries: [get, list]}]) {
   id: ID!
+  accessGroup: String!
   name: String!
   description: String
   coverImage: String
@@ -42,7 +44,9 @@ type Course
 }
 type Module
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}])
+  @auth(rules: [
+    {allow: groups, groups: ["admin"]}, 
+    { allow: private, queries: [get, list], mutations: null}])
   @key(name: "ofCourse", fields: ["courseId"]) {
   id: ID!
   courseId: ID!
@@ -63,7 +67,9 @@ enum QuestionType {
 }
 type Question
   @model 
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}])
+  @auth(rules: [
+    {allow: groups, groups: ["admin"]},
+    { allow: private, queries: [get, list], mutations: null}])
   @key(name: "ofModule", fields: ["moduleId"]) {
   id: ID!
   moduleId: ID!
@@ -76,7 +82,9 @@ type Question
 
 type Option 
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) 
+  @auth(rules: [
+    {allow: groups, groups: ["admin"]}, 
+    { allow: private, queries: [get, list], mutations: null}]) 
   @key(name: "ofQuestion", fields: ["questionId"] ){
   id: ID!
   questionId: ID!
@@ -147,3 +155,64 @@ type RecipeStep
     index: Int!
     instructionText: String!
   }
+
+type Query  {
+  adminListUsers: [CognitoUser] 
+    @function(name: "mfcAppLambda-${env}") 
+    @auth(rules: [{allow: groups, groups:["admin"]}])
+  adminListGroups: [CognitoGroup] 
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: groups, groups:["admin"]}])
+}
+
+type Mutation {
+  adminCreateUser(username: String): CognitoUser 
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: groups, groups:["admin"]}])
+  adminDeleteUser(username: String): Boolean 
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: groups, groups:["admin"]}])
+  adminAddUserToGroup(username: String, groupName: String): Boolean 
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: groups, groups:["admin"]}])
+  subscribeUser(username: String, courseId: String): Boolean 
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: groups, groups:["admin"]}])
+}
+
+type CognitoGroup {
+  GroupName: String
+  Description: String
+  Precedence: Int
+  LastMOdifiedDate: String
+  CreationDate: String
+}
+
+type CognitoUser {
+  Username: String!
+  Attributes: [Value]
+  UserCreateDate: String
+  UserLastModifiedDate: String
+  Enabled: Boolean
+  UserStatus: UserStatus
+  MFAOptions: [MFAOption]
+  PreferredMfaSetting: String
+  UserMFASettingList: String
+}
+type Value {
+  Name: String!
+  Value: String
+}
+type MFAOption {
+  DeliveryMedium: String
+  AttributeName: String
+}
+enum UserStatus {
+  UNCONFIRMED
+  CONFIRMED
+  ARCHIVED
+  COMPROMISED
+  UNKNOWN
+  RESET_REQUIRED
+  FORCE_CHANGE_PASSWORD
+}

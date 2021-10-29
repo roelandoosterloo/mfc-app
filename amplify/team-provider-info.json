@@ -14,6 +14,16 @@
     "categories": {
       "auth": {
         "mfcappf4fdfc42": {}
+      },
+      "function": {
+        "mfcAppFunction": {
+          "deploymentBucketName": "amplify-mfcapp-dev-152955-deployment",
+          "s3Key": "amplify-builds/mfcAppFunction-4c4e70613865692f5156-build.zip"
+        },
+        "mfcAppLambda": {
+          "deploymentBucketName": "amplify-mfcapp-dev-152955-deployment",
+          "s3Key": "amplify-builds/mfcAppLambda-617a4d37624d684f3133-build.zip"
+        }
       }
     }
   }

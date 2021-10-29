@@ -45,5 +45,29 @@
       "service": "S3",
       "providerPlugin": "awscloudformation"
     }
+  },
+  "function": {
+    "mfcAppLambda": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "mfcappf4fdfc42",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "mfcapp",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ]
+        }
+      ]
+    }
   }
 }
