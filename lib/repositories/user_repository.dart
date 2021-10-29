@@ -4,7 +4,7 @@ import 'package:amplify_flutter/amplify.dart';
 class UserRepository {
   Future<SignUpResult> createUser(String email, String password) async {
     SignUpResult result = await Amplify.Auth.signUp(
-      username: 'roelandoosterloo2',
+      username: email,
       password: password.trim(),
       options: CognitoSignUpOptions(
         userAttributes: {'email': email},

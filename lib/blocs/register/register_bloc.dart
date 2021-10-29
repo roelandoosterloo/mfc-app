@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/register/register_event.dart';
 import 'package:mfc_app/blocs/register/register_state.dart';
@@ -38,9 +37,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     try {
       await _userRepo.createUser(email, password);
       yield RegisterState.success();
-    } on FirebaseAuthException catch (ex) {
-      print(ex);
-      yield RegisterState.failure(errorMessage: ex.message);
     } catch (ex) {
       print(ex);
       yield RegisterState.failure();

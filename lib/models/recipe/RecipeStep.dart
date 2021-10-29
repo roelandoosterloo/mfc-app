@@ -1,6 +1,5 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:mfc_app/models/Model.dart';
-import 'package:mfc_app/models/recipe/Recipe.dart';
 
 class RecipeStep extends Model {
   final String id;
