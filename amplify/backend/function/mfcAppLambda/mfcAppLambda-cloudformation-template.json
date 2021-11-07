@@ -27,6 +27,10 @@
     "apimfcappGraphQLAPIEndpointOutput": {
       "Type": "String",
       "Default": "apimfcappGraphQLAPIEndpointOutput"
+    },
+    "apimfcappGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apimfcappGraphQLAPIKeyOutput"
     }
   },
   "Conditions": {
@@ -90,6 +94,9 @@
             },
             "API_MFCAPP_GRAPHQLAPIENDPOINTOUTPUT": {
               "Ref": "apimfcappGraphQLAPIEndpointOutput"
+            },
+            "API_MFCAPP_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apimfcappGraphQLAPIKeyOutput"
             }
           }
         },

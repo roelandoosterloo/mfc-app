@@ -4,18 +4,19 @@ const { v4: uuid } = require('uuid')
 const cognitoClient = new CognitoIdentityServiceProvider();
 const POOL_ID = process.env.AUTH_MFCAPPF4FDFC42_USERPOOLID;
 
-const createUser = async (email) => {
+const createUser = async (email, firstName, lastName) => {
+  let checkList;
   try {
-    const checkList = await cognitoClient.listUsers({
+    checkList = await cognitoClient.listUsers({
       UserPoolId: POOL_ID,
       Filter: `email="${email}"`,
     }).promise();
-    if (checkList.Users.length > 0) {
-      throw new Error("User already exists");
-    }
   } catch (ex) {
     console.error(ex);
     throw new Error("Could not verify user");
+  }
+  if (checkList.Users.length > 0) {
+    throw new Error("User already exists");
   }
   try {
     const userId = uuid();
@@ -23,10 +24,20 @@ const createUser = async (email) => {
       UserPoolId: POOL_ID,
       Username: userId,
       DesiredDeliveryMediums: ["EMAIL"],
-      UserAttributes: [{
-        Name: "email",
-        Value: email,
-      }]
+      UserAttributes: [
+        {
+          Name: "email",
+          Value: email,
+        },
+        {
+          Name: "given_name",
+          Value: firstName
+        },
+        {
+          Name: "family_name",
+          Value: lastName
+        }
+      ]
     }).promise();
     return user.User;
   } catch (ex) {
@@ -57,7 +68,20 @@ const listUsers = async () => {
     return res.Users;
   } catch (ex) {
     console.error(ex);
-    throw new Error("Users not found");
+    throw new Error("No users found");
+  }
+}
+
+const getUser = async (username) => {
+  try {
+    const res = await cognitoClient.adminGetUser({
+      UserPoolId: POOL_ID,
+      Username: username,
+    }).promise();
+    return res;
+  } catch (ex) {
+    console.log(ex);
+    throw new Error("User not found");
   }
 }
 
@@ -106,5 +130,6 @@ module.exports = {
   createGroup,
   deleteUser,
   listUsers,
+  getUser,
   listGroups,
 }

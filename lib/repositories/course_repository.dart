@@ -2,20 +2,23 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify.dart';
+import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/Module.dart';
-import 'package:mfc_app/models/course/Course.dart';
 
 class CourseRepository {
-  Future<List<Course>> listAvailableCourses() async {
+  Future<List<Enrollment>> listEnrolledCourses() async {
     String graphQLDocument = ''' 
-    query ListCourses {
-      listCourses {
+    query ListEnrolledCourses {
+      listEnrollments {
         items {
           id
-          name
-          description
-          coverImage
-          
+          startDate
+          course {
+            id
+            name
+            description
+            coverImage
+          }
         }
       }
     }
@@ -27,25 +30,33 @@ class CourseRepository {
     );
     GraphQLResponse response = await op.response;
     Map<String, dynamic> json = jsonDecode(response.data);
-    List<dynamic> items = json["listCourses"]["items"];
-    List<Course> courses = items.map((it) => Course.fromJson(it)).toList();
-    return courses;
+    List<dynamic> items = json["listEnrollments"]["items"];
+    List<Enrollment> enrolledCourses =
+        items.map((it) => Enrollment.fromJson(it)).toList();
+    return enrolledCourses;
   }
 
-  Future<Course?> getCourse(String courseId) async {
+  Future<Enrollment?> getEnrollment(String id) async {
     String graphQLDocument = '''
     query MyQuery {
-      getCourse(id: "$courseId") {
-        id,
-        name,
-        description,
-        coverImage,
-        modules{
+      getEnrollment(id: "$id") {
+        id
+        startDate
+        course {
+          id
+          name
+          description
+          coverImage
+        }
+        moduleSchedule {
           items {
-            index,
-            name,
-            id,
-            coverImage
+            availableAt
+            module {
+              index
+              name
+              id
+              coverImage
+            }
           }
         }
       }
@@ -58,8 +69,8 @@ class CourseRepository {
     );
     GraphQLResponse response = await op.response;
     Map<String, dynamic> json = jsonDecode(response.data);
-    Course course = Course.fromJson(json['getCourse']);
-    return course;
+    Enrollment enrolledCourse = Enrollment.fromJson(json['getEnrollment']);
+    return enrolledCourse;
   }
 
   Future<Module?> getModule(String courseId, String moduleId) async {
@@ -76,6 +87,7 @@ class CourseRepository {
           items {
             id
             type
+            introduction
             question
             options {
               items {

@@ -4,6 +4,7 @@ import 'package:mfc_app/blocs/course/list/course_list_bloc.dart';
 import 'package:mfc_app/blocs/course/single/single_course_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Course.dart';
+import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
@@ -37,7 +38,9 @@ class _CourseListScreenState extends State<CourseListScreen> {
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  Course course = state.courses[index];
+                  Enrollment enrollment = state.courses[index];
+                  Course course = enrollment.course;
+
                   return Card(
                     clipBehavior: Clip.antiAlias,
                     child: Column(
@@ -85,7 +88,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                             TextButton(
                               onPressed: () =>
                                   BlocProvider.of<NavigationBloc>(context)
-                                      .add(NavigatedToCourse(course.id)),
+                                      .add(NavigatedToCourse(enrollment.id)),
                               child: Text("Begin"),
                             )
                           ],

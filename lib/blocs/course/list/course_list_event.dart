@@ -10,7 +10,7 @@ abstract class CourseListEvent extends Equatable {
 class CourseListRequested extends CourseListEvent {}
 
 class CourseListFound extends CourseListEvent {
-  final List<Course> courses;
+  final List<Enrollment> courses;
 
   CourseListFound(this.courses);
 }

@@ -33,8 +33,8 @@ const generateSchedule = (startDate, modules) => {
                 available.setMonth(available.getMonth() + delay);
                 break;
         }
-        schedule.push({ 
-            moduleId: module.id, 
+        schedule.push({
+            moduleId: module.id,
             availableAt: available
         });
         date = available;
@@ -42,21 +42,18 @@ const generateSchedule = (startDate, modules) => {
     return schedule;
 }
 
-const createUser = async (email) => {
-    const user = await admin.createUser(email);
+const createUser = async (email, firstName, lastName) => {
+    const user = await admin.createUser(email, firstName, lastName);
     const username = user.Username;
-    await graphApi.createUser(username, email);
+    await graphApi.createUser(username, email, firstName, lastName);
     return user;
 }
 
-const subscribeUser = async (username, courseId) => {
+const subscribeUser = async (username, courseId, startDate) => {
     const course = await graphApi.getCourse(courseId);
-    console.log(course);
     if (!course) {
         throw Error("Could not find course");
     }
-
-    const startDate = new Date();
 
     const enrollment = await graphApi.createEnrollment(username, courseId, startDate);
     if (!enrollment) {
@@ -64,7 +61,7 @@ const subscribeUser = async (username, courseId) => {
     }
 
     const schedule = generateSchedule(startDate, course.modules.items);
-    for(const entry of schedule) {
+    for (const entry of schedule) {
         await graphApi.createModuleProgress(entry.moduleId, enrollment.id, entry.availableAt);
     }
 
@@ -79,6 +76,10 @@ const resolvers = {
         },
         adminListGroups: async ctx => {
             return await admin.listGroups();
+        },
+        adminGetUser: async ctx => {
+            const { username } = ctx.arguments;
+            return await admin.getUser(username);
         }
     },
     Mutation: {
@@ -87,12 +88,13 @@ const resolvers = {
             return await admin.addUserToGroup(username, groupName);
         },
         subscribeUser: async ctx => {
-            const { username, courseId } = ctx.arguments;
-            await subscribeUser(username, courseId);
+            const { username, courseId, startDate } = ctx.arguments;
+            await subscribeUser(username, courseId, startDate);
             return true;
         },
         adminCreateUser: async ctx => {
-            return await createUser(ctx.arguments.username);
+            const {email, firstName, lastName} = ctx.arguments;
+            return await createUser(email, firstName, lastName);
         },
         adminDeleteUser: async ctx => {
             const { username } = ctx.arguments;

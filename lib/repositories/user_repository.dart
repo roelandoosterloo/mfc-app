@@ -23,9 +23,10 @@ class UserRepository {
 
   Future<SignInResult> signIn(String email, String password) async {
     SignInResult result = await Amplify.Auth.signIn(
-      username: 'roelandoosterloo2',
+      username: email,
       password: password.trim(),
     );
+    print(result);
     return result;
   }
 

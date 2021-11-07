@@ -12,11 +12,11 @@ class SingleInitial extends SingleCourseState {}
 class CourseLoading extends SingleCourseState {}
 
 class CourseAvailable extends SingleCourseState {
-  final Course _course;
+  final Enrollment _course;
 
-  CourseAvailable({required Course course}) : _course = course;
+  CourseAvailable({required Enrollment course}) : _course = course;
 
-  Course get course => _course;
+  Enrollment get course => _course;
 
   @override
   List<Object> get props => [_course];

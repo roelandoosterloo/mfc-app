@@ -12,11 +12,11 @@ class CourseInitial extends CourseListState {}
 class CourseListLoading extends CourseListState {}
 
 class CourseListAvailable extends CourseListState {
-  final List<Course> _courses;
+  final List<Enrollment> _courses;
 
-  CourseListAvailable({required List<Course> courses}) : _courses = courses;
+  CourseListAvailable({required List<Enrollment> courses}) : _courses = courses;
 
-  List<Course> get courses => _courses;
+  List<Enrollment> get courses => _courses;
 
   @override
   List<Object> get props => [_courses];

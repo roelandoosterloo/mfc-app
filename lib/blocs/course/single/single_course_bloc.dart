@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/course/Course.dart';
+import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 
 part 'single_course_event.dart';
@@ -25,7 +26,7 @@ class SingleCourseBloc extends Bloc<SingleCourseEvent, SingleCourseState> {
   Stream<SingleCourseState> _mapCourseSelectedToState(String courseId) async* {
     yield CourseLoading();
     try {
-      Course? course = await _courseRepo.getCourse(courseId);
+      Enrollment? course = await _courseRepo.getEnrollment(courseId);
       if (course != null) {
         yield CourseAvailable(course: course);
       } else {

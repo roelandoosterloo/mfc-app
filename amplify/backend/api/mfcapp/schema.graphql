@@ -1,6 +1,9 @@
 type Profile
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: owner, ownerField: "cognitoId" }]) {
+  @auth(rules: [
+    { allow: groups, groups: ["admin"] }, 
+    { allow: private, provider: iam },
+    { allow: owner, ownerField: "cognitoId" }]) {
   id: ID!
   cognitoId: String!
   firstName: String
@@ -11,30 +14,34 @@ type Enrollment
   @model
   @auth(rules: [
     { allow: groups, groups: ["admin"] }, 
+    { allow: private, provider: iam },
     { allow: owner, ownerField: "cognitoId" }]) 
   @key(name: "ofCourse" fields: ["courseId"] ){
   id: ID!
   cognitoId: ID!
   courseId: ID!
-  startDate: AWSDate!
+  startDate: AWSDateTime!
+  course: Course @connection(fields: ["courseId"])
   moduleSchedule: [ModuleProgress!] @connection(keyName: "ofEnrollment", fields: ["id"])
 }
 type ModuleProgress 
   @model 
   @auth(rules: [
     { allow: groups, groups: ["admin"] }, 
-    { allow: owner} ])
+    { allow: private, provider: iam },
+    { allow: private, operations: [read] }])
   @key(name: "ofEnrollment", fields: ["enrollmentId"]){
   moduleId: ID!
   enrollmentId: ID!
   availableAt: AWSDateTime!
-  module: [Module] @connection(fields: ["moduleId"])
+  module: Module @connection(fields: ["moduleId"])
 }
 type Course
   @model
   @auth(rules: [
     { allow: groups, groups: ["admin"] },
-    { allow: groups, groupsField: "accessGroup", queries: [get, list]}]) {
+    { allow: private, provider: iam } ,
+    { allow: private, operations: [read] }]) {
   id: ID!
   accessGroup: String!
   name: String!
@@ -45,8 +52,9 @@ type Course
 type Module
   @model
   @auth(rules: [
-    {allow: groups, groups: ["admin"]}, 
-    { allow: private, queries: [get, list], mutations: null}])
+    { allow: groups, groups: ["admin"] },
+    { allow: private, provider: iam },
+    { allow: private, operations: [read] }])
   @key(name: "ofCourse", fields: ["courseId"]) {
   id: ID!
   courseId: ID!
@@ -69,7 +77,8 @@ type Question
   @model 
   @auth(rules: [
     {allow: groups, groups: ["admin"]},
-    { allow: private, queries: [get, list], mutations: null}])
+    { allow: private, provider: iam },
+    { allow: private, operations: [read]}])
   @key(name: "ofModule", fields: ["moduleId"]) {
   id: ID!
   moduleId: ID!
@@ -83,8 +92,9 @@ type Question
 type Option 
   @model
   @auth(rules: [
-    {allow: groups, groups: ["admin"]}, 
-    { allow: private, queries: [get, list], mutations: null}]) 
+    { allow: groups, groups: ["admin"] }, 
+    { allow: private, provider: iam },
+    { allow: private, operations: [read]}]) 
   @key(name: "ofQuestion", fields: ["questionId"] ){
   id: ID!
   questionId: ID!
@@ -92,7 +102,11 @@ type Option
 }
 type Measurement
   @model 
-  @auth(rules: [{allow: owner}, {allow: groups, groups: ["admin"]}]) {
+  @auth(rules: [
+    { allow: owner },
+    { allow: private, provider: iam },
+    { allow: groups, groups: ["admin"] }
+  ]) {
   id: ID!
   date: AWSDate!
   weight: Float!
@@ -106,7 +120,10 @@ enum ContentState {
 }
 type Recipe
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+  @auth(rules: [
+    {allow: groups, groups: ["admin"]}, 
+    { allow: private, operations: [read]}
+  ]) {
     id: ID!
     date: AWSDate!
     state: ContentState!
@@ -120,7 +137,7 @@ type Recipe
   }
 type Ingredient
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) 
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, operations: [read]}]) 
   @key(name: "forRecipe", fields: ["recipeId"])
   @key(name: "forProduct", fields: ["productId"]){
     id: ID!
@@ -133,7 +150,7 @@ type Ingredient
   }
 type Product
   @model
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, operations: [read]}]) {
     id: ID!
     name: String!
     namePlural: String!
@@ -141,14 +158,14 @@ type Product
   }
 type Unit
   @model 
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) {
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, operations: [read]}]) {
     id: ID!
     name: String!
     sign: String
   }
 type RecipeStep
   @model 
-  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, queries: [get, list], mutations: null}]) 
+  @auth(rules: [{allow: groups, groups: ["admin"]}, { allow: private, operations: [read]}]) 
   @key(name: "forRecipe", fields: ["recipeId"]) {
     id: ID!
     recipeId: ID!
@@ -163,10 +180,13 @@ type Query  {
   adminListGroups: [CognitoGroup] 
     @function(name: "mfcAppLambda-${env}")
     @auth(rules: [{allow: groups, groups:["admin"]}])
+  adminGetUser(username: String): CognitoUser
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: groups, groups: ["admin"]}])
 }
 
 type Mutation {
-  adminCreateUser(username: String): CognitoUser 
+  adminCreateUser(email: String, firstName: String, lastName: String ): CognitoUser 
     @function(name: "mfcAppLambda-${env}")
     @auth(rules: [{allow: groups, groups:["admin"]}])
   adminDeleteUser(username: String): Boolean 
@@ -175,7 +195,7 @@ type Mutation {
   adminAddUserToGroup(username: String, groupName: String): Boolean 
     @function(name: "mfcAppLambda-${env}")
     @auth(rules: [{allow: groups, groups:["admin"]}])
-  subscribeUser(username: String, courseId: String): Boolean 
+  subscribeUser(username: String, courseId: String, startDate: AWSDateTime): Boolean 
     @function(name: "mfcAppLambda-${env}")
     @auth(rules: [{allow: groups, groups:["admin"]}])
 }

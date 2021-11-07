@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
+import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     NavigationBloc _navBloc = BlocProvider.of<NavigationBloc>(context);
+    AuthenticationBloc _authBloc = BlocProvider.of<AuthenticationBloc>(context);
     return Scaffold(
       body: Container(
         child: SafeArea(
@@ -32,7 +35,14 @@ class HomeScreen extends StatelessWidget {
                   _navBloc.add(event);
                 },
                 child: Text("Course"),
-              )
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  AuthenticationEvent event = AuthenticationLoggedOut();
+                  _authBloc.add(event);
+                },
+                child: Text("Sign out"),
+              ),
             ],
           ),
         ),

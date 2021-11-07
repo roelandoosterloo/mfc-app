@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/course/Course.dart';
+import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 
 part 'course_list_event.dart';
@@ -37,11 +38,11 @@ class CourseListBloc extends Bloc<CourseListEvent, CourseListState> {
 
   Stream<CourseListState> _mapListRequestToState() async* {
     yield CourseListLoading();
-    List<Course> courses = await _courseRepo.listAvailableCourses();
+    List<Enrollment> courses = await _courseRepo.listEnrolledCourses();
     add(CourseListFound(courses));
   }
 
-  Stream<CourseListState> _mapListToState(List<Course> courses) async* {
+  Stream<CourseListState> _mapListToState(List<Enrollment> courses) async* {
     yield CourseListAvailable(courses: courses);
   }
 

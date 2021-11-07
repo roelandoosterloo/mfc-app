@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/course/single/single_course_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
+import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/Module.dart';
 import 'package:mfc_app/models/course/Course.dart';
+import 'package:mfc_app/models/course/ModuleProgress.dart';
 import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
@@ -20,6 +23,7 @@ class CourseSingleScreen extends StatefulWidget {
 
 class _CourseSingleScreenState extends State<CourseSingleScreen> {
   final String courseId;
+  final f = new DateFormat('yyyy-MM-dd');
 
   _CourseSingleScreenState(this.courseId);
 
@@ -52,7 +56,12 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
         } else if (state is CourseLoading) {
           return Loading();
         } else if (state is CourseAvailable) {
-          Course course = state.course;
+          Enrollment enrollment = state.course;
+          Course course = enrollment.course;
+          List<ModuleProgress> modules = enrollment.moduleSchedule ?? [];
+          modules.sort((a, b) =>
+              b.availableAt.millisecondsSinceEpoch -
+              a.availableAt.millisecondsSinceEpoch);
 
           return Scaffold(
             appBar: AppBar(
@@ -60,10 +69,11 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
             ),
             body: Container(
               child: ListView.separated(
-                itemCount: course.modules?.length ?? 0,
+                itemCount: modules.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
-                  Module? module = course.modules?[index];
+                  ModuleProgress progress = modules[index];
+                  Module? module = progress.module;
                   if (module != null) {
                     return ListTile(
                       leading: Hero(
@@ -75,85 +85,18 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
                         ),
                       ),
                       title: Text(module.name),
-                      subtitle: Text(module.name),
-                      onTap: () => BlocProvider.of<NavigationBloc>(context)
-                          .add(NavigatedToModule(course.id, module.id)),
+                      subtitle: Text(!progress.isAvailable()
+                          ? "available at ${f.format(progress.availableAt)}"
+                          : ""),
+                      onTap: progress.isAvailable()
+                          ? () => BlocProvider.of<NavigationBloc>(context)
+                              .add(NavigatedToModule(course.id, module.id))
+                          : null,
                     );
                   }
                   return ListTile(
                     title: Text("No modules"),
                   );
-
-                  // )
-
-                  // Card(
-                  //   clipBehavior: Clip.antiAlias,
-                  //   child: Column(
-                  //     children: [
-                  //       SizedBox(
-                  //         width: double.infinity,
-                  //         height: 150,
-                  //         child: Hero(
-                  //           tag: index,
-                  //           child: Image.network(
-                  //             "https://placeimg.com/1000/600/any",
-                  //             fit: BoxFit.cover,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       ListTile(
-                  //         title: Text(
-                  //           module.name,
-                  //           style: TextStyle(fontSize: 24),
-                  //         ),
-                  //         subtitle: Text(
-                  //           "Beschikbaar vanaf 09-05-2022",
-                  //           style:
-                  //               TextStyle(color: Colors.black.withOpacity(0.6)),
-                  //         ),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.all(16.0),
-                  //         child: Text(
-                  //           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean congue at purus eget auctor. Duis vitae facilisis neque, vitae lacinia velit. Aliquam vulputate et libero et dictum[...] ",
-                  //           style: TextStyle(
-                  //             color: Colors.black.withOpacity(0.6),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Divider(
-                  //         indent: 10,
-                  //         endIndent: 10,
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  //         child: Row(
-                  //           children: [
-                  //             Icon(Icons.restaurant),
-                  //             Text("16"),
-                  //             SizedBox(width: 24),
-                  //             Icon(Icons.play_arrow),
-                  //             Text("23:41"),
-                  //             SizedBox(width: 24),
-                  //             Icon(Icons.book),
-                  //             Text("9"),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       ButtonBar(
-                  //         alignment: MainAxisAlignment.start,
-                  //         children: [
-                  //           TextButton(
-                  //             onPressed: () =>
-                  //                 BlocProvider.of<NavigationBloc>(context)
-                  //                     .add(NavigatedToModule(index.toString())),
-                  //             child: Text("Begin"),
-                  //           )
-                  //         ],
-                  //       )
-                  //     ],
-                  //   ),
-                  // );
                 },
               ),
             ),
