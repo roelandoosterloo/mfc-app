@@ -68,8 +68,8 @@ class Measurement extends Model {
 
   Measurement.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        _date = DateTime.parse(json['date']),
-        _weight = json['weight'],
+        _date = _dateFormat.parse(json['date']),
+        _weight = json['weight'].toDouble(),
         _note = json['note'];
 
   Map<String, dynamic> toJson() => {

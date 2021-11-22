@@ -2,6 +2,7 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:flutter/foundation.dart';
 
 import '../Model.dart';
+import 'Answer.dart';
 import 'Option.dart';
 import 'QuestionType.dart';
 
@@ -14,6 +15,7 @@ class Question extends Model {
   final String _question;
   final int _index;
   final List<Option>? _options;
+  final Answer? _answer;
 
   @override
   String getId() {
@@ -44,6 +46,10 @@ class Question extends Model {
     return _options;
   }
 
+  Answer? get answer {
+    return _answer;
+  }
+
   const Question._internal(
       {required this.id,
       required moduleId,
@@ -51,13 +57,15 @@ class Question extends Model {
       required question,
       required index,
       introduction,
-      options})
+      options,
+      answer})
       : _moduleId = moduleId,
         _type = type,
         _question = question,
         _index = index,
         _introduction = introduction,
-        _options = options;
+        _options = options,
+        _answer = answer;
 
   factory Question(
       {String? id,
@@ -66,7 +74,8 @@ class Question extends Model {
       required String question,
       required int index,
       String? introduction,
-      List<Option>? options}) {
+      List<Option>? options,
+      Answer? answer}) {
     return Question._internal(
         id: id == null ? UUID.getUUID() : id,
         moduleId: moduleId,
@@ -74,8 +83,8 @@ class Question extends Model {
         index: index,
         question: question,
         introduction: introduction,
-        options:
-            options != null ? List<Option>.unmodifiable(options) : options);
+        options: options != null ? List<Option>.unmodifiable(options) : options,
+        answer: answer);
   }
   @override
   String toString() {
@@ -103,7 +112,9 @@ class Question extends Model {
             ? (json['options']['items'] as List)
                 .map((e) => Option.fromJson(new Map<String, dynamic>.from(e)))
                 .toList()
-            : null;
+            : null,
+        _answer =
+            json['answer'] != null ? Answer.fromJson(json['answer']) : null;
 
   Map<String, dynamic> toJson() => {
         'id': id,

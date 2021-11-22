@@ -41,11 +41,10 @@ class AppRouterDelegate extends RouterDelegate
               courseId: state.courseId!,
             ),
           );
-        if (state.moduleId != null)
+        if (state.moduleProgressId != null)
           stack.add(
             ModuleSinglePage(
-              state.courseId!,
-              state.moduleId!,
+              state.moduleProgressId!,
             ),
           );
       }

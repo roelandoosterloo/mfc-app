@@ -114,11 +114,11 @@ class AppNavigation extends NavigationState {
 
 class CourseNavigation extends AppNavigation {
   final String? courseId;
-  final String? moduleId;
+  final String? moduleProgressId;
 
   CourseNavigation({
     this.courseId,
-    this.moduleId,
+    this.moduleProgressId,
   });
 
   factory CourseNavigation.courseList() {
@@ -130,19 +130,19 @@ class CourseNavigation extends AppNavigation {
   }
 
   factory CourseNavigation.module(String moduleId) {
-    return CourseNavigation(moduleId: moduleId);
+    return CourseNavigation(moduleProgressId: moduleId);
   }
 
   CourseNavigation update({String? courseId, String? moduleId}) {
     return CourseNavigation(
       courseId: courseId ?? this.courseId,
-      moduleId: moduleId ?? this.moduleId,
+      moduleProgressId: moduleId ?? this.moduleProgressId,
     );
   }
 
   @override
   NavigationState goBack() {
-    if (courseId != null && moduleId != null) {
+    if (courseId != null && moduleProgressId != null) {
       return CourseNavigation.course(this.courseId!);
     }
     if (courseId != null) {
@@ -154,6 +154,6 @@ class CourseNavigation extends AppNavigation {
   @override
   List<Object> get props => [
         courseId ?? "",
-        moduleId ?? "",
+        moduleProgressId ?? "",
       ];
 }

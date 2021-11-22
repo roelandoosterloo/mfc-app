@@ -16,9 +16,11 @@ class ModuleQuestionsTab extends StatefulWidget {
 
 class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
   int _page = 0;
+  Map<int, String?> _answers = {};
 
   void nextQuestion(BuildContext context) {
     FocusScope.of(context).unfocus();
+    submitAnswer();
     widget.controller.nextPage(
       duration: Duration(milliseconds: 500),
       curve: Curves.easeOut,
@@ -27,6 +29,7 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
 
   void previousQuestion(BuildContext context) {
     FocusScope.of(context).unfocus();
+    submitAnswer();
     widget.controller.previousPage(
       duration: Duration(milliseconds: 500),
       curve: Curves.easeOut,
@@ -35,6 +38,34 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
 
   bool get hasMoreQuestions {
     return _page < widget.questions.length - 1;
+  }
+
+  String? get answer {
+    Question q = widget.questions[_page];
+    if (_answers[_page] != null) {
+      return _answers[_page]!;
+    }
+    if (q.answer != null) {
+      return q.answer!.answer;
+    }
+    return null;
+  }
+
+  void submitAnswer() {
+    if (_answers[_page] == null) {
+      return;
+    }
+    Question q = widget.questions[_page];
+    String answer = _answers[_page]!;
+    print(q.question);
+    print(answer);
+    BlocProvider.of<ModuleProgressBloc>(context).add(AnswerGiven(q, answer));
+  }
+
+  void onChangeAnswer(String value) {
+    setState(() {
+      _answers[_page] = value;
+    });
   }
 
   @override
@@ -60,6 +91,8 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
                       question: entry.value,
                       index: entry.key + 1,
                       key: Key(entry.value.id),
+                      onChange: (value) => onChangeAnswer(value),
+                      value: answer,
                     ),
                   ),
                 )
@@ -67,28 +100,31 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
           ),
         ),
         Divider(),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 8.0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (_page > 0)
-                ElevatedButton(
-                  onPressed: () => previousQuestion(context),
-                  child: Text("Previous Question"),
-                ),
-              if (_page == 0) Spacer(),
-              if (hasMoreQuestions)
-                ElevatedButton(
-                  onPressed: () => nextQuestion(context),
-                  child: Text("Next Question"),
-                ),
-              if (!hasMoreQuestions)
-                ElevatedButton(onPressed: () => null, child: Text("Done")),
-            ],
+        Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (_page > 0)
+                  ElevatedButton(
+                    onPressed: () => previousQuestion(context),
+                    child: Text("Previous Question"),
+                  ),
+                if (_page == 0) Spacer(),
+                if (hasMoreQuestions)
+                  ElevatedButton(
+                    onPressed: () => nextQuestion(context),
+                    child: Text("Next Question"),
+                  ),
+                if (!hasMoreQuestions)
+                  ElevatedButton(onPressed: () => null, child: Text("Done")),
+              ],
+            ),
           ),
         )
       ],

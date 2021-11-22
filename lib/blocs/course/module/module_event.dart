@@ -1,32 +1,43 @@
 part of 'module_bloc.dart';
 
-abstract class ModuleEvent extends Equatable {
-  const ModuleEvent();
+abstract class ModuleProgressEvent extends Equatable {
+  const ModuleProgressEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class ModuleSelected extends ModuleEvent {
-  final String _courseId;
-  final String _moduleId;
+class ModuleProgressSelected extends ModuleProgressEvent {
+  final String _moduleprogressId;
 
-  ModuleSelected(this._courseId, this._moduleId);
+  ModuleProgressSelected(this._moduleprogressId);
 
-  String get moduleId => _moduleId;
-  String get courseId => _courseId;
+  String get moduleprogressId => _moduleprogressId;
 
   @override
-  List<Object> get props => [_courseId, _moduleId];
+  List<Object> get props => [_moduleprogressId];
 }
 
-class ModuleFound extends ModuleEvent {
-  final Module _module;
+class ModuleProgressFound extends ModuleProgressEvent {
+  final ModuleProgress _moduleprogress;
 
-  ModuleFound(this._module);
+  ModuleProgressFound(this._moduleprogress);
 
-  Module get module => _module;
+  ModuleProgress get moduleprogress => _moduleprogress;
 
   @override
-  List<Object> get props => [_module];
+  List<Object> get props => [_moduleprogress];
+}
+
+class AnswerGiven extends ModuleProgressEvent {
+  final Question _question;
+  final String _answer;
+
+  AnswerGiven(this._question, this._answer);
+
+  Question get question => _question;
+  String get answer => _answer;
+
+  @override
+  List<Object> get props => [_question, _answer];
 }

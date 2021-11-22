@@ -25,7 +25,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     } else if (event is NavigatedToCourse) {
       yield* _mapCourseToState(event.courseId);
     } else if (event is NavigatedToModule) {
-      yield* _mapModuleToState(event.moduleId);
+      yield* _mapModuleToState(event.moduleProgressId);
     } else if (event is NavigatedToCourseList) {
       yield* _mapCourseListToState();
     }

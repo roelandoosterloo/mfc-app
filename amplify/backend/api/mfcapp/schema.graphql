@@ -30,11 +30,14 @@ type ModuleProgress
     { allow: groups, groups: ["admin"] }, 
     { allow: private, provider: iam },
     { allow: private, operations: [read] }])
-  @key(name: "ofEnrollment", fields: ["enrollmentId"]){
-  moduleId: ID!
-  enrollmentId: ID!
-  availableAt: AWSDateTime!
-  module: Module @connection(fields: ["moduleId"])
+  @key(name: "ofEnrollment", fields: ["enrollmentId"])
+  @key(name: "moduleId", fields: ["moduleId"]){
+    id: ID!
+    moduleId: ID!
+    enrollmentId: ID!
+    availableAt: AWSDateTime!
+    module: Module @connection(fields: ["moduleId"])
+    workbook: [Answer] @connection(keyName: "ofWorkbook" fields: ["id"])
 }
 type Course
   @model
@@ -87,6 +90,21 @@ type Question
   question: String!
   introduction: String
   options: [Option!] @connection( keyName: "ofQuestion", fields: ["id"] )
+  answer: Answer @connection(fields: ["id"] )
+}
+
+type Answer
+  @model
+  @auth( rules: [
+    { allow: groups, groups: ["admin"] }
+    { allow: owner },
+  ])
+  @key(name: "ofQuestion", fields: ["questionId"])
+  @key(name: "ofWorkbook", fields: ["moduleProgressId"]){
+  id: ID!
+  questionId: ID!
+  moduleProgressId: ID!
+  answer: String!
 }
 
 type Option 

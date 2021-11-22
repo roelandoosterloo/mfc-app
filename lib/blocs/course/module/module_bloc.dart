@@ -2,41 +2,62 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mfc_app/models/course/Module.dart';
+import 'package:mfc_app/models/course/ModuleProgress.dart';
+import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 
 part 'module_event.dart';
 part 'module_state.dart';
 
-class ModuleBloc extends Bloc<ModuleEvent, ModuleState> {
+class ModuleProgressBloc
+    extends Bloc<ModuleProgressEvent, ModuleProgressState> {
   final CourseRepository _courseRepo;
 
-  ModuleBloc({required CourseRepository courseRepo})
+  ModuleProgressBloc({required CourseRepository courseRepo})
       : _courseRepo = courseRepo,
-        super(ModuleInitial());
+        super(ModuleProgressInitial());
 
   @override
-  Stream<ModuleState> mapEventToState(ModuleEvent event) async* {
-    if (event is ModuleSelected) {
-      yield* _mapModuleSelectedToState(event.courseId, event.moduleId);
+  Stream<ModuleProgressState> mapEventToState(
+      ModuleProgressEvent event) async* {
+    if (event is ModuleProgressSelected) {
+      yield* _mapModuleProgressSelectedToState(event.moduleprogressId);
+    } else if (event is AnswerGiven) {
+      yield* _mapAnswerGivenToState(event.question, event.answer);
     }
   }
 
-  Stream<ModuleState> _mapModuleSelectedToState(
-    String courseId,
-    String moduleId,
+  Stream<ModuleProgressState> _mapModuleProgressSelectedToState(
+    String moduleprogressId,
   ) async* {
-    yield ModuleLoading();
+    yield ModuleProgressLoading();
     try {
-      Module? module = await _courseRepo.getModule(courseId, moduleId);
-      if (module != null) {
-        yield ModuleAvailable(module: module);
+      ModuleProgress? progress =
+          await _courseRepo.getModuleProgress(moduleprogressId);
+      if (progress != null) {
+        yield ModuleProgressAvailable(moduleprogress: progress);
       } else {
-        yield ModuleNotFound();
+        yield ModuleProgressNotFound();
       }
     } catch (ex) {
       print(ex);
-      yield ModuleLoadingFailed(error: ex.toString());
+      yield ModuleProgressLoadingFailed(error: ex.toString());
+    }
+  }
+
+  Stream<ModuleProgressState> _mapAnswerGivenToState(
+    Question question,
+    String answer,
+  ) async* {
+    print(answer);
+    try {
+      if (question.answer == null) {
+        await _courseRepo.createAnswer(question.id, "", answer);
+      } else {
+        await _courseRepo.updateAnswer(question.answer!.id, answer);
+      }
+    } catch (ex) {
+      print(ex);
     }
   }
 }

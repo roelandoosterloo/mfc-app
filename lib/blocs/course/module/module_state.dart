@@ -1,31 +1,32 @@
 part of 'module_bloc.dart';
 
-abstract class ModuleState extends Equatable {
-  const ModuleState();
+abstract class ModuleProgressState extends Equatable {
+  const ModuleProgressState();
 
   @override
   List<Object> get props => [];
 }
 
-class ModuleInitial extends ModuleState {}
+class ModuleProgressInitial extends ModuleProgressState {}
 
-class ModuleLoading extends ModuleState {}
+class ModuleProgressLoading extends ModuleProgressState {}
 
-class ModuleAvailable extends ModuleState {
-  final Module _module;
+class ModuleProgressAvailable extends ModuleProgressState {
+  final ModuleProgress _moduleProgress;
 
-  ModuleAvailable({required Module module}) : _module = module;
+  ModuleProgressAvailable({required ModuleProgress moduleprogress})
+      : _moduleProgress = moduleprogress;
 
-  Module get module => _module;
+  ModuleProgress get moduleprogress => _moduleProgress;
 
   @override
-  List<Object> get props => [_module];
+  List<Object> get props => [_moduleProgress];
 }
 
-class ModuleLoadingFailed extends ModuleState {
+class ModuleProgressLoadingFailed extends ModuleProgressState {
   final String _error;
 
-  ModuleLoadingFailed({String error = ""}) : _error = error;
+  ModuleProgressLoadingFailed({String error = ""}) : _error = error;
 
   String get error => error;
 
@@ -33,4 +34,4 @@ class ModuleLoadingFailed extends ModuleState {
   List<Object> get props => [_error];
 }
 
-class ModuleNotFound extends ModuleState {}
+class ModuleProgressNotFound extends ModuleProgressState {}

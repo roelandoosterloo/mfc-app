@@ -31,11 +31,10 @@ class NavigatedToCourse extends NavigationEvent {
 }
 
 class NavigatedToModule extends NavigationEvent {
-  final String courseId;
-  final String moduleId;
+  final String moduleProgressId;
 
-  NavigatedToModule(this.courseId, this.moduleId);
+  NavigatedToModule(this.moduleProgressId);
 
   @override
-  List<Object> get props => [courseId, moduleId];
+  List<Object> get props => [moduleProgressId];
 }

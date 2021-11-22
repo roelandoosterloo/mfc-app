@@ -12,6 +12,7 @@ class ModuleVideoTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 16),
       child: YoutubePlayerBuilder(
         player: YoutubePlayer(
           controller: _youtubeController,
@@ -21,8 +22,11 @@ class ModuleVideoTab extends StatelessWidget {
           return Column(
             children: [
               player,
-              SizedBox(
-                height: 300,
+              ElevatedButton(
+                onPressed: () {
+                  _youtubeController.toggleFullScreenMode();
+                },
+                child: Text("full"),
               )
             ],
           );
