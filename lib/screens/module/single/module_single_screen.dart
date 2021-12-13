@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/course/module/module_bloc.dart';
+import 'package:mfc_app/models/course/Answer.dart';
 import 'package:mfc_app/models/course/Module.dart';
+import 'package:mfc_app/models/course/ModuleProgress.dart';
 import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/widgets/MySliverPersistentHeaderDelegate.dart';
 import 'package:mfc_app/widgets/loading.dart';
@@ -71,7 +73,14 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                       backgroundColor: Color(0xff2b8474),
                       elevation: 0,
                       flexibleSpace: FlexibleSpaceBar(
-                        title: Text(module.name, textScaleFactor: 1),
+                        title: Text(
+                          module.name.toUpperCase(),
+                          textScaleFactor: 1.3,
+                          style: TextStyle(
+                            fontFamily: 'Stratum',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                         background: S3Image(
                           module.coverImage ?? "",
                           fit: BoxFit.cover,
@@ -82,7 +91,7 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                     SliverPersistentHeader(
                       delegate: MySliverPersistentHeaderDelegate(
                         TabBar(
-                          indicatorColor: Colors.white,
+                          indicatorColor: Color(0xfff44336),
                           tabs: [
                             Tab(text: "Info"),
                             Tab(text: "Video"),
@@ -95,38 +104,15 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                   ];
                 },
                 body: Container(
-                  color: Color(0xff2b8474),
                   padding: EdgeInsets.only(top: 16),
                   child: TabBarView(
                     children: [
                       ModuleInfoTab(module: module),
                       ModuleVideoTab(youtubeController: _youtubeController),
-                      ModuleQuestionsTab(questions: module.assignments ?? []),
+                      ModuleQuestionsTab(progress: state.moduleprogress),
                     ],
                   ),
                 ),
-              ),
-            ),
-          );
-          return DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(module.name),
-                bottom: TabBar(
-                  tabs: [
-                    Tab(text: "Info"),
-                    Tab(text: "Video"),
-                    Tab(text: "Opdrachten"),
-                  ],
-                ),
-              ),
-              body: TabBarView(
-                children: [
-                  ModuleInfoTab(module: module),
-                  ModuleVideoTab(youtubeController: _youtubeController),
-                  ModuleQuestionsTab(questions: module.assignments ?? []),
-                ],
               ),
             ),
           );

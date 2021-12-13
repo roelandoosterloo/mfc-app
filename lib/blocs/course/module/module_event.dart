@@ -31,13 +31,15 @@ class ModuleProgressFound extends ModuleProgressEvent {
 
 class AnswerGiven extends ModuleProgressEvent {
   final Question _question;
+  final ModuleProgress _progress;
   final String _answer;
 
-  AnswerGiven(this._question, this._answer);
+  AnswerGiven(this._question, this._progress, this._answer);
 
   Question get question => _question;
+  ModuleProgress get progress => _progress;
   String get answer => _answer;
 
   @override
-  List<Object> get props => [_question, _answer];
+  List<Object> get props => [_question, _progress, _answer];
 }

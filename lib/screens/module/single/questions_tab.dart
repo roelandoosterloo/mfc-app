@@ -3,12 +3,16 @@ part of 'module_single_screen.dart';
 class ModuleQuestionsTab extends StatefulWidget {
   ModuleQuestionsTab({
     Key? key,
-    required this.questions,
+    required this.progress,
   })  : controller = PageController(initialPage: 0),
+        questions = progress.module!.assignments ?? [],
+        answers = progress.workbook ?? [],
         super(key: key);
 
   final PageController controller;
+  final ModuleProgress progress;
   final List<Question> questions;
+  final List<Answer> answers;
 
   @override
   State<ModuleQuestionsTab> createState() => _ModuleQuestionsTabState();
@@ -42,6 +46,15 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
 
   String? get answer {
     Question q = widget.questions[_page];
+    Answer? answer;
+    try {
+      answer = widget.answers.firstWhere(
+        (element) => element.questionId == q.id,
+      );
+    } catch (e) {}
+    if (answer != null) {
+      return answer.answer;
+    }
     if (_answers[_page] != null) {
       return _answers[_page]!;
     }
@@ -59,7 +72,11 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
     String answer = _answers[_page]!;
     print(q.question);
     print(answer);
-    BlocProvider.of<ModuleProgressBloc>(context).add(AnswerGiven(q, answer));
+    BlocProvider.of<ModuleProgressBloc>(context).add(AnswerGiven(
+      q,
+      widget.progress,
+      answer,
+    ));
   }
 
   void onChangeAnswer(String value) {

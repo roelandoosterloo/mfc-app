@@ -1,5 +1,5 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/authentication/authentication_state.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
@@ -15,45 +15,46 @@ class AuthenticationBloc
     required NavigationBloc navigationBloc,
   })  : _userRepo = userRepo,
         _navigationBloc = navigationBloc,
-        super(AuthenticationInitial());
-
-  @override
-  Stream<AuthenticationState> mapEventToState(
-      AuthenticationEvent event) async* {
-    if (event is AuthenticationStarted) {
-      yield* _mapAuthenticationStartedToState();
-    } else if (event is AuthenticationLoggedIn) {
-      yield* _mapAuthenticationLoggedInToState();
-    } else if (event is AuthenticationLoggedOut) {
-      yield* _mapAuthenticationLoggedOutToState();
-    }
+        super(AuthenticationInitial()) {
+    on<AuthenticationStarted>(_onAuthStarted);
+    on<AuthenticationLoggedIn>(_onLoggedIn);
+    on<AuthenticationLoggedOut>(_onLoggedOut);
   }
 
-  Stream<AuthenticationState> _mapAuthenticationLoggedInToState() async* {
+  void _onLoggedIn(
+    AuthenticationLoggedIn event,
+    Emitter<AuthenticationState> emit,
+  ) async {
     try {
       AuthUser user = await _userRepo.getUser();
-      yield AuthenticationSuccess(user);
+      emit(AuthenticationSuccess(user));
       _navigationBloc.add(NavigatedToHome());
     } catch (e) {
-      yield AuthenticationFailure();
+      emit(AuthenticationFailure());
       _navigationBloc.add(NavigatedToLogin());
     }
   }
 
-  Stream<AuthenticationState> _mapAuthenticationLoggedOutToState() async* {
-    yield AuthenticationFailure();
+  void _onLoggedOut(
+    AuthenticationLoggedOut event,
+    Emitter<AuthenticationState> emit,
+  ) {
+    emit(AuthenticationFailure());
     _userRepo.signOut();
     _navigationBloc.add(NavigatedToLogin());
   }
 
-  Stream<AuthenticationState> _mapAuthenticationStartedToState() async* {
+  void _onAuthStarted(
+    AuthenticationStarted event,
+    Emitter<AuthenticationState> emit,
+  ) async {
     final isSignedIn = await _userRepo.isSignedIn();
     if (isSignedIn) {
       AuthUser user = await _userRepo.getUser();
-      yield AuthenticationSuccess(user);
+      emit(AuthenticationSuccess(user));
       _navigationBloc.add(NavigatedToHome());
     } else {
-      yield AuthenticationFailure();
+      emit(AuthenticationFailure());
       _navigationBloc.add(NavigatedToLogin());
     }
   }

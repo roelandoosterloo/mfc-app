@@ -51,6 +51,7 @@ class ModuleCard extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
+                    fontFamily: 'Stratum',
                   ),
                 ),
               ),

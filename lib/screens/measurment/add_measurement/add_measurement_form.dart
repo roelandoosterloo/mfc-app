@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/add_measurement/add_measurement_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/utils/input_formatter.dart';
+import 'package:mfc_app/widgets/date_input.dart';
 
 class AddMeasurementForm extends StatefulWidget {
   @override
@@ -80,7 +81,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
         }
         if (state.isSuccess) {
           BlocProvider.of<NavigationBloc>(context).add(
-            NavigatedToMeasurements(),
+            NavigatedBack(),
           );
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
         }
@@ -90,35 +91,17 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _dateController,
-                      enabled: false,
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.calendar_today),
-                        labelText: "Measurement date",
-                      ),
-                    ),
+              DateInput(
+                labelText: "Measurement date",
+                firstDate: DateTime.now().subtract(
+                  Duration(
+                    days: 1000,
                   ),
-                  ElevatedButton(
-                    onPressed: () => showDatePicker(
-                      context: context,
-                      firstDate: DateTime.parse("2020-01-01"),
-                      lastDate: DateTime.now(),
-                      initialDate: DateTime.now(),
-                    ).then((value) {
-                      if (value != null) {
-                        _dateController.text = f.format(value);
-                        _measurementBloc.add(
-                          MeasurementDateChanged(date: value),
-                        );
-                      }
-                    }),
-                    child: Text("Select date"),
-                  ),
-                ],
+                ),
+                controller: _dateController,
+                onDateSelected: (date) => _measurementBloc.add(
+                  MeasurementDateChanged(date: date),
+                ),
               ),
               TextFormField(
                 controller: _weightController,
@@ -156,7 +139,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                   onPressed: () => {
                     BlocProvider.of<AddMeasurementBloc>(context).add(
                       MeasurementSubmitted(
-                        date: DateTime.now(),
+                        date: f.parse(_dateController.text),
                         weight: double.parse(_weightController.text),
                         note: _noteController.text,
                       ),

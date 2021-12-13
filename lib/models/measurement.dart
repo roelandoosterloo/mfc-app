@@ -10,6 +10,7 @@ class Measurement extends Model {
   final DateTime _date;
   final double _weight;
   final String? _note;
+  final String _type = "Measurement";
 
   static final DateFormat _dateFormat = new DateFormat('yyyy-MM-dd');
 
@@ -32,6 +33,10 @@ class Measurement extends Model {
 
   String? get note {
     return _note;
+  }
+
+  String get type {
+    return _type;
   }
 
   const Measurement._internal(
@@ -76,6 +81,7 @@ class Measurement extends Model {
         'id': id,
         'date': _dateFormat.format(_date),
         'weight': _weight,
-        'note': _note
+        'note': _note,
+        'type': _type,
       };
 }

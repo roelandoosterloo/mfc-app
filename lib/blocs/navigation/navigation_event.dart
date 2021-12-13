@@ -21,6 +21,8 @@ class NavigatedToAddMeasurement extends NavigationEvent {}
 
 class NavigatedToCourseList extends NavigationEvent {}
 
+class NavigatedToProfile extends NavigationEvent {}
+
 class NavigatedToCourse extends NavigationEvent {
   final String courseId;
 

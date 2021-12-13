@@ -17,7 +17,6 @@ class ModuleInfoTab extends StatelessWidget {
           scrollDirection: Axis.vertical,
           child: Text(
             module.description,
-            style: TextStyle(color: Colors.white),
           ),
         ),
       ),

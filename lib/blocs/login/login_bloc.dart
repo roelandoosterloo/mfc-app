@@ -10,60 +10,64 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc({required UserRepository userRepo})
       : _userRepo = userRepo,
-        super(LoginState.initial());
-
-  @override
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is LoginEmailChanged) {
-      yield* _mapEmailChangedToState(event.email);
-    } else if (event is LoginPasswordChanged) {
-      yield* _mapPasswordChangedToState(event.password);
-    } else if (event is LoginWithCredentialsSubmitted) {
-      yield* _mapLoginWithCredentailsSubmittedToState(
-        event.email,
-        event.password,
-      );
-    } else if (event is LoginConfirmationSubmitted) {
-      yield* _mapLoginConfirmationSubmttedToState(event.code);
-    }
+        super(LoginState.initial()) {
+    on<LoginEmailChanged>(_onEmailChanged);
+    on<LoginPasswordChanged>(_onPasswordChanged);
+    on<LoginWithCredentialsSubmitted>(_onLoginSubmitted);
+    on<LoginConfirmationSubmitted>(_onConfirmationSubmitted);
   }
 
-  Stream<LoginState> _mapEmailChangedToState(String email) async* {
-    yield state.update(isEmailValid: Validators.isValidEmail(email));
+  void _onEmailChanged(
+    LoginEmailChanged event,
+    Emitter<LoginState> emit,
+  ) {
+    emit(state.update(isEmailValid: Validators.isValidEmail(event.email)));
   }
 
-  Stream<LoginState> _mapPasswordChangedToState(String password) async* {
-    yield state.update(isPasswordValid: Validators.isValidPassword(password));
+  void _onPasswordChanged(
+    LoginPasswordChanged event,
+    Emitter<LoginState> emit,
+  ) {
+    emit(
+      state.update(
+        isPasswordValid: Validators.isValidPassword(event.password),
+      ),
+    );
   }
 
-  Stream<LoginState> _mapLoginWithCredentailsSubmittedToState(
-      String email, String password) async* {
-    yield LoginState.loading();
+  void _onLoginSubmitted(
+    LoginWithCredentialsSubmitted event,
+    Emitter<LoginState> emit,
+  ) async {
+    emit(LoginState.loading());
     try {
-      SignInResult result = await _userRepo.signIn(email, password);
+      SignInResult result = await _userRepo.signIn(event.email, event.password);
       if (result.isSignedIn) {
-        yield LoginState.success();
+        emit(LoginState.success());
       } else {
-        yield LoginState.confirmationNeeded(result.nextStep);
+        emit(LoginState.confirmationNeeded(result.nextStep));
       }
     } catch (ex) {
       print(ex);
-      yield LoginState.failure();
+      emit(LoginState.failure());
     }
   }
 
-  Stream<LoginState> _mapLoginConfirmationSubmttedToState(String code) async* {
-    yield LoginState.loading();
+  void _onConfirmationSubmitted(
+    LoginConfirmationSubmitted event,
+    Emitter<LoginState> emit,
+  ) async {
+    emit(LoginState.loading());
     try {
-      SignInResult result = await _userRepo.confirmSignIn(code);
+      SignInResult result = await _userRepo.confirmSignIn(event.code);
       if (result.isSignedIn) {
-        yield LoginState.success();
+        emit(LoginState.success());
       } else {
-        yield LoginState.failure(error: "Login not confirmed");
+        emit(LoginState.failure(error: "Login not confirmed"));
       }
     } catch (ex) {
       print(ex);
-      yield LoginState.failure(error: ex.toString());
+      emit(LoginState.failure(error: ex.toString()));
     }
   }
 }

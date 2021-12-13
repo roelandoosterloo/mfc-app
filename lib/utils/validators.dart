@@ -27,4 +27,18 @@ class Validators {
     }
     return true;
   }
+
+  static isDateInRange({
+    DateTime? lower,
+    DateTime? upper,
+    required DateTime value,
+  }) {
+    if (lower != null && value.isBefore(lower)) {
+      return false;
+    }
+    if (upper != null && value.isAfter(upper)) {
+      return false;
+    }
+    return true;
+  }
 }

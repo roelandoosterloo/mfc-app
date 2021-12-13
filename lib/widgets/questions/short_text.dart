@@ -25,25 +25,16 @@ class ShortTextQuestion extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
             ),
           ),
           if (_question.introduction != null)
             Text(
               _question.introduction!,
-              style: TextStyle(
-                color: Colors.white,
-              ),
             ),
           TextFormField(
             decoration: InputDecoration(
-                labelText: "Your Answer",
-                labelStyle: TextStyle(
-                  color: Colors.white,
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                )),
+              labelText: "Your Answer",
+            ),
             controller: _controller,
           )
         ],

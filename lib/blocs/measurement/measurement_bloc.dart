@@ -14,42 +14,19 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
   MeasurementBloc({required MeasurementRepository measurementRepo})
       : _measureRepo = measurementRepo,
         super(MeasurementInitial()) {
-    // refresh();
+    on<MeasurementsDataRequested>(_onRequestMeasurements);
   }
 
-  dispose() {}
-
-  // refresh() {
-  //   _measureRepo.refresh().listen((data) {
-  //     add(MeasurementsFound(data));
-  //   }, onError: (error) {
-  //     add(MeasurementLoadingFailed(error));
-  //   });
-  // }
-
-  @override
-  Stream<MeasurementState> mapEventToState(MeasurementEvent event) async* {
-    if (event is MeasurementsDataRequested) {
-      yield* _mapDataRequestedToState();
-    } else if (event is MeasurementsFound) {
-      yield* _mapFoundToState(event.measurements);
-    } else if (event is MeasurementLoadingFailed) {
-      yield* _mapLoadingFailedToState(event.error);
+  void _onRequestMeasurements(
+    MeasurementsDataRequested event,
+    Emitter<MeasurementState> emit,
+  ) async {
+    emit(MeasurementLoading());
+    try {
+      List<Measurement> measurements = await _measureRepo.listMeasurements();
+      emit(MeasurementsAvailable(measurements: measurements));
+    } catch (ex) {
+      emit(MeasurementsFailed(error: ex.toString()));
     }
-  }
-
-  Stream<MeasurementState> _mapDataRequestedToState() async* {
-    yield MeasurementLoading();
-    List<Measurement> measurements = await _measureRepo.listMeasurements();
-    add(MeasurementsFound(measurements));
-  }
-
-  Stream<MeasurementState> _mapFoundToState(
-      List<Measurement> measurement) async* {
-    yield MeasurementsAvailable(measurements: measurement);
-  }
-
-  Stream<MeasurementState> _mapLoadingFailedToState(String error) async* {
-    yield MeasurementsFailed(error: error);
   }
 }

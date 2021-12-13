@@ -137,12 +137,14 @@ class CourseRepository {
     mutation submitAnswer {
       createAnswer(input: {
         questionId: "$questionId",
+        moduleProgressId: "$moduleProgressId",
         answer: "$value"
       }) {
         id
       }
     }
     ''';
+    print(graphQLDocument);
     GraphQLOperation op = Amplify.API.query(
       request: GraphQLRequest(
         document: graphQLDocument,

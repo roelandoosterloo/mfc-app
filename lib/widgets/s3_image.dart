@@ -5,15 +5,26 @@ import 'package:amplify_storage_plugin_interface/amplify_storage_plugin_interfac
 import 'package:flutter/material.dart';
 
 class S3Image extends StatelessWidget {
-  final String _fileName;
+  final String? _fileName;
   final BoxFit? _fit;
-  const S3Image(String fileName, {BoxFit? fit})
-      : _fileName = fileName,
-        _fit = fit;
+  final double? _height;
+  final double? _width;
+  const S3Image(
+    String? fileName, {
+    BoxFit? fit,
+    double? height,
+    double? width,
+  })  : _fileName = fileName,
+        _fit = fit,
+        _height = height,
+        _width = width;
 
   Future<File?> get file async {
+    if (_fileName == null) {
+      return null;
+    }
     final dir = await getApplicationDocumentsDirectory();
-    final filePath = dir.path + _fileName;
+    final filePath = dir.path + _fileName!;
     final file = File(filePath);
 
     if (file.existsSync()) {
@@ -22,7 +33,7 @@ class S3Image extends StatelessWidget {
 
     try {
       await Amplify.Storage.downloadFile(
-        key: _fileName,
+        key: _fileName!,
         local: file,
       );
       return file;
@@ -33,7 +44,7 @@ class S3Image extends StatelessWidget {
 
   Future<String> get url async {
     final GetUrlResult url = await Amplify.Storage.getUrl(
-      key: _fileName,
+      key: _fileName!,
       options: GetUrlOptions(accessLevel: StorageAccessLevel.guest),
     );
     return url.url;
@@ -49,10 +60,17 @@ class S3Image extends StatelessWidget {
             return Image.file(
               snapshot.data!,
               fit: _fit,
+              height: _height,
+              width: _width,
             );
           }
         }
-        return Image.asset('assets/placeholder.png', fit: _fit);
+        return Image.asset(
+          'assets/placeholder.png',
+          fit: _fit,
+          height: _height,
+          width: _width,
+        );
       },
     );
   }

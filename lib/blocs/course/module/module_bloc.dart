@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
@@ -15,46 +13,46 @@ class ModuleProgressBloc
 
   ModuleProgressBloc({required CourseRepository courseRepo})
       : _courseRepo = courseRepo,
-        super(ModuleProgressInitial());
-
-  @override
-  Stream<ModuleProgressState> mapEventToState(
-      ModuleProgressEvent event) async* {
-    if (event is ModuleProgressSelected) {
-      yield* _mapModuleProgressSelectedToState(event.moduleprogressId);
-    } else if (event is AnswerGiven) {
-      yield* _mapAnswerGivenToState(event.question, event.answer);
-    }
+        super(ModuleProgressInitial()) {
+    on<ModuleProgressSelected>(_onModuleSelected);
+    on<AnswerGiven>(_onAnswerGiven);
   }
 
-  Stream<ModuleProgressState> _mapModuleProgressSelectedToState(
-    String moduleprogressId,
-  ) async* {
-    yield ModuleProgressLoading();
+  void _onModuleSelected(
+    ModuleProgressSelected event,
+    Emitter<ModuleProgressState> emit,
+  ) async {
+    emit(ModuleProgressLoading());
     try {
       ModuleProgress? progress =
-          await _courseRepo.getModuleProgress(moduleprogressId);
+          await _courseRepo.getModuleProgress(event.moduleprogressId);
       if (progress != null) {
-        yield ModuleProgressAvailable(moduleprogress: progress);
+        emit(ModuleProgressAvailable(moduleprogress: progress));
       } else {
-        yield ModuleProgressNotFound();
+        emit(ModuleProgressNotFound());
       }
     } catch (ex) {
       print(ex);
-      yield ModuleProgressLoadingFailed(error: ex.toString());
+      emit(ModuleProgressLoadingFailed(error: ex.toString()));
     }
   }
 
-  Stream<ModuleProgressState> _mapAnswerGivenToState(
-    Question question,
-    String answer,
-  ) async* {
-    print(answer);
+  void _onAnswerGiven(
+    AnswerGiven event,
+    Emitter<ModuleProgressState> emit,
+  ) async {
     try {
-      if (question.answer == null) {
-        await _courseRepo.createAnswer(question.id, "", answer);
+      if (event.question.answer == null) {
+        await _courseRepo.createAnswer(
+          event.question.id,
+          event.progress.id,
+          event.answer,
+        );
       } else {
-        await _courseRepo.updateAnswer(question.answer!.id, answer);
+        await _courseRepo.updateAnswer(
+          event.question.answer!.id,
+          event.answer,
+        );
       }
     } catch (ex) {
       print(ex);

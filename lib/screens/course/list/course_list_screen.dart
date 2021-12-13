@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mfc_app/blocs/course/list/course_list_bloc.dart';
-import 'package:mfc_app/blocs/course/single/single_course_bloc.dart';
+import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
-import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
 class CourseListScreen extends StatefulWidget {
@@ -17,7 +15,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<CourseListBloc>(context).add(CourseListRequested());
+    BlocProvider.of<EnrollmentBloc>(context).add(EnrolledCoursesRequested());
   }
 
   @override
@@ -26,19 +24,16 @@ class _CourseListScreenState extends State<CourseListScreen> {
       appBar: AppBar(
         title: Text("All Courses"),
       ),
-      body: BlocBuilder<CourseListBloc, CourseListState>(
+      body: BlocBuilder<EnrollmentBloc, EnrollmentState>(
         builder: (context, state) {
-          if (state is CourseLoading) {
-            return Loading();
-          }
-          if (state is CourseListAvailable) {
+          if (state is EnrollmentState) {
             return Container(
               child: ListView.builder(
-                itemCount: state.courses.length,
+                itemCount: state.enrollments.length,
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  Enrollment enrollment = state.courses[index];
+                  Enrollment enrollment = state.enrollments[index];
                   Course course = enrollment.course;
 
                   return Card(
@@ -86,9 +81,12 @@ class _CourseListScreenState extends State<CourseListScreen> {
                           alignment: MainAxisAlignment.start,
                           children: [
                             TextButton(
-                              onPressed: () =>
-                                  BlocProvider.of<NavigationBloc>(context)
-                                      .add(NavigatedToCourse(enrollment.id)),
+                              onPressed: () {
+                                BlocProvider.of<EnrollmentBloc>(context)
+                                    .add(EnrolledCourseSelected(enrollment));
+                                BlocProvider.of<NavigationBloc>(context)
+                                    .add(NavigatedToCourse(enrollment.id));
+                              },
                               child: Text("Begin"),
                             )
                           ],

@@ -65,7 +65,6 @@ class _QuestionWState extends State<QuestionW> {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
               ),
             ),
           ),

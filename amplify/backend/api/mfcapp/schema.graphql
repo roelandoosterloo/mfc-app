@@ -120,6 +120,7 @@ type Option
 }
 type Measurement
   @model 
+  @key(name: "byDate", fields: ["type", "date"], queryField: "getMeasurementsByDate")
   @auth(rules: [
     { allow: owner },
     { allow: private, provider: iam },
@@ -129,6 +130,7 @@ type Measurement
   date: AWSDate!
   weight: Float!
   note: String
+  type: String!
 }
 enum ContentState {
   LIVE

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/measurement.dart';
@@ -14,55 +13,60 @@ class AddMeasurementBloc
 
   AddMeasurementBloc({required MeasurementRepository measureRepo})
       : _measureRepo = measureRepo,
-        super(AddMeasurementState.initial());
-
-  @override
-  Stream<AddMeasurementState> mapEventToState(
-    AddMeasurementEvent event,
-  ) async* {
-    if (event is MeasurementDateChanged) {
-      yield* _mapDateChangedToState(event.date);
-    } else if (event is MeasurementWeightChanged) {
-      yield* _mapWeightChangedToState(event.weight);
-    } else if (event is MeasurementNoteChanged) {
-      yield* _mapNoteChangedToState(event.note);
-    } else if (event is MeasurementSubmitted) {
-      yield* _mapSubmittedToState(event);
-    }
+        super(AddMeasurementState.initial()) {
+    on<MeasurementDateChanged>(_onDateChanged);
+    on<MeasurementWeightChanged>(_onWeightChanged);
+    on<MeasurementNoteChanged>(_onNoteChanged);
+    on<MeasurementSubmitted>(_onSubmitted);
   }
 
-  Stream<AddMeasurementState> _mapDateChangedToState(DateTime date) async* {
-    yield state.update(isDateValid: true);
+  void _onDateChanged(
+    MeasurementDateChanged event,
+    Emitter<AddMeasurementState> emit,
+  ) {
+    emit(state.update(isDateValid: true));
   }
 
-  Stream<AddMeasurementState> _mapWeightChangedToState(double weight) async* {
-    yield state.update(
-      isWeightValid: Validators.isNumberInRange(
-        value: weight,
-        lower: 0,
-        upper: 300,
+  void _onWeightChanged(
+    MeasurementWeightChanged event,
+    Emitter<AddMeasurementState> emit,
+  ) {
+    emit(
+      state.update(
+        isWeightValid: Validators.isNumberInRange(
+          value: event.weight,
+          lower: 0,
+          upper: 300,
+        ),
       ),
     );
   }
 
-  Stream<AddMeasurementState> _mapNoteChangedToState(String note) async* {
-    yield state.update(
-      isWaistValid: true,
+  void _onNoteChanged(
+    MeasurementNoteChanged event,
+    Emitter<AddMeasurementState> emit,
+  ) {
+    emit(
+      state.update(
+        isWaistValid: true,
+      ),
     );
   }
 
-  Stream<AddMeasurementState> _mapSubmittedToState(
-      MeasurementSubmitted event) async* {
-    yield AddMeasurementState.loading();
+  void _onSubmitted(
+    MeasurementSubmitted event,
+    Emitter<AddMeasurementState> emit,
+  ) {
+    emit(AddMeasurementState.loading());
     try {
       _measureRepo.addMeasurement(Measurement(
         date: event.date,
         weight: event.weight,
         note: event.note,
       ));
-      yield AddMeasurementState.success();
+      emit(AddMeasurementState.success());
     } catch (_) {
-      yield AddMeasurementState.failure();
+      emit(AddMeasurementState.failure());
     }
   }
 }

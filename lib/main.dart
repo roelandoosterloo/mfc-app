@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/amplifyconfiguration.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
+import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/navigation/router_delegate.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
@@ -19,9 +22,11 @@ import 'blocs/authentication/authentication_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = SimpleBlocObserver();
-  runApp(
-    MyAmplifyApp(),
+  BlocOverrides.runZoned(
+    () => runApp(
+      MyAmplifyApp(),
+    ),
+    blocObserver: SimpleBlocObserver(),
   );
 }
 
@@ -36,6 +41,13 @@ class MyAmplifyApp extends StatelessWidget {
         primarySwatch: createMaterialColor(
           Color(0xff2b8474),
         ),
+        tabBarTheme: TabBarTheme(
+          labelStyle: TextStyle(fontFamily: 'Stratum'),
+        ),
+        appBarTheme: AppBarTheme(
+          titleTextStyle: TextStyle(fontFamily: 'Stratum', fontSize: 24),
+        ),
+        fontFamily: 'Roboto',
       ),
       home: MainPage(),
     );
@@ -201,9 +213,14 @@ class _MainPageState extends State<MainPage> {
               create: (context) => CourseRepository(),
             ),
           ],
-          child: Router(
-            routerDelegate: AppRouterDelegate(),
-            backButtonDispatcher: RootBackButtonDispatcher(),
+          child: BlocProvider(
+            create: (context) => EnrollmentBloc(
+              context.read<CourseRepository>(),
+            ),
+            child: Router(
+              routerDelegate: AppRouterDelegate(),
+              backButtonDispatcher: RootBackButtonDispatcher(),
+            ),
           ),
         ),
       );
