@@ -25,8 +25,6 @@ class MeasurementRepository {
       ),
     );
     GraphQLResponse response = await op.response;
-    print(response.data);
-    print(response.errors);
     return;
   }
 

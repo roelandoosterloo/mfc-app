@@ -16,7 +16,7 @@ class ModuleCard extends StatelessWidget {
     Module m = _progress.module!;
 
     return Card(
-      color: Color(0xff308e7c),
+      color: Color(0xff459E8E),
       margin: EdgeInsets.symmetric(
         horizontal: 30,
         vertical: 15,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/add_measurement/add_measurement_bloc.dart';
@@ -24,6 +23,9 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
   void initState() {
     super.initState();
     _measurementBloc = BlocProvider.of<AddMeasurementBloc>(context);
+    _dateController.addListener(_onDateChange);
+    _weightController.addListener(_onWeightChange);
+    _noteController.addListener(_onNoteChange);
   }
 
   @override
@@ -32,6 +34,29 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
     _dateController.dispose();
     _weightController.dispose();
     _noteController.dispose();
+  }
+
+  _onDateChange() {
+    _measurementBloc.add(MeasurementDateChanged(date: _dateController.text));
+  }
+
+  _onWeightChange() {
+    _measurementBloc
+        .add(MeasurementWeightChanged(weight: _weightController.text));
+  }
+
+  _onNoteChange() {
+    _measurementBloc.add(MeasurementNoteChanged(note: _noteController.text));
+  }
+
+  void submitMeasurement() {
+    BlocProvider.of<AddMeasurementBloc>(context).add(
+      MeasurementSubmitted(
+        date: f.parse(_dateController.text),
+        weight: double.parse(_weightController.text),
+        note: _noteController.text,
+      ),
+    );
   }
 
   @override
@@ -99,9 +124,6 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                   ),
                 ),
                 controller: _dateController,
-                onDateSelected: (date) => _measurementBloc.add(
-                  MeasurementDateChanged(date: date),
-                ),
               ),
               TextFormField(
                 controller: _weightController,
@@ -109,7 +131,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                 autocorrect: false,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (_) =>
-                    !state.isWeightValid ? 'Invalid weight number' : null,
+                    !state.isWeightValid ? 'Gewicht ongeldig' : null,
                 decoration: InputDecoration(
                   icon: Icon(Icons.fitness_center),
                   suffix: Text("kg"),
@@ -133,21 +155,14 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
               SizedBox(
                 height: 40,
               ),
-              SizedBox(
-                width: 130,
-                child: ElevatedButton(
-                  onPressed: () => {
-                    BlocProvider.of<AddMeasurementBloc>(context).add(
-                      MeasurementSubmitted(
-                        date: f.parse(_dateController.text),
-                        weight: double.parse(_weightController.text),
-                        note: _noteController.text,
-                      ),
-                    ),
-                  },
-                  child: Text("Submit"),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size.fromHeight(40),
                 ),
+                onPressed: state.isValid() ? submitMeasurement : null,
+                child: Text("Submit"),
               ),
+              if (!state.isValid()) Text("Niet alle velden zijn goed ingevuld"),
             ],
           ),
         );

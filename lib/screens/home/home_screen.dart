@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
 import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
@@ -69,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              expandedHeight: 100,
+              expandedHeight: 60,
               floating: true,
               pinned: true,
               flexibleSpace: SafeArea(

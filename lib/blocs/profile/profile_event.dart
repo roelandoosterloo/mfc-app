@@ -7,6 +7,17 @@ abstract class ProfileEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class ProfileOpened extends ProfileEvent {
+  final String cognitoId;
+
+  ProfileOpened({required this.cognitoId});
+
+  @override
+  List<Object> get props => [cognitoId];
+}
+
+class ProfileLoadingDone extends ProfileEvent {}
+
 class FirstNameChanged extends ProfileEvent {
   final String name;
 
@@ -26,7 +37,7 @@ class LastNameChanged extends ProfileEvent {
 }
 
 class BirthdateChanged extends ProfileEvent {
-  final DateTime date;
+  final String date;
 
   BirthdateChanged({required this.date});
 
@@ -35,7 +46,7 @@ class BirthdateChanged extends ProfileEvent {
 }
 
 class LengthChanged extends ProfileEvent {
-  final double length;
+  final String length;
 
   LengthChanged({required this.length});
 
@@ -44,7 +55,7 @@ class LengthChanged extends ProfileEvent {
 }
 
 class TargetWeightChanged extends ProfileEvent {
-  final double weight;
+  final String weight;
 
   TargetWeightChanged({required this.weight});
 
@@ -53,26 +64,9 @@ class TargetWeightChanged extends ProfileEvent {
 }
 
 class ProfileSubmitted extends ProfileEvent {
-  final String firstName;
-  final String lastName;
-  final DateTime birthDate;
-  final double length;
-  final double weight;
+  final Profile profile;
 
-  ProfileSubmitted({
-    required this.firstName,
-    required this.lastName,
-    required this.birthDate,
-    required this.length,
-    required this.weight,
-  });
+  ProfileSubmitted(this.profile);
 
-  @override
-  List<Object> get props => [
-        this.firstName,
-        this.lastName,
-        this.birthDate,
-        this.length,
-        this.weight,
-      ];
+  List<Object> get props => [profile];
 }

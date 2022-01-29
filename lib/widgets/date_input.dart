@@ -9,6 +9,7 @@ class DateInput extends StatelessWidget {
   final DateTime? _firstDate;
   final DateTime? _lastDate;
   final DateTime? _initialDate;
+  final String? Function(String?)? _validator;
 
   DateInput({
     Key? key,
@@ -18,12 +19,14 @@ class DateInput extends StatelessWidget {
     DateTime? firstDate,
     DateTime? lastDate,
     DateTime? initialDate,
+    String? Function(String?)? validator,
   })  : _controller = controller ?? TextEditingController(),
         _onDateSelected = onDateSelected,
         _labelText = labelText,
         _firstDate = firstDate,
         _lastDate = lastDate,
         _initialDate = initialDate,
+        _validator = validator,
         super(key: key);
 
   @override
@@ -34,6 +37,8 @@ class DateInput extends StatelessWidget {
           child: TextFormField(
             controller: _controller,
             enabled: false,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: _validator,
             decoration: InputDecoration(
               icon: Icon(Icons.calendar_today),
               labelText: _labelText,

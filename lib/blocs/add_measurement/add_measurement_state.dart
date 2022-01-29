@@ -3,8 +3,6 @@ part of 'add_measurement_bloc.dart';
 class AddMeasurementState extends Equatable {
   final bool isDateValid;
   final bool isWeightValid;
-  final bool isHipsValid;
-  final bool isWaistValid;
   final bool isNoteValid;
   final bool isSubmitting;
   final bool isSuccess;
@@ -14,8 +12,6 @@ class AddMeasurementState extends Equatable {
   AddMeasurementState({
     required this.isDateValid,
     required this.isWeightValid,
-    required this.isHipsValid,
-    required this.isWaistValid,
     required this.isNoteValid,
     required this.isSubmitting,
     required this.isSuccess,
@@ -27,8 +23,6 @@ class AddMeasurementState extends Equatable {
     return AddMeasurementState(
       isDateValid: true,
       isWeightValid: true,
-      isHipsValid: true,
-      isWaistValid: true,
       isNoteValid: true,
       isSubmitting: false,
       isSuccess: false,
@@ -39,8 +33,6 @@ class AddMeasurementState extends Equatable {
     return AddMeasurementState(
       isDateValid: true,
       isWeightValid: true,
-      isHipsValid: true,
-      isWaistValid: true,
       isNoteValid: true,
       isSubmitting: true,
       isSuccess: false,
@@ -51,8 +43,6 @@ class AddMeasurementState extends Equatable {
     return AddMeasurementState(
       isDateValid: true,
       isWeightValid: true,
-      isHipsValid: true,
-      isWaistValid: true,
       isNoteValid: true,
       isSubmitting: false,
       isSuccess: true,
@@ -64,8 +54,6 @@ class AddMeasurementState extends Equatable {
     return AddMeasurementState(
       isDateValid: true,
       isWeightValid: true,
-      isHipsValid: true,
-      isWaistValid: true,
       isNoteValid: true,
       isSubmitting: false,
       isSuccess: false,
@@ -83,9 +71,7 @@ class AddMeasurementState extends Equatable {
   }) {
     return AddMeasurementState(
       isDateValid: isDateValid ?? this.isDateValid,
-      isWeightValid: isWaistValid ?? this.isWaistValid,
-      isHipsValid: isHipsValid ?? this.isHipsValid,
-      isWaistValid: isWaistValid ?? this.isWaistValid,
+      isWeightValid: isWeightValid ?? this.isWeightValid,
       isNoteValid: isNoteValid ?? this.isNoteValid,
       isSubmitting: isSubmitting,
       isSuccess: isSuccess,
@@ -93,12 +79,14 @@ class AddMeasurementState extends Equatable {
     );
   }
 
+  bool isValid() {
+    return isDateValid && isWeightValid && isNoteValid;
+  }
+
   @override
   List<Object> get props => [
         this.isDateValid,
         this.isWeightValid,
-        this.isHipsValid,
-        this.isWaistValid,
         this.isNoteValid,
         this.isSubmitting,
         this.isSuccess,

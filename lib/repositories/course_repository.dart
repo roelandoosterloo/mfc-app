@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
-import 'package:mfc_app/models/course/Module.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 
 class CourseRepository {

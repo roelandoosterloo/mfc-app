@@ -9,6 +9,9 @@ type Profile
   firstName: String
   lastName: String
   email: String
+  birthDate: AWSDate
+  length: Float
+  targetWeight: Float
 }
 type Enrollment
   @model

@@ -33,8 +33,6 @@ class _QuestionWState extends State<QuestionW> {
   void initState() {
     _controller.addListener(() {
       if (_controller.text != widget.value) {
-        print(_controller.text);
-        print(widget.value);
         widget.onChange(_controller.text);
       }
     });

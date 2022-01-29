@@ -31,6 +31,13 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
   final String progressId;
 
   _ModuleSingleScreenState(this.progressId);
+  YoutubePlayerController _youtubeController = YoutubePlayerController(
+    initialVideoId: "dQw4w9WgXcQ",
+    flags: YoutubePlayerFlags(
+      autoPlay: false,
+      mute: false,
+    ),
+  );
 
   @override
   void initState() {
@@ -39,14 +46,6 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
       ModuleProgressSelected(progressId),
     );
   }
-
-  YoutubePlayerController _youtubeController = YoutubePlayerController(
-    initialVideoId: "dQw4w9WgXcQ",
-    flags: YoutubePlayerFlags(
-      autoPlay: false,
-      mute: false,
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +63,9 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
               body: NestedScrollView(
                 headerSliverBuilder:
                     (BuildContext context, bool innerBoxIsScrolled) {
+                  if (_youtubeController.value.isFullScreen) {
+                    return [];
+                  }
                   return <Widget>[
                     SliverAppBar(
                       pinned: true,
@@ -104,7 +106,7 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                   ];
                 },
                 body: Container(
-                  padding: EdgeInsets.only(top: 16),
+                  // padding: EdgeInsets.only(top: 16),
                   child: TabBarView(
                     children: [
                       ModuleInfoTab(module: module),

@@ -24,22 +24,32 @@ class AddMeasurementBloc
     MeasurementDateChanged event,
     Emitter<AddMeasurementState> emit,
   ) {
-    emit(state.update(isDateValid: true));
+    try {
+      DateTime date = DateTime.parse(event.date);
+      emit(state.update(isDateValid: true));
+    } catch (ex) {
+      emit(state.update(isDateValid: false));
+    }
   }
 
   void _onWeightChanged(
     MeasurementWeightChanged event,
     Emitter<AddMeasurementState> emit,
   ) {
-    emit(
-      state.update(
-        isWeightValid: Validators.isNumberInRange(
-          value: event.weight,
-          lower: 0,
-          upper: 300,
+    try {
+      double weight = double.parse(event.weight);
+      emit(
+        state.update(
+          isWeightValid: Validators.isNumberInRange(
+            value: weight,
+            lower: 0,
+            upper: 300,
+          ),
         ),
-      ),
-    );
+      );
+    } catch (ex) {
+      emit(state.update(isWeightValid: false));
+    }
   }
 
   void _onNoteChanged(
@@ -48,7 +58,7 @@ class AddMeasurementBloc
   ) {
     emit(
       state.update(
-        isWaistValid: true,
+        isNoteValid: true,
       ),
     );
   }

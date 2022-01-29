@@ -4,7 +4,6 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/amplifyconfiguration.dart';
@@ -14,6 +13,7 @@ import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/navigation/router_delegate.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
+import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/color_generator.dart';
 import 'package:mfc_app/utils/simple_bloc_observer.dart';
@@ -31,8 +31,6 @@ void main() {
 }
 
 class MyAmplifyApp extends StatelessWidget {
-  final x = Firebase.initializeApp();
-
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -211,6 +209,9 @@ class _MainPageState extends State<MainPage> {
             ),
             RepositoryProvider<CourseRepository>(
               create: (context) => CourseRepository(),
+            ),
+            RepositoryProvider<ProfileRepository>(
+              create: (context) => ProfileRepository(),
             ),
           ],
           child: BlocProvider(

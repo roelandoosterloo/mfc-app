@@ -1,6 +1,12 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
+import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/profile/profile_bloc.dart';
+import 'package:mfc_app/models/Profile.dart';
+import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/widgets/date_input.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -9,6 +15,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final f = new DateFormat('yyyy-MM-dd');
+
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
@@ -16,16 +24,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _targetWeightController = TextEditingController();
 
   late ProfileBloc _profileBloc;
+  late AuthenticationBloc _authBloc;
 
   @override
   void initState() {
     super.initState();
     _profileBloc = BlocProvider.of<ProfileBloc>(context);
+    _authBloc = BlocProvider.of<AuthenticationBloc>(context);
     _firstNameController.addListener(_onFirstNameChange);
     _lastNameController.addListener(_onLastNameChange);
     _birthDateController.addListener(_onBirthdateChange);
     _lengthController.addListener(_onLengthChange);
     _targetWeightController.addListener(_onTargetWeightChange);
+    context.read<UserRepository>().getUser().then(
+      (AuthUser user) {
+        _profileBloc.add(ProfileOpened(cognitoId: user.username));
+      },
+    );
   }
 
   _onFirstNameChange() {
@@ -37,30 +52,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _onBirthdateChange() {
-    _profileBloc
-        .add(BirthdateChanged(date: DateTime.parse(_birthDateController.text)));
+    _profileBloc.add(BirthdateChanged(date: _birthDateController.text));
   }
 
   _onLengthChange() {
-    _profileBloc
-        .add(LengthChanged(length: double.parse(_lengthController.text)));
+    _profileBloc.add(LengthChanged(length: _lengthController.text));
   }
 
   _onTargetWeightChange() {
-    _profileBloc.add(TargetWeightChanged(
-        weight: double.parse(_targetWeightController.text)));
+    _profileBloc.add(TargetWeightChanged(weight: _targetWeightController.text));
   }
 
   _onSubmit() {
     _profileBloc.add(
       ProfileSubmitted(
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        birthDate: DateTime.parse(_birthDateController.text),
-        length: double.parse(_lengthController.text),
-        weight: double.parse(_targetWeightController.text),
+        _profileBloc.state.profile!.update(
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          birthDate: _birthDateController.text != ""
+              ? DateTime.parse(_birthDateController.text)
+              : null,
+          length: _lengthController.text != ""
+              ? double.parse(_lengthController.text)
+              : null,
+          targetWeight: _targetWeightController.text != ""
+              ? double.parse(_targetWeightController.text)
+              : null,
+        ),
       ),
     );
+  }
+
+  _onSelectMenu(String value) {
+    switch (value) {
+      case 'Logout':
+        _authBloc.add(
+          AuthenticationLoggedOut(),
+        );
+    }
   }
 
   @override
@@ -78,9 +107,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
+        actions: [
+          PopupMenuButton(
+            onSelected: _onSelectMenu,
+            itemBuilder: (BuildContext context) {
+              return {'Logout'}
+                  .map((String choice) => PopupMenuItem(
+                        child: Text(choice),
+                        value: choice,
+                      ))
+                  .toList();
+            },
+          ),
+        ],
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
-        listener: (context, state) => {},
+        listener: (context, state) {
+          if (state is EditProfileState &&
+              state.profile != null &&
+              !state.loaded) {
+            _firstNameController.text = state.profile!.firstName;
+            _lastNameController.text = state.profile!.lastName;
+            _birthDateController.text = state.profile!.birthDate != null
+                ? f.format(state.profile!.birthDate!)
+                : "";
+            _lengthController.text =
+                state.profile!.length?.toStringAsPrecision(3) ?? "";
+            _targetWeightController.text =
+                state.profile!.targetWeight?.toStringAsPrecision(3) ?? "";
+            _profileBloc.add(ProfileLoadingDone());
+          }
+          if (state is ProfileSuccessState) {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: [
+                      Text(
+                        "Profiel opgeslagen",
+                      ),
+                    ],
+                  ),
+                ),
+              );
+          }
+          if (state is ProfileFailureState) {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Profiel niet opgeslagen",
+                      ),
+                      Text(state.error)
+                    ],
+                  ),
+                ),
+              );
+          }
+        },
         builder: (context, state) {
           return Container(
             child: Padding(
@@ -107,9 +196,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   DateInput(
                     labelText: "Date of birth",
+                    validator: (_) => !state.isLengthValid
+                        ? 'Ingevulde lengte ongeldig'
+                        : null,
                     controller: _birthDateController,
                     onDateSelected: (p0) => null,
-                    firstDate: DateTime.parse("1950-01-01"),
+                    firstDate: DateTime.parse("1940-01-01"),
                   ),
                   TextFormField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -138,13 +230,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   SizedBox(height: 40),
-                  SizedBox(
-                    width: 130,
-                    child: ElevatedButton(
-                      onPressed: _onSubmit,
-                      child: Text("Submit"),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size.fromHeight(40),
                     ),
-                  )
+                    onPressed: state.isValid() ? _onSubmit : null,
+                    child: Text("Opslaan"),
+                  ),
+                  if (!state.isValid())
+                    Text("Niet alle velden zijn goed ingevuld"),
                 ],
               ),
             ),

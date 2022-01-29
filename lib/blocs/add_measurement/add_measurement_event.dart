@@ -8,7 +8,7 @@ abstract class AddMeasurementEvent extends Equatable {
 }
 
 class MeasurementDateChanged extends AddMeasurementEvent {
-  final DateTime date;
+  final String date;
 
   MeasurementDateChanged({required this.date});
 
@@ -17,7 +17,7 @@ class MeasurementDateChanged extends AddMeasurementEvent {
 }
 
 class MeasurementWeightChanged extends AddMeasurementEvent {
-  final double weight;
+  final String weight;
 
   MeasurementWeightChanged({required this.weight});
 

@@ -6,6 +6,7 @@ abstract class ProfileState extends Equatable {
   final bool isBirthDateValid;
   final bool isLengthValid;
   final bool isWeightValid;
+  final Profile? profile;
 
   const ProfileState({
     required this.isFirstNameValid,
@@ -13,45 +14,63 @@ abstract class ProfileState extends Equatable {
     required this.isBirthDateValid,
     required this.isLengthValid,
     required this.isWeightValid,
+    this.profile,
   });
+
+  bool isValid() {
+    return isFirstNameValid &&
+        isLastNameValid &&
+        isBirthDateValid &&
+        isLengthValid &&
+        isWeightValid;
+  }
 
   @override
   List<Object> get props => [];
 }
 
 class ProfileInitialState extends ProfileState {
-  ProfileInitialState()
+  ProfileInitialState({Profile? profile})
       : super(
           isFirstNameValid: true,
           isLastNameValid: true,
           isBirthDateValid: true,
           isLengthValid: true,
           isWeightValid: true,
+          profile: profile,
         );
 }
 
 class EditProfileState extends ProfileState {
+  final bool loaded;
+
   EditProfileState({
     required bool isFirstNameValid,
     required bool isLastNameValid,
     required bool isBirthDateValid,
     required bool isLengthValid,
     required bool isWeightValid,
-  }) : super(
+    Profile? profile,
+    bool? loaded,
+  })  : loaded = loaded ?? false,
+        super(
           isFirstNameValid: isFirstNameValid,
           isLastNameValid: isLastNameValid,
           isBirthDateValid: isBirthDateValid,
           isLengthValid: isLengthValid,
           isWeightValid: isWeightValid,
+          profile: profile,
         );
 
-  factory EditProfileState.initial() {
+  factory EditProfileState.initial(Profile p) {
     return EditProfileState(
       isFirstNameValid: true,
       isLastNameValid: true,
       isBirthDateValid: true,
       isLengthValid: true,
       isWeightValid: true,
+      loaded: false,
+      profile: p,
     );
   }
 
@@ -61,14 +80,17 @@ class EditProfileState extends ProfileState {
     bool? isBirthDateValid,
     bool? isLengthValid,
     bool? isWeightValid,
+    Profile? profile,
+    bool? loaded,
   }) {
     return EditProfileState(
-      isFirstNameValid: isFirstNameValid ?? this.isFirstNameValid,
-      isLastNameValid: isLastNameValid ?? this.isLastNameValid,
-      isBirthDateValid: isBirthDateValid ?? this.isBirthDateValid,
-      isLengthValid: isLengthValid ?? this.isLengthValid,
-      isWeightValid: isWeightValid ?? this.isWeightValid,
-    );
+        isFirstNameValid: isFirstNameValid ?? this.isFirstNameValid,
+        isLastNameValid: isLastNameValid ?? this.isLastNameValid,
+        isBirthDateValid: isBirthDateValid ?? this.isBirthDateValid,
+        isLengthValid: isLengthValid ?? this.isLengthValid,
+        isWeightValid: isWeightValid ?? this.isWeightValid,
+        profile: profile ?? this.profile,
+        loaded: loaded ?? this.loaded);
   }
 
   @override
@@ -78,6 +100,8 @@ class EditProfileState extends ProfileState {
         isBirthDateValid,
         isLengthValid,
         isWeightValid,
+        loaded,
+        profile ?? "no-profile"
       ];
 }
 
@@ -89,10 +113,11 @@ class SubmittingProfileState extends ProfileState {
           isBirthDateValid: prev.isBirthDateValid,
           isLengthValid: prev.isLengthValid,
           isWeightValid: prev.isWeightValid,
+          profile: prev.profile,
         );
 }
 
-class ProfileSuccessState extends ProfileState {
+class ProfileSuccessState extends EditProfileState {
   ProfileSuccessState(ProfileState prev)
       : super(
           isFirstNameValid: prev.isFirstNameValid,
@@ -100,10 +125,12 @@ class ProfileSuccessState extends ProfileState {
           isBirthDateValid: prev.isBirthDateValid,
           isLengthValid: prev.isLengthValid,
           isWeightValid: prev.isWeightValid,
+          profile: prev.profile,
+          loaded: true,
         );
 }
 
-class ProfileFailureState extends ProfileState {
+class ProfileFailureState extends EditProfileState {
   final String error;
 
   ProfileFailureState(ProfileState prev, this.error)
@@ -113,5 +140,7 @@ class ProfileFailureState extends ProfileState {
           isBirthDateValid: prev.isBirthDateValid,
           isLengthValid: prev.isLengthValid,
           isWeightValid: prev.isWeightValid,
+          profile: prev.profile,
+          loaded: true,
         );
 }

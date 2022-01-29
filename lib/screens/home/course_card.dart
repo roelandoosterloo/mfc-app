@@ -66,13 +66,16 @@ class CourseCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      _enrollment.course.name.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Stratum",
-                        fontWeight: FontWeight.w700,
-                        fontSize: 32,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        _enrollment.course.name.toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Stratum",
+                          fontWeight: FontWeight.w700,
+                          fontSize: 32,
+                        ),
                       ),
                     ),
                   ],
