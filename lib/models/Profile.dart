@@ -1,4 +1,4 @@
-import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:mfc_app/models/Model.dart';
@@ -12,7 +12,7 @@ class Profile extends Model {
   final double? _length;
   final double? _targetWeight;
 
-  static final DateFormat _dateFormat = new DateFormat('yyyy-MM-dd');
+  static final DateFormat _dateFormat = new DateFormat("yyyy-MM-dd");
 
   String get firstName {
     return _firstName;

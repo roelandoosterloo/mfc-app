@@ -1,18 +1,47 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_flutter/amplify.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 
 class CourseRepository {
+  Future<List<Course>> listCourses() async {
+    String graphQLDocument = ''' 
+    query ListCourses {
+      listCourses {
+        items {
+          id
+          name
+          description
+          coverImage
+        }
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    GraphQLResponse response = await op.response;
+    Map<String, dynamic> json = jsonDecode(response.data);
+    List<dynamic> items = json["listCourses"]["items"];
+    List<Course> enrolledCourses =
+        items.map((it) => Course.fromJson(it)).toList();
+    return enrolledCourses;
+  }
+
   Future<List<Enrollment>> listEnrolledCourses() async {
     String graphQLDocument = ''' 
     query ListEnrolledCourses {
       listEnrollments {
         items {
           id
-          startDate
+          enrolledAt
+          startedAt
+          completedAt
           course {
             id
             name
@@ -36,12 +65,54 @@ class CourseRepository {
     return enrolledCourses;
   }
 
+  Future<bool> setCourseStartedAt(String id) async {
+    String graphQLDocument = '''
+    mutation setStartedAt {
+      updateEnrollment(input: {
+        id: "$id",
+        startedAt: "${DateTime.now().toUtc().toIso8601String()}",
+      }) {
+        id
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    GraphQLResponse result = await op.response;
+    return true;
+  }
+
+  Future<bool> setModuleStartedAt(String id) async {
+    String graphQLDocument = '''
+    mutation setModuleStartedAt {
+      updateModuleProgress(input: {
+        id: "$id",
+        startedAt: "${DateTime.now().toUtc().toIso8601String()}",
+      }) {
+        id
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    GraphQLResponse result = await op.response;
+    return true;
+  }
+
   Future<Enrollment?> getEnrollment(String id) async {
     String graphQLDocument = '''
     query MyQuery {
       getEnrollment(id: "$id") {
         id
-        startDate
+        enrolledAt
+        startedAt
+        completedAt
         course {
           id
           name
@@ -52,6 +123,8 @@ class CourseRepository {
           items {
             id
             availableAt
+            startedAt
+            completedAt
             module {
               index
               name

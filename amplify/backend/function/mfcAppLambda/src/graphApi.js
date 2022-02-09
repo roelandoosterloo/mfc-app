@@ -107,7 +107,7 @@ const getCourse = async (id) => {
   }
 }
 
-const createEnrollment = async (cognitoId, courseId, startDate) => {
+const createEnrollment = async (cognitoId, courseId, enrolledAt) => {
   const enrollmentMutation = `
     mutation enrollUser($input: CreateEnrollmentInput!) {
         createEnrollment(input: $input) {
@@ -118,7 +118,7 @@ const createEnrollment = async (cognitoId, courseId, startDate) => {
   const input = {
     cognitoId,
     courseId,
-    startDate,
+    enrolledAt,
   };
   const response = await request(enrollmentMutation, { input });
   console.log(response);

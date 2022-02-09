@@ -38,9 +38,8 @@ class AuthenticationBloc
   void _onLoggedOut(
     AuthenticationLoggedOut event,
     Emitter<AuthenticationState> emit,
-  ) {
-    emit(AuthenticationFailure());
-    _userRepo.signOut();
+  ) async {
+    await _userRepo.signOut();
     _navigationBloc.add(NavigatedToLogin());
   }
 

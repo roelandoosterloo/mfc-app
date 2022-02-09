@@ -1,4 +1,4 @@
-import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
@@ -8,7 +8,9 @@ import 'Course.dart';
 @immutable
 class Enrollment extends Model {
   final String id;
-  final DateTime _startDate;
+  final DateTime? _startedAt;
+  final DateTime? _enrolledAt;
+  final DateTime? _completedAt;
   final Course _course;
   final List<ModuleProgress>? _moduleSchedule;
 
@@ -17,8 +19,16 @@ class Enrollment extends Model {
     return id;
   }
 
-  DateTime get startDate {
-    return _startDate;
+  DateTime? get startedAt {
+    return _startedAt;
+  }
+
+  DateTime? get enrolledAt {
+    return _enrolledAt;
+  }
+
+  DateTime? get completedAt {
+    return _completedAt;
   }
 
   Course get course {
@@ -30,19 +40,30 @@ class Enrollment extends Model {
   }
 
   const Enrollment._internal(
-      {required this.id, required startDate, required course, moduleSchedule})
-      : _startDate = startDate,
+      {required this.id,
+      startedAt,
+      enrolledAt,
+      completedAt,
+      required course,
+      moduleSchedule})
+      : _startedAt = startedAt,
         _course = course,
+        _enrolledAt = enrolledAt,
+        _completedAt = completedAt,
         _moduleSchedule = moduleSchedule;
 
   factory Enrollment(
       {String? id,
-      required DateTime startDate,
+      DateTime? startedAt,
+      DateTime? enrolledAt,
+      DateTime? completedAt,
       required Course course,
       List<ModuleProgress>? moduleSchedule}) {
     return Enrollment._internal(
       id: id == null ? UUID.getUUID() : id,
-      startDate: startDate,
+      startedAt: startedAt,
+      enrolledAt: startedAt,
+      completedAt: startedAt,
       course: course,
       moduleSchedule: moduleSchedule != null
           ? List<ModuleProgress>.unmodifiable(moduleSchedule)
@@ -52,7 +73,15 @@ class Enrollment extends Model {
 
   Enrollment.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        _startDate = DateTime.parse(json['startDate']),
+        _startedAt = json['startedAt'] != null
+            ? DateTime.parse(json['startedAt'])
+            : null,
+        _enrolledAt = json['enrolledAt'] != null
+            ? DateTime.parse(json['enrolledAt'])
+            : null,
+        _completedAt = json['completedAt'] != null
+            ? DateTime.parse(json['completedAt'])
+            : null,
         _course = Course.fromJson(json['course']),
         _moduleSchedule = json['moduleSchedule']?['items'] is List
             ? (json['moduleSchedule']['items'] as List)

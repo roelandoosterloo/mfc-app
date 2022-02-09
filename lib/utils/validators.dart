@@ -1,10 +1,14 @@
 class Validators {
-  static final RegExp _emailRegExp = RegExp(r'.*'
-      //r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
-      );
-  static final RegExp _passwordRegExp = RegExp(r'.*'
-      // r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$',
-      );
+  static final RegExp _emailRegExp = RegExp(
+    r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
+  );
+  static final RegExp _passwordRegExp = RegExp(
+    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$',
+  );
+
+  static isNotEmpty(String value) {
+    return value.isNotEmpty;
+  }
 
   static isValidEmail(String email) {
     return _emailRegExp.hasMatch(email);

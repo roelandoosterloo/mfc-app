@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,13 +34,31 @@ class MyAmplifyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Amplify MFC App',
+      title: 'MyFoodCoach',
       theme: ThemeData(
         primarySwatch: createMaterialColor(
           Color(0xff2b8474),
         ),
+        secondaryHeaderColor: Color(0xfff44336),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+            ),
+            textStyle: MaterialStateProperty.all<TextStyle>(
+              TextStyle(
+                fontFamily: 'Stratum',
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ),
         tabBarTheme: TabBarTheme(
           labelStyle: TextStyle(fontFamily: 'Stratum'),
+          unselectedLabelStyle: TextStyle(fontFamily: 'Stratum'),
         ),
         appBarTheme: AppBarTheme(
           titleTextStyle: TextStyle(fontFamily: 'Stratum', fontSize: 24),

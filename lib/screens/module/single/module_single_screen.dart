@@ -6,7 +6,6 @@ import 'package:mfc_app/models/course/Module.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/widgets/MySliverPersistentHeaderDelegate.dart';
-import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/questions/question.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -31,13 +30,8 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
   final String progressId;
 
   _ModuleSingleScreenState(this.progressId);
-  YoutubePlayerController _youtubeController = YoutubePlayerController(
-    initialVideoId: "dQw4w9WgXcQ",
-    flags: YoutubePlayerFlags(
-      autoPlay: false,
-      mute: false,
-    ),
-  );
+
+  YoutubePlayerController? _youtubeController;
 
   @override
   void initState() {
@@ -49,12 +43,31 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ModuleProgressBloc, ModuleProgressState>(
+    return BlocConsumer<ModuleProgressBloc, ModuleProgressState>(
+      listener: (context, state) {
+        if (_youtubeController == null && state is ModuleProgressAvailable) {
+          setState(
+            () {
+              String? videoId = YoutubePlayer.convertUrlToId(
+                  state.moduleprogress.module!.videoUrl);
+              if (videoId != null) {
+                _youtubeController = YoutubePlayerController(
+                  initialVideoId: videoId,
+                  flags: YoutubePlayerFlags(
+                    autoPlay: false,
+                    mute: false,
+                  ),
+                );
+              }
+            },
+          );
+        }
+      },
       builder: (context, state) {
         if (state is ModuleProgressInitial) {
-          return Loading();
+          return Scaffold(body: Container());
         } else if (state is ModuleProgressLoading) {
-          return Loading();
+          return Scaffold(body: Container());
         } else if (state is ModuleProgressAvailable) {
           Module module = state.moduleprogress.module!;
           return DefaultTabController(
@@ -63,7 +76,8 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
               body: NestedScrollView(
                 headerSliverBuilder:
                     (BuildContext context, bool innerBoxIsScrolled) {
-                  if (_youtubeController.value.isFullScreen) {
+                  if (_youtubeController != null &&
+                      _youtubeController!.value.isFullScreen) {
                     return [];
                   }
                   return <Widget>[
@@ -106,11 +120,13 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                   ];
                 },
                 body: Container(
-                  // padding: EdgeInsets.only(top: 16),
                   child: TabBarView(
                     children: [
                       ModuleInfoTab(module: module),
-                      ModuleVideoTab(youtubeController: _youtubeController),
+                      ModuleVideoTab(
+                        youtubeController: _youtubeController,
+                        module: module,
+                      ),
                       ModuleQuestionsTab(progress: state.moduleprogress),
                     ],
                   ),
@@ -124,12 +140,12 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
               child: Container(
                 child: Column(
                   children: [
-                    Text("weird state"),
+                    Text("Er ging iets fout"),
                     MaterialButton(
                       onPressed: () =>
                           BlocProvider.of<ModuleProgressBloc>(context)
                               .add(ModuleProgressSelected(progressId)),
-                      child: Text('reload'),
+                      child: Text('Opnieuw laden'),
                     ),
                   ],
                 ),

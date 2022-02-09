@@ -1,4 +1,4 @@
-import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 

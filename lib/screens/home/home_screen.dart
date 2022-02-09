@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
-import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
+import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
+import 'homepage/homepage_bloc.dart';
+
 part 'course_card.dart';
+part 'home_header.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,24 +18,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<EnrollmentBloc>(context).add(EnrolledCoursesRequested());
+    BlocProvider.of<HomePageBloc>(context).add(HomePageOpened());
   }
 
   @override
   Widget build(BuildContext context) {
     NavigationBloc _navBloc = BlocProvider.of<NavigationBloc>(context);
-    AuthenticationBloc _authBloc = BlocProvider.of<AuthenticationBloc>(context);
     return Scaffold(
-      // appBar: AppBar(
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      // ),
       extendBodyBehindAppBar: true,
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 10,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: "home",
+            label: "Home",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.trending_down),
@@ -75,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Image.asset(
-                    "assets/logo.png",
+                    "assets/images/logo.png",
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -83,81 +80,80 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ];
         },
-        body: BlocBuilder<EnrollmentBloc, EnrollmentState>(
+        body: BlocBuilder<HomePageBloc, HomePageState>(
           builder: (context, state) {
-            if (state is EnrollmentState) {
+            if (state is HomePageLoaded) {
               return Container(
-                child: ListView.builder(
-                  itemCount: state.enrollments.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    Enrollment enrollment = state.enrollments[index];
-
-                    return CourseCard(
-                      enrollment: enrollment,
-                      onTap: () {
-                        BlocProvider.of<EnrollmentBloc>(context)
-                            .add(EnrolledCourseSelected(enrollment));
-                        BlocProvider.of<NavigationBloc>(context)
-                            .add(NavigatedToCourse(enrollment.id));
-                      },
-                    );
-                  },
+                child: SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      HomeHeader(
+                        firstName: state.profile.firstName,
+                        highlightCourse: state.enrollments[0].course,
+                      ),
+                      SubHeader("Mijn programma's"),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: state.enrollments
+                              .map((enrollment) => CourseCard(
+                                    course: enrollment.course,
+                                    courseState: CourseState.started,
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                      SubHeader("Beschikbaar"),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: state.courses
+                              .map((course) => CourseCard(
+                                    course: course,
+                                    courseState: CourseState.locked,
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
-            return Text("Loading");
+            return Container();
           },
         ),
       ),
-      // body: Stack(
-      //   children: [
-      //     Container(
-      //       height: MediaQuery.of(context).size.height * 0.25,
-      //       width: MediaQuery.of(context).size.width,
-      //       color: Color(0xff2b8474),
-      //     ),
-      //     Container(
-      //       padding:
-      //           EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.10),
-      //       alignment: Alignment.topCenter,
-      //       child: Image.asset(
-      //         "assets/logo.png",
-      //         height: MediaQuery.of(context).size.height * 0.08,
-      //         fit: BoxFit.contain,
-      //       ),
-      //     ),
-      //     BlocBuilder<EnrollmentBloc, EnrollmentState>(
-      //       builder: (context, state) {
-      //         if (state is EnrollmentState) {
-      //           return Container(
-      //             child: ListView.builder(
-      //               itemCount: state.enrollments.length,
-      //               scrollDirection: Axis.vertical,
-      //               shrinkWrap: true,
-      //               itemBuilder: (context, index) {
-      //                 Enrollment enrollment = state.enrollments[index];
-      //                 Course course = enrollment.course;
+    );
+  }
+}
 
-      //                 return CourseCard(
-      //                   enrollment: enrollment,
-      //                   onTap: () {
-      //                     BlocProvider.of<EnrollmentBloc>(context)
-      //                         .add(EnrolledCourseSelected(enrollment));
-      //                     BlocProvider.of<NavigationBloc>(context)
-      //                         .add(NavigatedToCourse(enrollment.id));
-      //                   },
-      //                 );
-      //               },
-      //             ),
-      //           );
-      //         }
-      //         return Text("Loading");
-      //       },
-      //     )
-      //   ],
-      // ),
+class SubHeader extends StatelessWidget {
+  final String header;
+
+  const SubHeader(
+    String header, {
+    Key? key,
+  })  : header = header,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 16.0,
+        top: 24,
+      ),
+      child: Text(
+        header.toUpperCase(),
+        style: TextStyle(
+          fontSize: 20,
+          fontFamily: 'Stratum',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }

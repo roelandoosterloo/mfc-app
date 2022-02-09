@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:amplify_flutter/amplify.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_plugin_interface/amplify_storage_plugin_interface.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +66,7 @@ class S3Image extends StatelessWidget {
           }
         }
         return Image.asset(
-          'assets/placeholder.png',
+          'assets/images/placeholder.png',
           fit: _fit,
           height: _height,
           width: _width,

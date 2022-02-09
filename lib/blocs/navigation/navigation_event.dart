@@ -13,6 +13,8 @@ class NavigatedToRegister extends NavigationEvent {}
 
 class NavigatedToLogin extends NavigationEvent {}
 
+class NavigatedToResetPassword extends NavigationEvent {}
+
 class NavigatedToHome extends NavigationEvent {}
 
 class NavigatedToMeasurements extends NavigationEvent {}

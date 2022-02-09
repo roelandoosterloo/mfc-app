@@ -130,16 +130,21 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
                 if (_page > 0)
                   ElevatedButton(
                     onPressed: () => previousQuestion(context),
-                    child: Text("Previous Question"),
+                    child: Icon(Icons.chevron_left),
                   ),
                 if (_page == 0) Spacer(),
                 if (hasMoreQuestions)
                   ElevatedButton(
                     onPressed: () => nextQuestion(context),
-                    child: Text("Next Question"),
+                    child: Icon(Icons.chevron_right),
                   ),
                 if (!hasMoreQuestions)
-                  ElevatedButton(onPressed: () => null, child: Text("Done")),
+                  ElevatedButton(
+                    onPressed: () => null, //redirect to module overzicht
+                    child: Icon(
+                      Icons.check,
+                    ),
+                  ),
               ],
             ),
           ),

@@ -59,17 +59,11 @@ class _QuestionWState extends State<QuestionW> {
               bottom: 16,
             ),
             child: Text(
-              "Question ${widget.index}",
+              "Vraag ${widget.index}",
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Divider(
-              color: Colors.white70,
             ),
           ),
           if (widget.question.type == QuestionType.SHORT_TEXT)

@@ -64,9 +64,29 @@ class TargetWeightChanged extends ProfileEvent {
 }
 
 class ProfileSubmitted extends ProfileEvent {
-  final Profile profile;
+  final String? firstName;
+  final String? lastName;
+  final String? birthDate;
+  final String? length;
+  final String? targetWeight;
 
-  ProfileSubmitted(this.profile);
+  ProfileSubmitted(
+      {String? firstName,
+      String? lastName,
+      String? birthDate,
+      String? length,
+      String? targetWeight})
+      : firstName = firstName,
+        lastName = lastName,
+        birthDate = birthDate,
+        length = length,
+        targetWeight = targetWeight;
 
-  List<Object> get props => [profile];
+  List<Object> get props => [
+        firstName ?? "",
+        lastName ?? "",
+        birthDate ?? "",
+        length ?? "",
+        targetWeight ?? ""
+      ];
 }

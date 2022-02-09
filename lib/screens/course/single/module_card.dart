@@ -3,13 +3,11 @@ part of 'course_single_screen.dart';
 class ModuleCard extends StatelessWidget {
   final ModuleProgress _progress;
 
-  final f = new DateFormat('yyyy-MM-dd');
+  final f = new DateFormat(DATE_FORMAT);
 
   ModuleCard({Key? key, required ModuleProgress progress})
       : _progress = progress,
         super(key: key);
-
-  void onClickModule() {}
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +23,8 @@ class ModuleCard extends StatelessWidget {
       child: InkWell(
         onTap: _progress.isAvailable()
             ? () {
-                BlocProvider.of<NavigationBloc>(context)
-                    .add(NavigatedToModule(_progress.id));
+                BlocProvider.of<SingleCoursePageBloc>(context)
+                    .add(SingleCoursePageModuleSelected(_progress));
               }
             : null,
         child: Padding(

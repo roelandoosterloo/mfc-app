@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 class StatisticCard extends StatelessWidget {
   final String title;
   final String subText;
-  final IconData icon;
+  final IconData? icon;
+  final String? mainText;
   final Color? iconColor;
 
   const StatisticCard({
     Key? key,
     required this.title,
     required this.subText,
-    required this.icon,
+    this.icon,
+    this.mainText,
     this.iconColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color(0xff459e8e),
+      color: Theme.of(context).primaryColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -29,11 +31,22 @@ class StatisticCard extends StatelessWidget {
               fontFamily: 'Stratum',
             ),
           ),
-          Icon(
-            icon,
-            size: 64,
-            color: iconColor,
-          ),
+          if (icon != null)
+            Icon(
+              icon,
+              size: 64,
+              color: iconColor,
+            ),
+          if (mainText != null)
+            Text(
+              this.mainText!,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Stratum',
+              ),
+            ),
           Text(
             this.subText,
             style: TextStyle(

@@ -4,10 +4,12 @@ import 'package:flutter/material.dart' show Page;
 import 'package:mfc_app/screens/course/list/course_list_page.dart';
 import 'package:mfc_app/screens/course/single/course_single_page.dart';
 import 'package:mfc_app/screens/home/home_page.dart';
+import 'package:mfc_app/screens/landing/landing_page.dart';
 import 'package:mfc_app/screens/login/login_page.dart';
 import 'package:mfc_app/screens/measurment/add_measurement/add_measurement_page.dart';
 import 'package:mfc_app/screens/measurment/measurement_page.dart';
 import 'package:mfc_app/screens/module/single/module_single_page.dart';
+import 'package:mfc_app/screens/password_reset/password_reset_page.dart';
 import 'package:mfc_app/screens/profile/profile_page.dart';
 import 'package:mfc_app/screens/register/register_page.dart';
 import 'package:mfc_app/utils/stack.dart';
@@ -20,6 +22,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<NavigatedBack>(_onNavigatedBack);
     on<NavigatedToRegister>(_onNavigatedToRegister);
     on<NavigatedToLogin>(_onNavigatedToLogin);
+    on<NavigatedToResetPassword>(_onNavigatedToResetPassword);
     on<NavigatedToHome>(_onNavigatedToHome);
     on<NavigatedToMeasurements>(_onNavigatedToMeasurements);
     on<NavigatedToAddMeasurement>(_onNavigatedToAddMeasurement);
@@ -51,6 +54,16 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       return emit(state.goTo(LoginPage()));
     }
     emit(AuthenticationNavigation.initial());
+  }
+
+  void _onNavigatedToResetPassword(
+    NavigatedToResetPassword event,
+    Emitter<NavigationState> emit,
+  ) {
+    if (state is AuthenticationNavigation) {
+      return emit(state.goTo(PasswordResetPage()));
+    }
+    emit(AuthenticationNavigation.initial().goTo(PasswordResetPage()));
   }
 
   void _onNavigatedToHome(
@@ -89,8 +102,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) {
     emit(state.goTo(CourseSinglePage(
-        // event.courseId,
-        )));
+      event.courseId,
+    )));
   }
 
   void _onNavigatedToModule(

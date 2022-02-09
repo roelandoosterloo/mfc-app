@@ -1,89 +1,115 @@
 part of 'home_screen.dart';
 
+enum CourseState {
+  locked,
+  availble,
+  started,
+}
+
 class CourseCard extends StatelessWidget {
-  final Enrollment _enrollment;
+  final Course _course;
   final Function()? _onTap;
+  final CourseState _courseState;
 
   const CourseCard({
     Key? key,
-    required Enrollment enrollment,
+    required Course course,
     Function()? onTap,
-  })  : _enrollment = enrollment,
+    required CourseState courseState,
+  })  : _course = course,
         _onTap = onTap,
+        _courseState = courseState,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: Card(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: InkWell(
-          onTap: _onTap,
-          child: Stack(
-            children: [
-              S3Image(
-                _enrollment.course.coverImage,
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.width * 0.6,
-              ),
-              Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.width * 0.6,
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Color(0xff2b8474),
-                              width: 3,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                              vertical: 4,
-                            ),
-                            child: Text(
-                              "START",
-                              style: TextStyle(
-                                color: Color(0xff2b8474),
-                                fontFamily: "Stratum",
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        _enrollment.course.name.toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "Stratum",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 32,
-                        ),
-                      ),
-                    ),
-                  ],
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: AspectRatio(
+        aspectRatio: 1.77,
+        child: Card(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: InkWell(
+            onTap: _onTap,
+            child: Stack(
+              children: [
+                S3Image(
+                  _course.coverImage,
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  width: double.infinity,
                 ),
-              )
-            ],
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: StatusBadge(
+                            state: this._courseState,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                        child: Text(
+                          _course.name.toUpperCase(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: "Stratum",
+                            fontWeight: FontWeight.w700,
+                            fontSize: 28,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class StatusBadge extends StatelessWidget {
+  final CourseState state;
+
+  const StatusBadge({
+    Key? key,
+    required this.state,
+  }) : super(key: key);
+
+  IconData getIcon() {
+    switch (state) {
+      case CourseState.locked:
+        return Icons.lock;
+      case CourseState.availble:
+        return Icons.play_arrow;
+      case CourseState.started:
+        return Icons.play_arrow;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: Colors.white38,
+      radius: 12,
+      child: Icon(
+        getIcon(),
+        size: 18,
       ),
     );
   }

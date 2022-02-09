@@ -2,6 +2,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/models/measurement.dart';
 
@@ -20,7 +21,7 @@ class MeasurementChart2 extends StatefulWidget {
 }
 
 class _MeasurementChart2State extends State<MeasurementChart2> {
-  final f = new DateFormat('yyyy-MM-dd');
+  final f = new DateFormat(DATE_FORMAT);
   final int _leftLabelCount = 6;
   final int _bottomLabelCount = 4;
   List<FlSpot> _values = const [];
@@ -37,6 +38,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
   }
 
   void _prepareData() {
+    widget._measurements.sort((m1, m2) => m1.date.compareTo(m2.date));
     _values = widget._measurements
         .map((e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.weight))
         .toList();
@@ -75,9 +77,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
       isCurved: true,
       curveSmoothness: 0.4,
       colors: [
-        Color(0xff2B5BE1),
-        Color(0xff265BE1),
-        Color(0xff14D5E8),
+        Color(0xfff44336),
       ],
     );
   }
@@ -124,7 +124,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
       horizontalInterval: _leftTitlesInterval,
       getDrawingHorizontalLine: (value) {
         return FlLine(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).primaryColorLight,
           strokeWidth: 1,
         );
       },
@@ -145,7 +145,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
         border: Border.symmetric(
           vertical: BorderSide.none,
           horizontal: BorderSide(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColorLight,
           ),
         ),
       ),

@@ -13,6 +13,42 @@ type Profile
   length: Float
   targetWeight: Float
 }
+type Program 
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["admin"] }
+    { allow: private, operations: [read] }
+  ]){
+  id: ID!
+  name: String!
+  courses: [ProgramCourse]! @connection(keyName: "byProgram", fields: ["id"])
+}
+type ProgramCourse
+  @model
+  @auth(rules: [
+    { allow: groups, groups: ["admin"] }
+    { allow: private, operations: [read] }
+  ])
+  @key(name: "byProgram", fields: ["programId", "courseId"])
+  @key(name: "byCourse", fields: ["courseId", "programId"]) {
+    id: ID!
+    courseId: ID!
+    programId: ID!
+    course: Course! @connection(fields: ["courseId"])
+    program: Program! @connection(fields: ["programId"])
+}
+type Membership 
+  @model
+  @auth(rules: [
+    { allow: groups, groups:["admin"]}
+    { allow: owner, ownerField: "cognitoId", operations: [read] }
+  ])
+  {
+    id: ID!
+    cognitoId: ID!
+    programId: ID!
+    program: Program @connection(fields: ["programId"])
+  }
 type Enrollment
   @model
   @auth(rules: [
@@ -23,7 +59,9 @@ type Enrollment
   id: ID!
   cognitoId: ID!
   courseId: ID!
-  startDate: AWSDateTime!
+  enrolledAt: AWSDateTime
+  startedAt: AWSDateTime
+  completedAt: AWSDateTime
   course: Course @connection(fields: ["courseId"])
   moduleSchedule: [ModuleProgress!] @connection(keyName: "ofEnrollment", fields: ["id"])
 }
@@ -39,6 +77,8 @@ type ModuleProgress
     moduleId: ID!
     enrollmentId: ID!
     availableAt: AWSDateTime!
+    startedAt: AWSDateTime
+    completedAt: AWSDateTime
     module: Module @connection(fields: ["moduleId"])
     workbook: [Answer] @connection(keyName: "ofWorkbook" fields: ["id"])
 }

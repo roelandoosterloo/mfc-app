@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/measurement/measurement_bloc.dart';
+import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
@@ -15,7 +16,7 @@ class MeasurementOverview extends StatefulWidget {
 }
 
 class _MeasurementOverviewState extends State<MeasurementOverview> {
-  final f = new DateFormat('yyyy-MM-dd');
+  final f = new DateFormat(DATE_FORMAT);
   Profile? profile;
 
   @override
@@ -54,7 +55,7 @@ class _MeasurementOverviewState extends State<MeasurementOverview> {
                 child: Column(
                   children: [
                     Card(
-                      color: Color(0xff459E8E),
+                      color: Theme.of(context).primaryColor,
                       margin: EdgeInsets.symmetric(
                         horizontal: 30,
                         vertical: 15,
@@ -87,27 +88,20 @@ class _MeasurementOverviewState extends State<MeasurementOverview> {
                           subText:
                               "${state.measurements.last.weight.toStringAsFixed(1)} kg",
                           icon: Icons.monitor_weight_outlined,
-                          iconColor: Colors.deepPurple,
+                          iconColor: Colors.white,
                         ),
                         StatisticCard(
                           title: "Streefgewicht",
                           subText: "${profile?.targetWeight} kg",
                           icon: Icons.flag_outlined,
-                          iconColor: Colors.cyan,
+                          iconColor: Colors.white,
                         ),
                         StatisticCard(
                           title: "Totaal afgevallen",
-                          subText:
-                              "${(state.measurements.first.weight - state.measurements.last.weight).toStringAsFixed(1)} kg",
-                          icon: Icons.trending_down_rounded,
-                          iconColor: Colors.deepOrange,
-                        ),
-                        StatisticCard(
-                          title: "Huidige BMI",
-                          subText:
-                              "${bmi(state.measurements.last.weight)?.toStringAsFixed(0)}",
-                          icon: Icons.calculate_outlined,
-                          iconColor: Color(0xff2B5BE1),
+                          mainText:
+                              "${(state.measurements.first.weight - state.measurements.last.weight).toStringAsFixed(1)} ",
+                          subText: "kg",
+                          iconColor: Colors.white,
                         )
                       ],
                     )
@@ -117,7 +111,7 @@ class _MeasurementOverviewState extends State<MeasurementOverview> {
             ),
           );
         }
-        return Text("Loadin");
+        return Container();
       },
     );
   }

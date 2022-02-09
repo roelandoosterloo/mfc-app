@@ -1,6 +1,7 @@
-import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:mfc_app/constants/values.dart';
 
 import 'Model.dart';
 
@@ -12,7 +13,7 @@ class Measurement extends Model {
   final String? _note;
   final String _type = "Measurement";
 
-  static final DateFormat _dateFormat = new DateFormat('yyyy-MM-dd');
+  static final DateFormat _dateFormat = new DateFormat(DATE_FORMAT);
 
   @override
   String getId() {

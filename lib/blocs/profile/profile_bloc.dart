@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
+import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/utils/validators.dart';
@@ -9,6 +11,7 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepo;
+  final dateFormat = new DateFormat(DATE_FORMAT);
 
   ProfileBloc({required ProfileRepository profileRepo})
       : _profileRepo = profileRepo,
@@ -42,26 +45,34 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     FirstNameChanged event,
     Emitter<ProfileState> emit,
   ) {
-    emit((state as EditProfileState).update(isFirstNameValid: true));
+    emit(
+      (state as EditProfileState).update(
+        isFirstNameValid: Validators.isNotEmpty(event.name),
+      ),
+    );
   }
 
   void _onLastNameChanged(
     LastNameChanged event,
     Emitter<ProfileState> emit,
   ) {
-    emit((state as EditProfileState).update(isLastNameValid: true));
+    emit(
+      (state as EditProfileState).update(
+        isLastNameValid: Validators.isNotEmpty(event.name),
+      ),
+    );
   }
 
   void _onBirthdateChanged(
     BirthdateChanged event,
     Emitter<ProfileState> emit,
   ) {
-    if (event.date == "") {
+    if (event.date.isEmpty) {
       emit((state as EditProfileState).update(isBirthDateValid: true));
       return;
     }
     try {
-      DateTime date = DateTime.parse(event.date);
+      DateTime date = dateFormat.parse(event.date);
       emit(
         (state as EditProfileState).update(
           isBirthDateValid: Validators.isDateInRange(
@@ -127,10 +138,35 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileSubmitted event,
     Emitter<ProfileState> emit,
   ) async {
-    bool success = await _profileRepo.submitProfile(event.profile);
-    if (success) {
-      emit(ProfileSuccessState(state));
-    } else {
+    Profile? profile = state.profile;
+    if (profile == null) {
+      emit(ProfileFailureState(state, "Could not find profile"));
+      return;
+    }
+
+    if (!state.isValid()) {
+      emit((state as EditProfileState));
+      return;
+    }
+
+    try {
+      DateTime birthDate = dateFormat.parse(event.birthDate ?? "");
+      double length = double.parse(event.length ?? "");
+      double targetWeight = double.parse(event.targetWeight ?? "");
+
+      bool success = await _profileRepo.submitProfile(profile.update(
+        firstName: event.firstName,
+        lastName: event.lastName,
+        birthDate: birthDate,
+        length: length,
+        targetWeight: targetWeight,
+      ));
+      if (success) {
+        emit(ProfileSuccessState(state));
+      } else {
+        emit(ProfileFailureState(state, "Something went wrong"));
+      }
+    } catch (ex) {
       emit(ProfileFailureState(state, "Something went wrong"));
     }
   }

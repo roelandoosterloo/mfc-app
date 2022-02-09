@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
-import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
+import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/Module.dart';
 import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
+import 'package:mfc_app/screens/course/single/bloc/singlecoursepage_bloc.dart';
 import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
 part "module_card.dart";
 
-class CourseSingleScreen extends StatelessWidget {
+class CourseSingleScreen extends StatefulWidget {
+  @override
+  State<CourseSingleScreen> createState() => _CourseSingleScreenState();
+}
+
+class _CourseSingleScreenState extends State<CourseSingleScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<SingleCoursePageBloc>(context)
+        .add(SingleCoursePageOpened());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,10 +33,18 @@ class CourseSingleScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: BlocBuilder<EnrollmentBloc, EnrollmentState>(
+      body: BlocBuilder<SingleCoursePageBloc, SingleCoursePageState>(
         builder: (context, state) {
-          if (state is EnrollmentState && state.selected != null) {
-            Enrollment enrollment = state.selected!;
+          if (state is SingleCoursePageLoading) {
+            return Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Color(0xff2b8474),
+              ),
+            );
+          } else if (state is SingleCoursePageLoaded) {
+            Enrollment enrollment = state.enrollment!;
             Course course = enrollment.course;
             List<ModuleProgress> modules = enrollment.moduleSchedule ?? [];
             modules.sort((a, b) =>

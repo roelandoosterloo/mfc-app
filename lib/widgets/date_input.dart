@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mfc_app/constants/values.dart';
 
 class DateInput extends StatelessWidget {
-  final f = new DateFormat('yyyy-MM-dd');
+  final f = new DateFormat(DATE_FORMAT);
   final TextEditingController _controller;
   final Function(DateTime)? _onDateSelected;
   final String _labelText;
@@ -59,7 +60,7 @@ class DateInput extends StatelessWidget {
               }
             }
           }),
-          child: Text("Select date"),
+          child: Text("Kies een datum"),
         ),
       ],
     );

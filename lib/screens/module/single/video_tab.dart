@@ -1,21 +1,31 @@
 part of 'module_single_screen.dart';
 
 class ModuleVideoTab extends StatelessWidget {
-  const ModuleVideoTab({
-    Key? key,
-    required YoutubePlayerController youtubeController,
-  })  : _youtubeController = youtubeController,
-        super(key: key);
+  final YoutubePlayerController? _youtubeController;
+  final Module _module;
 
-  final YoutubePlayerController _youtubeController;
+  ModuleVideoTab({
+    Key? key,
+    YoutubePlayerController? youtubeController,
+    required Module module,
+  })  : _youtubeController = youtubeController,
+        _module = module,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (_youtubeController == null) {
+      return Container(
+        child: Text(
+          "Deze module heeft geen video",
+        ),
+      );
+    }
     return Container(
       padding: EdgeInsets.only(top: 16),
       child: YoutubePlayerBuilder(
         player: YoutubePlayer(
-          controller: _youtubeController,
+          controller: _youtubeController!,
           showVideoProgressIndicator: true,
           progressColors: ProgressBarColors(
             playedColor: Theme.of(context).primaryColor,
@@ -24,16 +34,8 @@ class ModuleVideoTab extends StatelessWidget {
         ),
         builder: (context, player) {
           return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               player,
-              ElevatedButton(
-                onPressed: () {
-                  _youtubeController.toggleFullScreenMode();
-                  _youtubeController.play();
-                },
-                child: Text("full screen"),
-              )
             ],
           );
         },

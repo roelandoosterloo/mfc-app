@@ -25,7 +25,7 @@ class AddMeasurementBloc
     Emitter<AddMeasurementState> emit,
   ) {
     try {
-      DateTime date = DateTime.parse(event.date);
+      DateTime.parse(event.date);
       emit(state.update(isDateValid: true));
     } catch (ex) {
       emit(state.update(isDateValid: false));

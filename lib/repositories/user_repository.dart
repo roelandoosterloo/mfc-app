@@ -1,5 +1,5 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 
 class UserRepository {
   Future<SignUpResult> createUser(String email, String password) async {
@@ -7,7 +7,7 @@ class UserRepository {
       username: email,
       password: password.trim(),
       options: CognitoSignUpOptions(
-        userAttributes: {'email': email},
+        userAttributes: {CognitoUserAttributeKey.email: email},
       ),
     );
     return result;
@@ -37,8 +37,19 @@ class UserRepository {
     return result;
   }
 
+  Future<ResetPasswordResult> requestPasswordReset(String email) {
+    return Amplify.Auth.resetPassword(username: email);
+  }
+
+  Future<UpdatePasswordResult> confirmPasswordReset(
+      String email, String password, String code) {
+    return Amplify.Auth.confirmResetPassword(
+        username: email, newPassword: password, confirmationCode: code);
+  }
+
   Future<void> signOut() async {
-    await Amplify.Auth.signOut();
+    SignOutResult result = await Amplify.Auth.signOut();
+    print(result);
     return;
   }
 

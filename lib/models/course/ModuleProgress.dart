@@ -1,4 +1,4 @@
-import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 import 'package:mfc_app/models/course/Answer.dart';
@@ -8,6 +8,8 @@ import 'package:mfc_app/models/course/Module.dart';
 class ModuleProgress extends Model {
   final String id;
   final DateTime _availableAt;
+  final DateTime? _startedAt;
+  final DateTime? _completedAt;
   final Module? _module;
   final List<Answer>? _workbook;
 
@@ -28,6 +30,14 @@ class ModuleProgress extends Model {
     return _workbook;
   }
 
+  DateTime? get startedAt {
+    return _startedAt;
+  }
+
+  DateTime? get completedAt {
+    return _completedAt;
+  }
+
   bool isAvailable() {
     return _availableAt.isBefore(DateTime.now());
   }
@@ -37,19 +47,27 @@ class ModuleProgress extends Model {
     required availableAt,
     module,
     workbook,
+    startedAt,
+    completedAt,
   })  : _availableAt = availableAt,
+        _startedAt = startedAt,
+        _completedAt = completedAt,
         _module = module,
         _workbook = workbook;
 
   factory ModuleProgress({
     String? id,
     required DateTime availableAt,
+    DateTime? startedAt,
+    DateTime? completedAt,
     Module? module,
     List<Answer>? workbook,
   }) {
     return ModuleProgress._internal(
       id: id == null ? UUID.getUUID() : id,
       availableAt: availableAt,
+      startedAt: startedAt,
+      completedAt: completedAt,
       module: module,
       workbook: workbook,
     );
@@ -58,6 +76,12 @@ class ModuleProgress extends Model {
   ModuleProgress.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         _availableAt = DateTime.parse(json['availableAt']),
+        _startedAt = json['startedAt'] != null
+            ? DateTime.parse(json['startedAt'])
+            : null,
+        _completedAt = json['completedAt'] != null
+            ? DateTime.parse(json['completedAt'])
+            : null,
         _module = Module.fromJson(json['module']),
         _workbook = json['workbook']?['items'] is List
             ? (json['workbook']['items'] as List)

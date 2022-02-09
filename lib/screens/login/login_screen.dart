@@ -1,61 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
 import 'package:mfc_app/blocs/login/login_bloc.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/screens/login/login_form.dart';
-import 'package:mfc_app/widgets/curved_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserRepository _userRepository = context.read<UserRepository>();
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        elevation: 0,
         backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
+      extendBodyBehindAppBar: true,
       body: BlocProvider<LoginBloc>(
-        create: (context) => LoginBloc(userRepo: _userRepository),
+        create: (context) => LoginBloc(
+          userRepo: _userRepository,
+          authBloc: context.read<AuthenticationBloc>(),
+        ),
         child: Container(
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                CurvedWidget(
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 75, left: 50),
-                    width: double.infinity,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xff2b8474),
-                          Color(0xff2b8474),
-                          Color(0xff2b8474).withOpacity(0.2),
-                        ],
+          child: Column(
+            children: [
+              Container(
+                height: 120,
+                width: double.infinity,
+                color: Theme.of(context).primaryColor,
+                child: Column(
+                  children: [
+                    Spacer(),
+                    SizedBox(
+                      width: 150.0,
+                      child: Image.asset(
+                        "assets/images/logo.png",
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: Colors.white,
-                      ),
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
+                  ],
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 250),
-                  child: LoginForm(),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+              Text(
+                "WELKOM",
+                style: TextStyle(
+                  fontFamily: 'Stratum',
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 ),
-              ],
-            ),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+              LoginForm(),
+              if (MediaQuery.of(context).viewInsets.bottom == 0)
+                Spacer(
+                  flex: 3,
+                )
+            ],
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:equatable/equatable.dart';
 
-class LoginState {
+class LoginState extends Equatable {
   final bool isEmailValid;
   final bool isPasswordValid;
   final bool isSubmitting;
@@ -104,4 +105,15 @@ class LoginState {
       error: error ?? this.error,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        isEmailValid,
+        isPasswordValid,
+        isSubmitting,
+        isSuccess,
+        isFailure,
+        needsConfirmation,
+        error
+      ];
 }

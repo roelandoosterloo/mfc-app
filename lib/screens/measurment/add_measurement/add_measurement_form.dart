@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/add_measurement/add_measurement_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
+import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/utils/input_formatter.dart';
 import 'package:mfc_app/widgets/date_input.dart';
 
@@ -17,7 +18,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
   final TextEditingController _noteController = TextEditingController();
 
   late AddMeasurementBloc _measurementBloc;
-  final f = new DateFormat('yyyy-MM-dd');
+  final f = new DateFormat(DATE_FORMAT);
 
   @override
   void initState() {
@@ -117,7 +118,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
           child: Column(
             children: [
               DateInput(
-                labelText: "Measurement date",
+                labelText: "Datum meting",
                 firstDate: DateTime.now().subtract(
                   Duration(
                     days: 1000,
@@ -135,7 +136,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                 decoration: InputDecoration(
                   icon: Icon(Icons.fitness_center),
                   suffix: Text("kg"),
-                  labelText: "Weight",
+                  labelText: "Gewicht",
                 ),
                 inputFormatters: [
                   buildDecimalFormatter(precision: 2),
@@ -146,10 +147,11 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) => !state.isNoteValid ? 'Invalid note' : null,
+                validator: (_) =>
+                    !state.isNoteValid ? 'Notitie ongeldig' : null,
                 decoration: InputDecoration(
                   icon: Icon(Icons.sticky_note_2),
-                  labelText: "Notes",
+                  labelText: "Notitie",
                 ),
               ),
               SizedBox(
@@ -160,7 +162,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                   minimumSize: Size.fromHeight(40),
                 ),
                 onPressed: state.isValid() ? submitMeasurement : null,
-                child: Text("Submit"),
+                child: Text("Opslaan"),
               ),
               if (!state.isValid()) Text("Niet alle velden zijn goed ingevuld"),
             ],

@@ -15,12 +15,8 @@ class MeasurementScreen extends StatelessWidget {
     MeasurementBloc bloc = MeasurementBloc(measurementRepo: _measurementRepo);
     bloc.add(MeasurementsDataRequested());
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        title: Text("Measurements"),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        title: Text("Mijn metingen"),
       ),
       body: BlocProvider<MeasurementBloc>(
         create: (context) => bloc,
@@ -29,7 +25,6 @@ class MeasurementScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navBloc.add(NavigatedToAddMeasurement()),
         child: Icon(Icons.add),
-        backgroundColor: Colors.accents.first,
       ),
     );
   }

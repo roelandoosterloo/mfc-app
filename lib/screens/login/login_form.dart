@@ -30,6 +30,13 @@ class _LoginFormState extends State<LoginForm> {
     _passwordController.addListener(_onPasswordChange);
   }
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
@@ -47,6 +54,10 @@ class _LoginFormState extends State<LoginForm> {
 
   _onRegister() {
     _navigationBloc.add(NavigatedToRegister());
+  }
+
+  _onPasswordReset() {
+    _navigationBloc.add(NavigatedToResetPassword());
   }
 
   _onEmailChange() {
@@ -107,9 +118,6 @@ class _LoginFormState extends State<LoginForm> {
             );
         }
         if (state.isSuccess) {
-          BlocProvider.of<AuthenticationBloc>(context).add(
-            AuthenticationLoggedIn(),
-          );
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
         }
       },
@@ -123,10 +131,11 @@ class _LoginFormState extends State<LoginForm> {
                 keyboardType: TextInputType.emailAddress,
                 autocorrect: false,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) => !state.isEmailValid ? 'Invalid email' : null,
+                validator: (_) =>
+                    !state.isEmailValid ? 'Ongeldig email adres' : null,
                 decoration: InputDecoration(
                   icon: Icon(Icons.email),
-                  labelText: 'Email',
+                  labelText: 'Email adres',
                 ),
               ),
               TextFormField(
@@ -135,35 +144,31 @@ class _LoginFormState extends State<LoginForm> {
                 obscureText: true,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (_) =>
-                    !state.isPasswordValid ? 'Invalid password' : null,
+                    !state.isPasswordValid ? 'Ongeldig wachtwoord' : null,
                 decoration: InputDecoration(
                   icon: Icon(Icons.lock),
-                  labelText: 'Password',
+                  labelText: 'Wachtwoord',
                 ),
               ),
               SizedBox(
                 height: 40,
               ),
-              SizedBox(
-                width: 130,
-                child: ElevatedButton(
-                  onPressed: canSubmit(state) ? _onLogin : null,
-                  child: Row(
-                    children: [Icon(Icons.check), Text("Login")],
-                  ),
+              ElevatedButton(
+                onPressed: canSubmit(state) ? _onLogin : null,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Text("LOG IN"),
+                ),
+              ),
+              TextButton(
+                onPressed: _onPasswordReset,
+                child: Text(
+                  "Wachtwoord vergeten?",
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
               SizedBox(
                 height: 40,
-              ),
-              SizedBox(
-                width: 130,
-                child: ElevatedButton(
-                  onPressed: _onRegister,
-                  child: Row(
-                    children: [Icon(Icons.add), Text("Register")],
-                  ),
-                ),
               ),
             ],
           ),

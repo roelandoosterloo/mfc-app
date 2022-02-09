@@ -10,7 +10,7 @@ class AddMeasurementScreen extends StatelessWidget {
     MeasurementRepository _measureRepo = context.read<MeasurementRepository>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add measurement"),
+        title: Text("Meting toevoegen"),
       ),
       body: BlocProvider<AddMeasurementBloc>(
         create: (context) => AddMeasurementBloc(measureRepo: _measureRepo),

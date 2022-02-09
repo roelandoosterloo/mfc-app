@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/profile/profile_bloc.dart';
-import 'package:mfc_app/models/Profile.dart';
+import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/widgets/date_input.dart';
 
@@ -15,7 +15,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final f = new DateFormat('yyyy-MM-dd');
+  final f = new DateFormat(DATE_FORMAT);
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -66,20 +66,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _onSubmit() {
     _profileBloc.add(
       ProfileSubmitted(
-        _profileBloc.state.profile!.update(
           firstName: _firstNameController.text,
           lastName: _lastNameController.text,
-          birthDate: _birthDateController.text != ""
-              ? DateTime.parse(_birthDateController.text)
-              : null,
-          length: _lengthController.text != ""
-              ? double.parse(_lengthController.text)
-              : null,
-          targetWeight: _targetWeightController.text != ""
-              ? double.parse(_targetWeightController.text)
-              : null,
-        ),
-      ),
+          birthDate: _birthDateController.text,
+          length: _lengthController.text,
+          targetWeight: _targetWeightController.text),
     );
   }
 

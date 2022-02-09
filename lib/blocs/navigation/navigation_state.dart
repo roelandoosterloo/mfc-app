@@ -14,7 +14,7 @@ abstract class NavigationState extends Equatable {
 }
 
 class NavigationInitial extends NavigationState {
-  NavigationInitial() : super(stack: IStack([LoginPage()]));
+  NavigationInitial() : super(stack: IStack([LandingPage()]));
 
   @override
   NavigationState goBack() {
@@ -33,7 +33,7 @@ class AuthenticationNavigation extends NavigationState {
   factory AuthenticationNavigation.initial() {
     return AuthenticationNavigation(
       stack: IStack([
-        LoginPage(),
+        LandingPage(),
       ]),
     );
   }
