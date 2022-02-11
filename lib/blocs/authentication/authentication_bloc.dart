@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/authentication/authentication_state.dart';
@@ -19,6 +22,29 @@ class AuthenticationBloc
     on<AuthenticationStarted>(_onAuthStarted);
     on<AuthenticationLoggedIn>(_onLoggedIn);
     on<AuthenticationLoggedOut>(_onLoggedOut);
+    _listenForEvents();
+  }
+
+  StreamSubscription _listenForEvents() {
+    StreamSubscription hubSubscription =
+        Amplify.Hub.listen([HubChannel.Auth], (hubEvent) {
+      switch (hubEvent.eventName) {
+        case 'SIGNED_IN':
+          print('USER IS SIGNED IN');
+          break;
+        case 'SIGNED_OUT':
+          this.add(AuthenticationLoggedOut());
+          print('USER IS SIGNED OUT');
+          break;
+        case 'SESSION_EXPIRED':
+          this.add(AuthenticationLoggedOut());
+          break;
+        case 'USER_DELETED':
+          this.add(AuthenticationLoggedOut());
+          break;
+      }
+    });
+    return hubSubscription;
   }
 
   void _onLoggedIn(

@@ -39,6 +39,16 @@ class Enrollment extends Model {
     return _moduleSchedule;
   }
 
+  bool isCourseDone() {
+    bool done = true;
+    if (completedAt != null) return true;
+    if (moduleSchedule == null) return true;
+    moduleSchedule!.forEach((element) {
+      done = done && element.completedAt != null;
+    });
+    return done;
+  }
+
   const Enrollment._internal(
       {required this.id,
       startedAt,

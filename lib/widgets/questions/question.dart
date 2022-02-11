@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mfc_app/models/course/Answer.dart';
 import 'package:mfc_app/models/course/Option.dart';
 import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/models/course/QuestionType.dart';
@@ -12,6 +13,7 @@ class QuestionW extends StatefulWidget {
   final Question question;
   final int index;
   final Function(String) onChange;
+  final Answer? answer;
   final String? value;
 
   const QuestionW({
@@ -19,6 +21,7 @@ class QuestionW extends StatefulWidget {
     required this.question,
     required this.onChange,
     required this.index,
+    this.answer,
     this.value,
   }) : super(key: key);
 
@@ -31,6 +34,11 @@ class _QuestionWState extends State<QuestionW> {
 
   @override
   void initState() {
+    if (widget.value != null &&
+        (widget.question.type == QuestionType.SHORT_TEXT ||
+            widget.question.type == QuestionType.LONG_TEXT)) {
+      _controller.text = widget.value!;
+    }
     _controller.addListener(() {
       if (_controller.text != widget.value) {
         widget.onChange(_controller.text);

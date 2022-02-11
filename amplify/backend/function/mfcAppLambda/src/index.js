@@ -66,7 +66,16 @@ const subscribeUser = async (username, courseId, startDate) => {
     }
 
     await admin.addUserToGroup(username, course.accessGroup);
+}
 
+const generateCourseSchedule = async (username, startDate, courseId, enrollmentId) => {
+    const course = await graphApi.getCourse(courseId);
+    const schedule = generateSchedule(startDate, course.modules.items);
+
+    for (const entry of schedule) {
+        await graphApi.createModuleProgress(username, entry.moduleId, enrollmentId, entry.availableAt);
+    }
+    return true;
 }
 
 const resolvers = {
@@ -103,6 +112,12 @@ const resolvers = {
         adminCreateGroup: async ctx => {
             const { groupName, description } = ctx.arguments;
             return await admin.createGroup(groupName, description);
+        },
+        generateCourseSchedule: async ctx => {
+            const {startDate, courseId, enrollmentId} = ctx.arguments;
+            const { username } = ctx.identity;
+            console.log(ctx.identity);
+            return await generateCourseSchedule(username, startDate, courseId, enrollmentId);
         }
     }
 }

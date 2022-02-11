@@ -2,12 +2,14 @@ part of 'home_screen.dart';
 
 class HomeHeader extends StatelessWidget {
   final String firstName;
-  final Course highlightCourse;
+  final Course? highlightCourse;
+  final bool loading;
 
   const HomeHeader({
     Key? key,
     required this.firstName,
-    required this.highlightCourse,
+    this.highlightCourse,
+    this.loading = false,
   }) : super(key: key);
 
   String greeting() {
@@ -47,14 +49,16 @@ class HomeHeader extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            CourseCard(
-              course: highlightCourse,
-              courseState: CourseState.availble,
-              onTap: () {
-                BlocProvider.of<HomePageBloc>(context)
-                    .add(CourseSelected(highlightCourse.id));
-              },
-            ),
+            if (highlightCourse != null)
+              CourseCard(
+                course: highlightCourse!,
+                courseState: CourseState.availble,
+                isLoading: loading,
+                onTap: () {
+                  BlocProvider.of<HomePageBloc>(context)
+                      .add(CourseSelected(highlightCourse!.id));
+                },
+              ),
           ],
         ),
       ],

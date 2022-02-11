@@ -33,7 +33,7 @@ class ShortTextQuestion extends StatelessWidget {
             ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: "Your Answer",
+              labelText: "Jouw antwoord",
             ),
             controller: _controller,
           )

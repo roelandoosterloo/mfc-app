@@ -111,7 +111,7 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                           tabs: [
                             Tab(text: "Info"),
                             Tab(text: "Video"),
-                            Tab(text: "Opdrachten"),
+                            Tab(text: "Werkboek"),
                           ],
                         ),
                       ),

@@ -5,21 +5,9 @@ const cognitoClient = new CognitoIdentityServiceProvider();
 const POOL_ID = process.env.AUTH_MFCAPPF4FDFC42_USERPOOLID;
 
 const createUser = async (email, firstName, lastName) => {
-  let checkList;
+
   try {
-    checkList = await cognitoClient.listUsers({
-      UserPoolId: POOL_ID,
-      Filter: `email="${email}"`,
-    }).promise();
-  } catch (ex) {
-    console.error(ex);
-    throw new Error("Could not verify user");
-  }
-  if (checkList.Users.length > 0) {
-    throw new Error("User already exists");
-  }
-  try {
-    const userId = uuid();
+    const userId = `${firstName}.${lastName}`;
     const user = await cognitoClient.adminCreateUser({
       UserPoolId: POOL_ID,
       Username: userId,

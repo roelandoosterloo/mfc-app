@@ -7,6 +7,45 @@ import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 
 class CourseRepository {
+  Future<List<Course>> listSubscribedCourses() async {
+    String graphQLDocument = '''
+    query ListSubscribedCourses {
+      listMemberships {
+        items {
+          program {
+            courses {
+              items {
+                course {
+                  id
+                  name
+                  description
+                  coverImage
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    GraphQLResponse response = await op.response;
+    Map<String, dynamic> json = jsonDecode(response.data);
+    List<dynamic> memberships = json["listMemberships"]["items"];
+    List<dynamic> courses = memberships
+        .map((item) => item["program"]["courses"]["items"])
+        .expand((element) => element)
+        .map((item) => item["course"])
+        .toList();
+    List<Course> enrolledCourses =
+        courses.map((it) => Course.fromJson(it)).toList();
+    return enrolledCourses;
+  }
+
   Future<List<Course>> listCourses() async {
     String graphQLDocument = ''' 
     query ListCourses {
@@ -42,6 +81,13 @@ class CourseRepository {
           enrolledAt
           startedAt
           completedAt
+          moduleSchedule {
+            items {
+              id
+              availableAt
+              completedAt
+            }
+          }
           course {
             id
             name
@@ -200,6 +246,26 @@ class CourseRepository {
     return module;
   }
 
+  Future<bool> completeModule(String moduleProgressId) async {
+    String graphQLDocument = '''
+    mutation completeModule {
+      updateModuleProgress(input: {
+        id: "$moduleProgressId",
+        completedAt: "${DateTime.now().toUtc().toIso8601String()}"
+      }) {
+        id    
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    var result = await op.response;
+    return true;
+  }
+
   Future<bool> createAnswer(
     String questionId,
     String moduleProgressId,
@@ -216,7 +282,6 @@ class CourseRepository {
       }
     }
     ''';
-    print(graphQLDocument);
     GraphQLOperation op = Amplify.API.query(
       request: GraphQLRequest(
         document: graphQLDocument,
@@ -244,5 +309,58 @@ class CourseRepository {
     );
     await op.response;
     return true;
+  }
+
+  Future<bool> generateCourseSchedule(
+      String courseId, String enrollmentId) async {
+    String graphQLDocument = '''
+    mutation generateSchedule {
+      generateCourseSchedule(
+        startDate: "${DateTime.now().toUtc().toIso8601String()}"
+        courseId: "$courseId"
+        enrollmentId: "$enrollmentId"
+      )
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    await op.response;
+    return true;
+  }
+
+  Future<Enrollment> createEnrollment(String userId, String courseId) async {
+    String graphQLDocument = '''
+    mutation createEnrollment {
+      createEnrollment(input: {
+        cognitoId: "$userId"
+        courseId: "$courseId"
+        enrolledAt: "${DateTime.now().toUtc().toIso8601String()}"
+      }) {
+        id
+        enrolledAt
+        startedAt
+        completedAt
+        course {
+          id
+          name
+          description
+          coverImage
+        }
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    GraphQLResponse response = await op.response;
+    Map<String, dynamic> json = jsonDecode(response.data);
+    Enrollment enrolledCourse = Enrollment.fromJson(json['createEnrollment']);
+    await generateCourseSchedule(courseId, enrolledCourse.id);
+    return enrolledCourse;
   }
 }

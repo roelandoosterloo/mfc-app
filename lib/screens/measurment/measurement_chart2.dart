@@ -1,4 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -56,8 +58,11 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
         .map((e) => e.y)
         .reduce((value, element) => value < element ? value : element);
 
+    _maxY = max(_maxY, widget._profile?.targetWeight ?? 0);
+    _minY = min(_minY, widget._profile?.targetWeight ?? double.infinity);
+
     _leftTitlesInterval =
-        ((_maxY - _minY) / (_leftLabelCount - 2)).ceilToDouble();
+        max(5, ((_maxY - _minY) / (_leftLabelCount - 2)).ceilToDouble());
 
     _minY = (_minY / _leftTitlesInterval).floorToDouble() * _leftTitlesInterval;
     _maxY = (_maxY / _leftTitlesInterval).ceilToDouble() * _leftTitlesInterval;
@@ -73,9 +78,9 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
     return LineChartBarData(
       spots: _values,
       barWidth: 3,
-      dotData: FlDotData(show: false),
+      dotData: FlDotData(show: widget._measurements.length <= 1),
       isCurved: true,
-      curveSmoothness: 0.4,
+      curveSmoothness: 0.2,
       colors: [
         Color(0xfff44336),
       ],
@@ -102,7 +107,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
         return "${DateFormat.MMM().format(date)}\n${DateFormat.d().format(date)}";
       },
       margin: 8,
-      interval: (_maxX - _minX) / _bottomLabelCount,
+      interval: max(1000 * 60 * 60 * 24, (_maxX - _minX) / _bottomLabelCount),
       getTextStyles: (context, value) => TextStyle(color: Colors.white54),
     );
   }

@@ -26,7 +26,6 @@ class UserRepository {
       username: email,
       password: password.trim(),
     );
-    print(result);
     return result;
   }
 
@@ -49,7 +48,6 @@ class UserRepository {
 
   Future<void> signOut() async {
     SignOutResult result = await Amplify.Auth.signOut();
-    print(result);
     return;
   }
 

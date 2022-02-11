@@ -60,4 +60,29 @@ class ProfileRepository {
     }
     return true;
   }
+
+  Future<bool> setCurrentCourse(String profileId, String courseId) async {
+    String graphQLDocument = '''
+    mutation setCurrentCourse {
+      updateProfile(input: {
+        id: "$profileId",
+        currentCourseId: "$courseId",
+      }) {
+        id
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    try {
+      GraphQLResponse result = await op.response;
+      print(result.errors);
+    } catch (ex) {
+      print(ex);
+    }
+    return true;
+  }
 }

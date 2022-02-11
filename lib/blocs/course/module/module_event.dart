@@ -4,7 +4,7 @@ abstract class ModuleProgressEvent extends Equatable {
   const ModuleProgressEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class ModuleProgressSelected extends ModuleProgressEvent {
@@ -32,14 +32,28 @@ class ModuleProgressFound extends ModuleProgressEvent {
 class AnswerGiven extends ModuleProgressEvent {
   final Question _question;
   final ModuleProgress _progress;
-  final String _answer;
+  final Answer? _answer;
+  final String _value;
 
-  AnswerGiven(this._question, this._progress, this._answer);
+  AnswerGiven(this._question, this._progress, this._answer, this._value);
 
   Question get question => _question;
   ModuleProgress get progress => _progress;
-  String get answer => _answer;
+  String get value => _value;
+  Answer? get answer => _answer;
 
   @override
-  List<Object> get props => [_question, _progress, _answer];
+  List<Object?> get props => [_question, _progress, _answer, _value];
+}
+
+class ModuleCompleted extends ModuleProgressEvent {
+  final ModuleProgress _moduleProgress;
+
+  ModuleCompleted(this._moduleProgress);
+
+  ModuleProgress get moduleProgress => _moduleProgress;
+  String get moduleProgressId => _moduleProgress.getId();
+
+  @override
+  List<Object> get props => [_moduleProgress];
 }

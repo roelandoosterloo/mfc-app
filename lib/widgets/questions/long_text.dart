@@ -30,7 +30,7 @@ class LongTextQuestion extends StatelessWidget {
           if (_question.introduction != null) Text(_question.introduction!),
           TextFormField(
             decoration: InputDecoration(
-              labelText: "Your Answer",
+              labelText: "Jouw antwoord",
             ),
             keyboardType: TextInputType.multiline,
             maxLines: null,

@@ -36,10 +36,9 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     HomePageOpened event,
     Emitter<HomePageState> emit,
   ) async {
-    emit(HomePageLoading());
     try {
       List<Enrollment> enrollments = await _courseRepo.listEnrolledCourses();
-      List<Course> courses = await _courseRepo.listCourses();
+      List<Course> courses = await _courseRepo.listSubscribedCourses();
       AuthUser user = await _userRepo.getUser();
       Profile profile = await _profileRepo.getProfile(user.username);
       emit(
@@ -55,16 +54,29 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     Emitter<HomePageState> emit,
   ) async {
     if (state is HomePageLoaded) {
+      emit((state as HomePageLoaded).setCourseLoading(true));
       HomePageLoaded hplState = (state as HomePageLoaded);
-      Enrollment? enrollment = hplState.enrollments.firstWhere(
-          (enrollment) => enrollment.course.id == event.courseId,
-          orElse: null);
-      if (enrollment != null) {
-        if (enrollment.startedAt == null) {
-          _courseRepo.setCourseStartedAt(enrollment.id);
-        }
-        _navBloc.add(NavigatedToCourse(enrollment.id));
+      Enrollment? enrollment;
+      try {
+        enrollment = hplState.enrollments
+            .firstWhere((enrollment) => enrollment.course.id == event.courseId);
+      } catch (ex) {}
+      if (enrollment == null) {
+        enrollment = await _courseRepo.createEnrollment(
+            hplState.profile.getId(), event.courseId);
       }
+
+      if (enrollment.startedAt == null) {
+        await _courseRepo.setCourseStartedAt(enrollment.id);
+      }
+      if (hplState.profile.currentCourseId != event.courseId) {
+        await _profileRepo.setCurrentCourse(
+          hplState.profile.id,
+          event.courseId,
+        );
+      }
+      emit((state as HomePageLoaded).setCourseLoading(false));
+      _navBloc.add(NavigatedToCourse(enrollment.id));
     }
   }
 }

@@ -117,7 +117,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                     validator: (_) =>
                         !state.isCodeValid ? "Code ongeldig" : null,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.code),
+                      icon: Icon(Icons.password),
                       labelText: "Verificatie code",
                     ),
                   ),
@@ -130,7 +130,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                     validator: (_) =>
                         !state.isPasswordValid ? "Wachtwoord ongeldig" : null,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.password),
+                      icon: Icon(Icons.lock),
                       labelText: "Nieuw wachtwoord",
                     ),
                   ),
@@ -141,7 +141,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                     obscureText: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.password),
+                      icon: Icon(Icons.lock),
                       labelText: "Herhaal wachtwoord",
                     ),
                   ),

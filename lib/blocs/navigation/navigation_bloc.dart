@@ -18,7 +18,7 @@ part 'navigation_event.dart';
 part 'navigation_state.dart';
 
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
-  NavigationBloc() : super(NavigationInitial()) {
+  NavigationBloc() : super(NavigationInitial(false)) {
     on<NavigatedBack>(_onNavigatedBack);
     on<NavigatedToRegister>(_onNavigatedToRegister);
     on<NavigatedToLogin>(_onNavigatedToLogin);
@@ -61,9 +61,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) {
     if (state is AuthenticationNavigation) {
-      return emit(state.goTo(PasswordResetPage()));
+      return emit(state.goTo(PasswordResetPage(username: event.username)));
     }
-    emit(AuthenticationNavigation.initial().goTo(PasswordResetPage()));
+    emit(AuthenticationNavigation.initial()
+        .goTo(PasswordResetPage(username: event.username)));
   }
 
   void _onNavigatedToHome(

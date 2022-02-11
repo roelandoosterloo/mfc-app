@@ -44,22 +44,21 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
     return _page < widget.questions.length - 1;
   }
 
-  String? get answer {
-    Question q = widget.questions[_page];
-    Answer? answer;
+  Answer? answer(int page) {
     try {
-      answer = widget.answers.firstWhere(
-        (element) => element.questionId == q.id,
+      return widget.answers.firstWhere(
+        (element) => element.questionId == widget.questions[page].id,
       );
     } catch (e) {}
-    if (answer != null) {
-      return answer.answer;
+    return null;
+  }
+
+  String? value(int page) {
+    if (_answers[page] != null) {
+      return _answers[page]!;
     }
-    if (_answers[_page] != null) {
-      return _answers[_page]!;
-    }
-    if (q.answer != null) {
-      return q.answer!.answer;
+    if (answer(page) != null) {
+      return answer(page)!.answer;
     }
     return null;
   }
@@ -69,13 +68,12 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
       return;
     }
     Question q = widget.questions[_page];
-    String answer = _answers[_page]!;
-    print(q.question);
-    print(answer);
+    String value = _answers[_page]!;
     BlocProvider.of<ModuleProgressBloc>(context).add(AnswerGiven(
       q,
       widget.progress,
-      answer,
+      answer(_page),
+      value,
     ));
   }
 
@@ -83,6 +81,12 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
     setState(() {
       _answers[_page] = value;
     });
+  }
+
+  void _onCompleteModule() {
+    submitAnswer();
+    BlocProvider.of<ModuleProgressBloc>(context)
+        .add(ModuleCompleted(widget.progress));
   }
 
   @override
@@ -109,7 +113,7 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
                       index: entry.key + 1,
                       key: Key(entry.value.id),
                       onChange: (value) => onChangeAnswer(value),
-                      value: answer,
+                      value: value(entry.key),
                     ),
                   ),
                 )
@@ -140,7 +144,7 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
                   ),
                 if (!hasMoreQuestions)
                   ElevatedButton(
-                    onPressed: () => null, //redirect to module overzicht
+                    onPressed: _onCompleteModule, //redirect to module overzicht
                     child: Icon(
                       Icons.check,
                     ),

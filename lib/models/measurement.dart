@@ -13,7 +13,7 @@ class Measurement extends Model {
   final String? _note;
   final String _type = "Measurement";
 
-  static final DateFormat _dateFormat = new DateFormat(DATE_FORMAT);
+  static final DateFormat _dateFormat = new DateFormat("yyyy-MM-dd");
 
   @override
   String getId() {

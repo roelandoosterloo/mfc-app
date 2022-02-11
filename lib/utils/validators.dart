@@ -11,11 +11,22 @@ class Validators {
   }
 
   static isValidEmail(String email) {
+    return true;
     return _emailRegExp.hasMatch(email);
   }
 
   static isValidPassword(String password) {
     return _passwordRegExp.hasMatch(password);
+  }
+
+  static isNumberOfCharacters({
+    double? lower,
+    double? upper,
+    required String value,
+  }) {
+    if (lower != null && value.length < lower) return false;
+    if (upper != null && value.length > upper) return false;
+    return true;
   }
 
   static isNumberInRange({

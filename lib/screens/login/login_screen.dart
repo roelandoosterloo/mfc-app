@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
 import 'package:mfc_app/blocs/login/login_bloc.dart';
+import 'package:mfc_app/blocs/login/login_state.dart';
+import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/screens/login/login_form.dart';
+import 'package:mfc_app/screens/login/setup_password_form.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserRepository _userRepository = context.read<UserRepository>();
+    NavigationBloc _navBloc = BlocProvider.of<NavigationBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -46,19 +51,69 @@ class LoginScreen extends StatelessWidget {
               Spacer(
                 flex: 1,
               ),
-              Text(
-                "WELKOM",
-                style: TextStyle(
-                  fontFamily: 'Stratum',
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                ),
+              BlocConsumer<LoginBloc, LoginState>(
+                listener: (context, state) {
+                  if (state.isFailure) {
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (state.error != null &&
+                                  state.error!.isNotEmpty)
+                                Flexible(
+                                  child: Text(
+                                    state.error!,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                )
+                              else
+                                Text(
+                                  "Login mislukt",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              Icon(
+                                Icons.error,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                          backgroundColor: Colors.red[400],
+                        ),
+                      );
+                  }
+                  if (state.isLoading) {
+                    ScaffoldMessenger.of(context)
+                      ..removeCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Loading..."),
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                        ),
+                      );
+                  }
+                  if (state.isSuccess) {
+                    _navBloc.add(NavigatedToHome());
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  }
+                },
+                builder: (context, state) {
+                  if (state is LoggingIn) {
+                    return LoginForm();
+                  }
+                  if (state is SetupPassword) {
+                    return SetupPasswordForm();
+                  }
+                  return Container();
+                },
               ),
-              Spacer(
-                flex: 1,
-              ),
-              LoginForm(),
               if (MediaQuery.of(context).viewInsets.bottom == 0)
                 Spacer(
                   flex: 3,

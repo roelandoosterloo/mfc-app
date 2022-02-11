@@ -14,18 +14,25 @@ part 'password_reset_state.dart';
 class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
   final UserRepository _userRepo;
   final NavigationBloc _navBloc;
+  final String? _username;
 
   PasswordResetBloc({
     required UserRepository userRepo,
     required NavigationBloc navBloc,
+    String? username,
   })  : _userRepo = userRepo,
         _navBloc = navBloc,
+        _username = username,
         super(PasswordResetEmailStep()) {
     on<EmailChanged>(_onEmailChanged);
     on<CodeChanged>(_onCodeChanged);
     on<PasswordChanged>(_onPasswordChanged);
     on<RequestSubmitted>(_onResetRequested);
     on<ResetConfirmed>(_onResetConfirmed);
+
+    if (username != null) {
+      this.add(RequestSubmitted(email: username));
+    }
   }
 
   void _onEmailChanged(
@@ -65,8 +72,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     RequestSubmitted event,
     Emitter<PasswordResetState> emit,
   ) async {
-    if (state is PasswordResetEmailStep &&
-        (state as PasswordResetEmailStep).emailValid) {
+    if (state is PasswordResetEmailStep) {
       try {
         ResetPasswordResult result =
             await _userRepo.requestPasswordReset(event.email);

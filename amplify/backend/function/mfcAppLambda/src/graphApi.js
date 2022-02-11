@@ -130,7 +130,7 @@ const createEnrollment = async (cognitoId, courseId, enrolledAt) => {
   }
 }
 
-const createModuleProgress = async (moduleId, enrollmentId, availableAt) => {
+const createModuleProgress = async (owner, moduleId, enrollmentId, availableAt) => {
   const progressMutation = `
   mutation createModuleProgress($input: CreateModuleProgressInput!) {
     createModuleProgress(input: $input) {
@@ -139,6 +139,7 @@ const createModuleProgress = async (moduleId, enrollmentId, availableAt) => {
   }
   `
   const input = {
+    owner,
     moduleId,
     enrollmentId,
     availableAt,

@@ -22,7 +22,7 @@
         },
         "mfcAppLambda": {
           "deploymentBucketName": "amplify-mfcapp-dev-152955-deployment",
-          "s3Key": "amplify-builds/mfcAppLambda-65315151445176336e42-build.zip"
+          "s3Key": "amplify-builds/mfcAppLambda-563971496472676e536f-build.zip"
         }
       }
     }

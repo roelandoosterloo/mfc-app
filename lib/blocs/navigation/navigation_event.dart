@@ -4,7 +4,7 @@ abstract class NavigationEvent extends Equatable {
   const NavigationEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class NavigatedBack extends NavigationEvent {}
@@ -13,7 +13,18 @@ class NavigatedToRegister extends NavigationEvent {}
 
 class NavigatedToLogin extends NavigationEvent {}
 
-class NavigatedToResetPassword extends NavigationEvent {}
+class NavigatedToResetPassword extends NavigationEvent {
+  final String? _username;
+
+  NavigatedToResetPassword({String? username})
+      : _username = username,
+        super();
+
+  String? get username => _username;
+
+  @override
+  List<Object?> get props => [_username];
+}
 
 class NavigatedToHome extends NavigationEvent {}
 

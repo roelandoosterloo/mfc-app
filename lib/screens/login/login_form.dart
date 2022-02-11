@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
-import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/login/login_bloc.dart';
 import 'package:mfc_app/blocs/login/login_event.dart';
 import 'package:mfc_app/blocs/login/login_state.dart';
@@ -40,11 +38,11 @@ class _LoginFormState extends State<LoginForm> {
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
-  bool canSubmit(LoginState state) {
+  bool canSubmit(LoggingIn state) {
     return state.isEmailValid &&
         state.isPasswordValid &&
         isPopulated &&
-        !state.isSubmitting;
+        !state.isLoading;
   }
 
   _onLogin() {
@@ -70,110 +68,78 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state.isFailure) {
-          ScaffoldMessenger.of(context)
-            ..removeCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<LoginBloc, LoginState>(
+      builder: (context, state) {
+        if (state is SetupPassword) {}
+        if (state is LoggingIn) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "WELKOM",
+                style: TextStyle(
+                  fontFamily: 'Stratum',
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
                   children: [
-                    if (state.error.isNotEmpty)
-                      Flexible(
-                        child: Text(
-                          state.error,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    else
-                      Text(
-                        "Login failed",
-                        style: TextStyle(color: Colors.white),
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (_) =>
+                          !state.isEmailValid ? 'Ongeldig email adres' : null,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: 'Gebruikersnaam',
                       ),
-                    Icon(
-                      Icons.error,
-                      color: Colors.white,
+                    ),
+                    TextFormField(
+                      controller: _passwordController,
+                      autocorrect: false,
+                      obscureText: true,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (_) =>
+                          !state.isPasswordValid ? 'Ongeldig wachtwoord' : null,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.lock),
+                        labelText: 'Wachtwoord',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    ElevatedButton(
+                      onPressed: canSubmit(state) ? _onLogin : null,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text("LOG IN"),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _onPasswordReset,
+                      child: Text(
+                        "Wachtwoord vergeten?",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
                     ),
                   ],
                 ),
-                backgroundColor: Colors.red[400],
-              ),
-            );
-        }
-        if (state.isSubmitting) {
-          ScaffoldMessenger.of(context)
-            ..removeCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Loading..."),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );
-        }
-        if (state.isSuccess) {
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        }
-      },
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) => Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) =>
-                    !state.isEmailValid ? 'Ongeldig email adres' : null,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.email),
-                  labelText: 'Email adres',
-                ),
-              ),
-              TextFormField(
-                controller: _passwordController,
-                autocorrect: false,
-                obscureText: true,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) =>
-                    !state.isPasswordValid ? 'Ongeldig wachtwoord' : null,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.lock),
-                  labelText: 'Wachtwoord',
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              ElevatedButton(
-                onPressed: canSubmit(state) ? _onLogin : null,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Text("LOG IN"),
-                ),
-              ),
-              TextButton(
-                onPressed: _onPasswordReset,
-                child: Text(
-                  "Wachtwoord vergeten?",
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              ),
-              SizedBox(
-                height: 40,
               ),
             ],
-          ),
-        ),
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }

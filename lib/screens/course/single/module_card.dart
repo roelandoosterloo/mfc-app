@@ -44,26 +44,40 @@ class ModuleCard extends StatelessWidget {
                 width: 12,
               ),
               Expanded(
-                child: Text(
-                  m.name.toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontFamily: 'Stratum',
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      m.name.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontFamily: 'Stratum',
+                      ),
+                    ),
+                    if (_progress.completedAt != null)
+                      Text(
+                        "Afgerond",
+                        style: TextStyle(color: Colors.white),
+                      )
+                  ],
                 ),
               ),
               SizedBox(
                 width: 12,
               ),
               if (_progress.isAvailable())
-                CircleAvatar(
-                  backgroundColor: Color(0xff2b8474),
-                  radius: 20,
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                  ),
+                Column(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Color(0xff2b8474),
+                      radius: 20,
+                      child: Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               if (!_progress.isAvailable())
                 Column(

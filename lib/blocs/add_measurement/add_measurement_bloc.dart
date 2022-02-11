@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
+import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/measurement.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
 import 'package:mfc_app/utils/validators.dart';
@@ -10,6 +12,7 @@ part 'add_measurement_state.dart';
 class AddMeasurementBloc
     extends Bloc<AddMeasurementEvent, AddMeasurementState> {
   MeasurementRepository _measureRepo;
+  final dateFormat = new DateFormat(DATE_FORMAT);
 
   AddMeasurementBloc({required MeasurementRepository measureRepo})
       : _measureRepo = measureRepo,
@@ -25,7 +28,7 @@ class AddMeasurementBloc
     Emitter<AddMeasurementState> emit,
   ) {
     try {
-      DateTime.parse(event.date);
+      dateFormat.parse(event.date);
       emit(state.update(isDateValid: true));
     } catch (ex) {
       emit(state.update(isDateValid: false));
@@ -66,10 +69,10 @@ class AddMeasurementBloc
   void _onSubmitted(
     MeasurementSubmitted event,
     Emitter<AddMeasurementState> emit,
-  ) {
+  ) async {
     emit(AddMeasurementState.loading());
     try {
-      _measureRepo.addMeasurement(Measurement(
+      await _measureRepo.addMeasurement(Measurement(
         date: event.date,
         weight: event.weight,
         note: event.note,

@@ -2,8 +2,9 @@ part of 'navigation_bloc.dart';
 
 abstract class NavigationState extends Equatable {
   final IStack<Page> stack;
+  final bool wentBack;
 
-  const NavigationState({required this.stack});
+  const NavigationState({required this.stack, this.wentBack = false});
 
   NavigationState goBack();
 
@@ -14,50 +15,61 @@ abstract class NavigationState extends Equatable {
 }
 
 class NavigationInitial extends NavigationState {
-  NavigationInitial() : super(stack: IStack([LandingPage()]));
+  NavigationInitial(bool wentBack)
+      : super(stack: IStack([LandingPage()]), wentBack: wentBack);
 
   @override
   NavigationState goBack() {
-    return NavigationInitial();
+    return NavigationInitial(true);
   }
 
   @override
   NavigationState goTo(Page p) {
-    return NavigationInitial();
+    return NavigationInitial(false);
   }
+
+  @override
+  List<Object> get props => [stack, wentBack];
 }
 
 class AuthenticationNavigation extends NavigationState {
-  AuthenticationNavigation({required IStack<Page> stack}) : super(stack: stack);
+  AuthenticationNavigation({required IStack<Page> stack, bool wentBack = false})
+      : super(stack: stack, wentBack: wentBack);
 
-  factory AuthenticationNavigation.initial() {
+  factory AuthenticationNavigation.initial({bool? wentBack}) {
     return AuthenticationNavigation(
       stack: IStack([
         LandingPage(),
       ]),
+      wentBack: wentBack ?? false,
     );
   }
 
   @override
   NavigationState goBack() {
     if (stack.length == 1) {
-      return AuthenticationNavigation.initial();
+      return AuthenticationNavigation.initial(wentBack: true);
     }
-    return AuthenticationNavigation(stack: stack.pop());
+    return AuthenticationNavigation(stack: stack.pop(), wentBack: true);
   }
 
   @override
   NavigationState goTo(Page p) {
     return AuthenticationNavigation(stack: stack.push(p));
   }
+
+  @override
+  List<Object> get props => [stack, wentBack];
 }
 
 class AppNavigation extends NavigationState {
-  AppNavigation({required IStack<Page> stack}) : super(stack: stack);
+  AppNavigation({required IStack<Page> stack, bool wentBack = false})
+      : super(stack: stack, wentBack: wentBack);
 
-  factory AppNavigation.initial() {
+  factory AppNavigation.initial({bool? wentBack}) {
     return AppNavigation(
       stack: IStack([HomePage()]),
+      wentBack: wentBack ?? false,
     );
   }
 
@@ -66,29 +78,14 @@ class AppNavigation extends NavigationState {
     if (stack.length == 1) {
       return this;
     }
-    return AppNavigation(stack: stack.pop());
+    return AppNavigation(stack: stack.pop(), wentBack: true);
   }
 
   @override
-  List<Object> get props => [stack];
+  List<Object> get props => [stack, wentBack];
 
   @override
   NavigationState goTo(Page p) {
     return AppNavigation(stack: stack.push(p));
   }
 }
-
-// class CourseNavigation extends AppNavigation {
-//   CourseNavigation({required stack}) : super(stack: stack);
-
-//   @override
-//   NavigationState goBack() {
-//     if (stack.length == 1) {
-//       return AppNavigation.initial();
-//     }
-//     return CourseNavigation(stack: stack.pop());
-//   }
-
-//   @override
-//   List<Object> get props => [stack];
-// }

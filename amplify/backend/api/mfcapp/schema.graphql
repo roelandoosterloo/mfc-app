@@ -12,6 +12,8 @@ type Profile
   birthDate: AWSDate
   length: Float
   targetWeight: Float
+  currentCourseId: ID
+  currentCourse: [Course] @connection(fields: ["currentCourseId"])
 }
 type Program 
   @model
@@ -53,8 +55,7 @@ type Enrollment
   @model
   @auth(rules: [
     { allow: groups, groups: ["admin"] }, 
-    { allow: private, provider: iam },
-    { allow: owner, ownerField: "cognitoId" }]) 
+    { allow: owner } ] ) 
   @key(name: "ofCourse" fields: ["courseId"] ){
   id: ID!
   cognitoId: ID!
@@ -69,6 +70,7 @@ type ModuleProgress
   @model 
   @auth(rules: [
     { allow: groups, groups: ["admin"] }, 
+    { allow: owner },
     { allow: private, provider: iam },
     { allow: private, operations: [read] }])
   @key(name: "ofEnrollment", fields: ["enrollmentId"])
@@ -76,6 +78,7 @@ type ModuleProgress
     id: ID!
     moduleId: ID!
     enrollmentId: ID!
+    owner: String!
     availableAt: AWSDateTime!
     startedAt: AWSDateTime
     completedAt: AWSDateTime
@@ -261,6 +264,9 @@ type Mutation {
   subscribeUser(username: String, courseId: String, startDate: AWSDateTime): Boolean 
     @function(name: "mfcAppLambda-${env}")
     @auth(rules: [{allow: groups, groups:["admin"]}])
+  generateCourseSchedule(startDate: AWSDateTime, courseId: String, enrollmentId: String): Boolean
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: private }])
 }
 
 type CognitoGroup {

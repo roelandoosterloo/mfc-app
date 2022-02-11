@@ -82,7 +82,8 @@ class ModuleProgress extends Model {
         _completedAt = json['completedAt'] != null
             ? DateTime.parse(json['completedAt'])
             : null,
-        _module = Module.fromJson(json['module']),
+        _module =
+            json['module'] != null ? Module.fromJson(json['module']) : null,
         _workbook = json['workbook']?['items'] is List
             ? (json['workbook']['items'] as List)
                 .map((e) => Answer.fromJson(new Map<String, dynamic>.from(e)))

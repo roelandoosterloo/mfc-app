@@ -11,6 +11,7 @@ class Profile extends Model {
   final DateTime? _birthDate;
   final double? _length;
   final double? _targetWeight;
+  final String? _currentCourseId;
 
   static final DateFormat _dateFormat = new DateFormat("yyyy-MM-dd");
 
@@ -34,6 +35,10 @@ class Profile extends Model {
     return _targetWeight;
   }
 
+  String? get currentCourseId {
+    return _currentCourseId;
+  }
+
   String? get formattedBirthdate {
     if (_birthDate != null) {
       return _dateFormat.format(_birthDate!);
@@ -47,11 +52,13 @@ class Profile extends Model {
     DateTime? birthDate,
     double? length,
     double? targetWeight,
+    String? currentCourseId,
   })  : _firstName = firstName,
         _lastName = lastName,
         _birthDate = birthDate,
         _length = length,
-        _targetWeight = targetWeight;
+        _targetWeight = targetWeight,
+        _currentCourseId = currentCourseId;
 
   factory Profile({
     String? id,
@@ -60,6 +67,7 @@ class Profile extends Model {
     DateTime? birthDate,
     double? length,
     double? targetWeight,
+    String? currentCourseId,
   }) {
     return Profile._internal(
       id: id ?? UUID.getUUID(),
@@ -68,6 +76,7 @@ class Profile extends Model {
       birthDate: birthDate,
       length: length,
       targetWeight: targetWeight,
+      currentCourseId: currentCourseId,
     );
   }
 
@@ -82,6 +91,7 @@ class Profile extends Model {
     DateTime? birthDate,
     double? length,
     double? targetWeight,
+    String? currentCourseId,
   }) {
     return Profile(
       id: this.id,
@@ -90,6 +100,7 @@ class Profile extends Model {
       birthDate: birthDate ?? this.birthDate,
       length: length ?? this.length,
       targetWeight: targetWeight ?? this.targetWeight,
+      currentCourseId: currentCourseId ?? this.currentCourseId,
     );
   }
 
@@ -103,7 +114,8 @@ class Profile extends Model {
         _length = json['length'] != null ? json['length'].toDouble() : null,
         _targetWeight = json['targetWeight'] != null
             ? json['targetWeight'].toDouble()
-            : null;
+            : null,
+        _currentCourseId = json['currentCourseId'];
 
   @override
   Map<String, dynamic> toJson() => {
@@ -113,5 +125,6 @@ class Profile extends Model {
         'birthDate': birthDate != null ? _dateFormat.format(birthDate!) : null,
         'length': length,
         'targetWeight': targetWeight,
+        'currentCourseId': _currentCourseId,
       };
 }

@@ -6,6 +6,10 @@ import 'package:mfc_app/screens/password_reset/bloc/password_reset_bloc.dart';
 import 'package:mfc_app/screens/password_reset/password_reset_screen.dart';
 
 class PasswordResetPage extends Page {
+  final String? username;
+
+  PasswordResetPage({this.username}) : super();
+
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
@@ -14,6 +18,7 @@ class PasswordResetPage extends Page {
         create: (context) => PasswordResetBloc(
           userRepo: context.read<UserRepository>(),
           navBloc: context.read<NavigationBloc>(),
+          username: username,
         ),
         child: PasswordResetScreen(),
       ),

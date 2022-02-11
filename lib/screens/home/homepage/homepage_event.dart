@@ -9,6 +9,8 @@ abstract class HomePageEvent extends Equatable {
 
 class HomePageOpened extends HomePageEvent {}
 
+class HomePageReopend extends HomePageEvent {}
+
 class CourseSelected extends HomePageEvent {
   final String courseId;
 
