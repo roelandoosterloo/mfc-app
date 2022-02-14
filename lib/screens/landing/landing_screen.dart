@@ -11,7 +11,8 @@ class LandingScreen extends StatelessWidget {
   }
 
   _onRegister() async {
-    if (!await launch('https://myfoodcoach.nl/12weekseafvalplan')) {
+    if (!await launch(
+        'https://myfoodcoach.nl/12weekseafvalplan?utm_source=mfc_app&utm_medium=landing_page&utm_campaign=mfc_app')) {
       throw "Could not open URL";
     }
   }
@@ -59,6 +60,9 @@ class LandingScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                 ],
               ),

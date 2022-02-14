@@ -39,9 +39,10 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     EmailChanged event,
     Emitter<PasswordResetState> emit,
   ) {
+    bool valid = Validators.isValidEmail(event.email);
     emit(
       PasswordResetEmailStep(
-        emailValid: Validators.isValidEmail(event.email),
+        emailValid: valid,
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
+import 'package:mfc_app/utils/parser.dart';
 import 'package:mfc_app/utils/validators.dart';
 
 part 'profile_event.dart';
@@ -11,7 +12,7 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepo;
-  final dateFormat = new DateFormat(DATE_FORMAT);
+  final dateFormat = new DateFormat.yMd(Intl.getCurrentLocale());
 
   ProfileBloc({required ProfileRepository profileRepo})
       : _profileRepo = profileRepo,
@@ -90,48 +91,40 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     LengthChanged event,
     Emitter<ProfileState> emit,
   ) {
-    if (event.length == "") {
+    double? length = Parser.readDouble(event.length);
+    if (length == null) {
       emit((state as EditProfileState).update(isLengthValid: true));
       return;
     }
-    try {
-      double length = double.parse(event.length);
-      emit(
-        (state as EditProfileState).update(
-          isLengthValid: Validators.isNumberInRange(
-            value: length,
-            lower: 1.00,
-            upper: 2.50,
-          ),
+    emit(
+      (state as EditProfileState).update(
+        isLengthValid: Validators.isNumberInRange(
+          value: length,
+          lower: 1.00,
+          upper: 2.50,
         ),
-      );
-    } catch (ex) {
-      emit((state as EditProfileState).update(isLengthValid: false));
-    }
+      ),
+    );
   }
 
   void _onTargetWeightChanged(
     TargetWeightChanged event,
     Emitter<ProfileState> emit,
   ) {
-    if (event.weight == "") {
+    double? weight = Parser.readDouble(event.weight);
+    if (weight == null) {
       emit((state as EditProfileState).update(isWeightValid: true));
       return;
     }
-    try {
-      double weight = double.parse(event.weight);
-      emit(
-        (state as EditProfileState).update(
-          isWeightValid: Validators.isNumberInRange(
-            value: weight,
-            lower: 40,
-            upper: 250,
-          ),
+    emit(
+      (state as EditProfileState).update(
+        isWeightValid: Validators.isNumberInRange(
+          value: weight,
+          lower: 40,
+          upper: 250,
         ),
-      );
-    } catch (ex) {
-      emit((state as EditProfileState).update(isWeightValid: false));
-    }
+      ),
+    );
   }
 
   void _onProfileSubmitted(
@@ -151,8 +144,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     try {
       DateTime birthDate = dateFormat.parse(event.birthDate ?? "");
-      double length = double.parse(event.length ?? "");
-      double targetWeight = double.parse(event.targetWeight ?? "");
+      double? length = Parser.readDouble(event.length);
+      double? targetWeight = Parser.readDouble(event.targetWeight);
 
       bool success = await _profileRepo.submitProfile(profile.update(
         firstName: event.firstName,

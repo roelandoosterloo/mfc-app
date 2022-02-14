@@ -24,7 +24,7 @@ class MeasurementScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mijn metingen"),
+        title: Text("Mijn metingen".toUpperCase()),
       ),
       body: BlocProvider<MeasurementBloc>(
         create: (context) => bloc,

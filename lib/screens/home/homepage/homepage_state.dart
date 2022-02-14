@@ -4,7 +4,7 @@ abstract class HomePageState extends Equatable {
   const HomePageState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class HomePageInitial extends HomePageState {}
@@ -15,17 +15,17 @@ class HomePageLoaded extends HomePageState {
   final List<Course> _courses;
   final List<Enrollment> _enrollments;
   final Profile profile;
-  final bool loadingCourse;
+  final String? loadingCourse;
 
   HomePageLoaded(this._courses, this._enrollments, this.profile,
-      {this.loadingCourse = false});
+      {this.loadingCourse});
 
-  HomePageLoaded setCourseLoading(bool loading) {
+  HomePageLoaded setCourseLoading(String? loadingCourse) {
     return HomePageLoaded(
       _courses,
       _enrollments,
       profile,
-      loadingCourse: loading,
+      loadingCourse: loadingCourse,
     );
   }
 
@@ -65,7 +65,7 @@ class HomePageLoaded extends HomePageState {
   }
 
   @override
-  List<Object> get props => [_courses, _enrollments, profile, loadingCourse];
+  List<Object?> get props => [_courses, _enrollments, profile, loadingCourse];
 }
 
 class HomePageError extends HomePageState {

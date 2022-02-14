@@ -195,7 +195,7 @@ class CourseRepository {
 
   Future<ModuleProgress?> getModuleProgress(String progressId) async {
     String graphQLDocument = '''
-    query MyQuery {
+    query GetModuleProgress {
       getModuleProgress(id: "$progressId") {
         id
         availableAt

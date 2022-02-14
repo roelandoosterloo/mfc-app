@@ -23,9 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
     BlocProvider.of<HomePageBloc>(context).add(HomePageOpened());
   }
 
-  bool courseCanBeOpened(Course selected, Enrollment? currentEnrollment) {
+  bool courseCanBeOpened(
+      Course selected, Enrollment? currentEnrollment, String? loadingCourse) {
+    if (loadingCourse != null) return false;
     if (currentEnrollment == null) return true;
     if (currentEnrollment.isCourseDone()) return true;
+    if (selected.id == currentEnrollment.course.id) return true;
+
     return false;
   }
 
@@ -84,7 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 pinned: true,
                 flexibleSpace: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
+                    padding: const EdgeInsets.only(
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
                     child: Image.asset(
                       "assets/images/logo.png",
                       fit: BoxFit.contain,
@@ -106,7 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         HomeHeader(
                           firstName: state.profile.firstName,
                           highlightCourse: state.highlightedCourse,
-                          loading: state.loadingCourse,
+                          loading: state.loadingCourse ==
+                              state.highlightedCourse?.id,
                         ),
                         SubHeader("Beschikbaar"),
                         SingleChildScrollView(
@@ -115,19 +123,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: state.courses
                                 .map((course) => CourseCard(
                                       course: course,
-                                      courseState: courseCanBeOpened(course,
-                                                  state.currentEnrollment) ||
+                                      courseState: courseCanBeOpened(
+                                                  course,
+                                                  state.currentEnrollment,
+                                                  state.loadingCourse) ||
                                               course.id ==
                                                   state.highlightedCourse?.id
                                           ? CourseState.availble
                                           : CourseState.locked,
                                       onTap: () => courseCanBeOpened(
-                                              course, state.currentEnrollment)
+                                              course,
+                                              state.currentEnrollment,
+                                              state.loadingCourse)
                                           ? BlocProvider.of<HomePageBloc>(
                                                   context)
                                               .add(CourseSelected(course.id))
                                           : null,
-                                      isLoading: state.loadingCourse,
+                                      isLoading: state.loadingCourse != null &&
+                                          state.loadingCourse == course.id,
                                     ))
                                 .toList(),
                           ),

@@ -61,7 +61,7 @@ class _SetupPasswordFormState extends State<SetupPasswordForm> {
             child: Column(
               children: [
                 Text(
-                  "Stel je wachtwoord in",
+                  "Stel je wachtwoord in".toUpperCase(),
                   style: TextStyle(
                     fontSize: 22,
                     fontFamily: "Stratum",

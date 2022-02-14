@@ -23,7 +23,7 @@ class S3Image extends StatelessWidget {
     if (_fileName == null) {
       return null;
     }
-    final dir = await getApplicationDocumentsDirectory();
+    final dir = await getTemporaryDirectory();
     final filePath = dir.path + _fileName!;
     final file = File(filePath);
 
@@ -39,7 +39,7 @@ class S3Image extends StatelessWidget {
       return file;
     } on StorageException catch (_) {
       print('Error while downloading file');
-    }
+    } catch (_) {}
   }
 
   Future<String> get url async {

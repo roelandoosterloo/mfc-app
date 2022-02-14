@@ -4,18 +4,17 @@ import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/measurement/measurement_bloc.dart';
 import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/screens/measurment/measurement_chart2.dart';
-import 'package:mfc_app/screens/measurment/statistic_cart.dart';
+import 'package:mfc_app/screens/measurment/statistic_card.dart';
 
 class MeasurementOverview extends StatelessWidget {
-  final f = new DateFormat(DATE_FORMAT);
+  final f = new DateFormat.yMd(Intl.getCurrentLocale());
+  final n = new NumberFormat(SINGLE_DECIMAL_FORMAT);
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MeasurementBloc, MeasurementState>(
       builder: (context, state) {
         if (state is MeasurementsAvailable) {
-          print("draw something!!!");
-          print(state.measurements.length);
           return Container(
             child: SafeArea(
               child: SingleChildScrollView(
@@ -53,21 +52,22 @@ class MeasurementOverview extends StatelessWidget {
                         StatisticCard(
                           title: "Huidige gewicht",
                           subText: state.currentWeight != null
-                              ? "${state.currentWeight!.toStringAsFixed(1)} kg"
+                              ? "${n.format(state.currentWeight!)} kg"
                               : "Niet beschikbaar",
                           icon: Icons.monitor_weight_outlined,
                           iconColor: Colors.white,
                         ),
                         StatisticCard(
                           title: "Streefgewicht",
-                          subText: "${state.profile.targetWeight ?? "-"} kg",
+                          subText:
+                              "${state.profile.targetWeight != null ? n.format(state.profile.targetWeight) : "-"} kg",
                           icon: Icons.flag_outlined,
                           iconColor: Colors.white,
                         ),
                         StatisticCard(
                           title: "Totaal afgevallen",
                           mainText: state.totalWeightLost != null
-                              ? "${state.totalWeightLost!.toStringAsFixed(1)}"
+                              ? n.format(state.totalWeightLost)
                               : "-",
                           subText: "kg",
                           iconColor: Colors.white,

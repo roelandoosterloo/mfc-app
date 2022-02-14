@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/course/module/module_bloc.dart';
+import 'package:mfc_app/constants/colors.dart';
 import 'package:mfc_app/models/course/Answer.dart';
 import 'package:mfc_app/models/course/Module.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
@@ -86,7 +87,7 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                       floating: false,
                       expandedHeight:
                           MediaQuery.of(context).size.height * 0.305,
-                      backgroundColor: Color(0xff2b8474),
+                      backgroundColor: Theme.of(context).primaryColor,
                       elevation: 0,
                       flexibleSpace: FlexibleSpaceBar(
                         title: Text(
@@ -107,11 +108,11 @@ class _ModuleSingleScreenState extends State<ModuleSingleScreen> {
                     SliverPersistentHeader(
                       delegate: MySliverPersistentHeaderDelegate(
                         TabBar(
-                          indicatorColor: Color(0xfff44336),
+                          indicatorColor: RED,
                           tabs: [
-                            Tab(text: "Info"),
-                            Tab(text: "Video"),
-                            Tab(text: "Werkboek"),
+                            Tab(text: "Info".toUpperCase()),
+                            Tab(text: "Video".toUpperCase()),
+                            Tab(text: "Werkboek".toUpperCase()),
                           ],
                         ),
                       ),

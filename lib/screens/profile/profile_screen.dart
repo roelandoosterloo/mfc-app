@@ -7,6 +7,7 @@ import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/profile/profile_bloc.dart';
 import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
+import 'package:mfc_app/utils/formatter.dart';
 import 'package:mfc_app/widgets/date_input.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,8 +16,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final f = new DateFormat(DATE_FORMAT);
-
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
@@ -97,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile"),
+        title: Text("Mijn Profiel".toUpperCase()),
         actions: [
           PopupMenuButton(
             onSelected: _onSelectMenu,
@@ -119,13 +118,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               !state.loaded) {
             _firstNameController.text = state.profile!.firstName;
             _lastNameController.text = state.profile!.lastName;
-            _birthDateController.text = state.profile!.birthDate != null
-                ? f.format(state.profile!.birthDate!)
-                : "";
+            _birthDateController.text =
+                Formatter.formatDate(state.profile!.birthDate!) ?? "";
             _lengthController.text =
-                state.profile!.length?.toStringAsPrecision(3) ?? "";
+                Formatter.formatDecimal(state.profile?.length, decimals: 2) ??
+                    "";
             _targetWeightController.text =
-                state.profile!.targetWeight?.toStringAsPrecision(3) ?? "";
+                Formatter.formatDecimal(state.profile?.targetWeight) ?? "";
             _profileBloc.add(ProfileLoadingDone());
           }
           if (state is ProfileSuccessState) {
@@ -148,14 +147,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ..removeCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Profiel niet opgeslagen",
-                      ),
-                      Text(state.error)
-                    ],
+                  content: Container(
+                    height: 100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Profiel niet opgeslagen",
+                        ),
+                        Text(state.error)
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -186,7 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: InputDecoration(labelText: "Achternaam"),
                   ),
                   DateInput(
-                    labelText: "Date of birth",
+                    labelText: "Geboortedatum",
                     validator: (_) => !state.isLengthValid
                         ? 'Ingevulde lengte ongeldig'
                         : null,
@@ -199,7 +201,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     validator: (_) => !state.isLengthValid
                         ? 'Ingevulde lengte ongeldig'
                         : null,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     controller: _lengthController,
                     autocorrect: false,
                     decoration: InputDecoration(
@@ -212,7 +216,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     validator: (_) => !state.isWeightValid
                         ? 'Ingevulde gewicht ongeldig'
                         : null,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     controller: _targetWeightController,
                     autocorrect: false,
                     decoration: InputDecoration(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mfc_app/constants/values.dart';
 
 class DateInput extends StatelessWidget {
-  final f = new DateFormat(DATE_FORMAT);
+  final f = new DateFormat.yMd(Intl.getCurrentLocale());
   final TextEditingController _controller;
   final Function(DateTime)? _onDateSelected;
   final String _labelText;

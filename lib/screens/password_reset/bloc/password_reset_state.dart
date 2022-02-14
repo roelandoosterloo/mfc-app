@@ -4,7 +4,7 @@ abstract class PasswordResetState extends Equatable {
   const PasswordResetState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class PasswordResetInitial extends PasswordResetState {}
@@ -19,7 +19,7 @@ class PasswordResetEmailStep extends PasswordResetState {
   }
 
   @override
-  List<Object> get props => [emailValid];
+  List<Object?> get props => [_emailValid];
 }
 
 class PasswordResetCodeStep extends PasswordResetState {
@@ -61,8 +61,7 @@ class PasswordResetCodeStep extends PasswordResetState {
   }
 
   @override
-  List<Object> get props =>
-      [email, result, _isPasswordValid ?? "", _isCodeValid ?? ""];
+  List<Object?> get props => [email, result, _isPasswordValid, _isCodeValid];
 }
 
 class PasswordResetRequestedFailure extends PasswordResetState {

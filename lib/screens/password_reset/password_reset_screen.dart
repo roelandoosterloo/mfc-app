@@ -95,6 +95,9 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                       labelText: "Email adres",
                     ),
                   ),
+                  SizedBox(
+                    height: 40,
+                  ),
                   ElevatedButton(
                     onPressed: state.emailValid ? _onSubmitCodeRequest : null,
                     child: Text("HERSTEL"),
@@ -144,6 +147,9 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                       icon: Icon(Icons.lock),
                       labelText: "Herhaal wachtwoord",
                     ),
+                  ),
+                  SizedBox(
+                    height: 40,
                   ),
                   ElevatedButton(
                     onPressed: state.isValid() ? _onSubmitResetPassword : null,

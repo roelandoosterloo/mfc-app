@@ -3,7 +3,7 @@ part of 'course_single_screen.dart';
 class ModuleCard extends StatelessWidget {
   final ModuleProgress _progress;
 
-  final f = new DateFormat(DATE_FORMAT);
+  final f = new DateFormat.yMd(Intl.getCurrentLocale());
 
   ModuleCard({Key? key, required ModuleProgress progress})
       : _progress = progress,
@@ -70,7 +70,7 @@ class ModuleCard extends StatelessWidget {
                 Column(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Color(0xff2b8474),
+                      backgroundColor: Theme.of(context).primaryColor,
                       radius: 20,
                       child: Icon(
                         Icons.play_arrow,

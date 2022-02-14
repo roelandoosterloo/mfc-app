@@ -6,6 +6,8 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:mfc_app/models/measurement.dart';
 
 class MeasurementRepository {
+  List<Measurement>? _measurements;
+
   Future<void> addMeasurement(Measurement measurement) async {
     GraphQLOperation op = Amplify.API.mutate(
       request: GraphQLRequest<String>(
@@ -28,7 +30,10 @@ class MeasurementRepository {
     return;
   }
 
-  Future<List<Measurement>> listMeasurements() async {
+  Stream<List<Measurement>> listMeasurements() async* {
+    if (_measurements != null) {
+      yield _measurements!;
+    }
     String graphQLDocument = ''' 
     query ListMeasurements {
       getMeasurementsByDate(
@@ -54,6 +59,6 @@ class MeasurementRepository {
     List<dynamic> items = json["getMeasurementsByDate"]["items"];
     List<Measurement> measurements =
         items.map((it) => Measurement.fromJson(it)).toList();
-    return measurements;
+    yield measurements;
   }
 }

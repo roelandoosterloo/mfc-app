@@ -119,7 +119,20 @@ class _LoginFormState extends State<LoginForm> {
                       onPressed: canSubmit(state) ? _onLogin : null,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Text("LOG IN"),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (state.isLoading)
+                              Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  height: 20,
+                                  width: 40,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )),
+                            Text("LOG IN"),
+                          ],
+                        ),
                       ),
                     ),
                     TextButton(

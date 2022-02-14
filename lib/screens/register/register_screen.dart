@@ -9,6 +9,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserRepository _userRepository = context.read<UserRepository>();
+    ThemeData theme = Theme.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -35,9 +36,9 @@ class RegisterScreen extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Color(0xff2b8474),
-                          Color(0xff2b8474),
-                          Color(0xff2b8474).withOpacity(0.2),
+                          theme.primaryColor,
+                          theme.primaryColor,
+                          theme.primaryColor.withOpacity(0.2),
                         ],
                       ),
                     ),

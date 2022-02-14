@@ -22,6 +22,30 @@
         },
         "mfcAppLambda": {
           "deploymentBucketName": "amplify-mfcapp-dev-152955-deployment",
+          "s3Key": "amplify-builds/mfcAppLambda-563737626474514c4a6b-build.zip"
+        }
+      }
+    }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mfcapp-prod-165653-authRole",
+      "UnauthRoleArn": "arn:aws:iam::854037337507:role/amplify-mfcapp-prod-165653-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::854037337507:role/amplify-mfcapp-prod-165653-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-mfcapp-prod-165653-deployment",
+      "UnauthRoleName": "amplify-mfcapp-prod-165653-unauthRole",
+      "StackName": "amplify-mfcapp-prod-165653",
+      "StackId": "arn:aws:cloudformation:eu-west-1:854037337507:stack/amplify-mfcapp-prod-165653/3ba0c0a0-8b53-11ec-980f-06ce81376dfd",
+      "AmplifyAppId": "d3ridyvrbiy8n8"
+    },
+    "categories": {
+      "auth": {
+        "mfcappf4fdfc42": {}
+      },
+      "function": {
+        "mfcAppLambda": {
+          "deploymentBucketName": "amplify-mfcapp-prod-165653-deployment",
           "s3Key": "amplify-builds/mfcAppLambda-563971496472676e536f-build.zip"
         }
       }

@@ -97,10 +97,10 @@ class Profile extends Model {
       id: this.id,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
-      birthDate: birthDate ?? this.birthDate,
-      length: length ?? this.length,
-      targetWeight: targetWeight ?? this.targetWeight,
-      currentCourseId: currentCourseId ?? this.currentCourseId,
+      birthDate: birthDate,
+      length: length,
+      targetWeight: targetWeight,
+      currentCourseId: currentCourseId,
     );
   }
 

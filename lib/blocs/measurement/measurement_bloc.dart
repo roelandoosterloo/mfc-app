@@ -1,4 +1,4 @@
-import 'package:amplify_auth_plugin_interface/src/Session/AuthUser.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/measurement.dart';
@@ -33,10 +33,12 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
   ) async {
     emit(MeasurementLoading());
     try {
-      List<Measurement> measurements = await _measureRepo.listMeasurements();
       AuthUser user = await _userRepo.getUser();
       Profile p = await _profileRepo.getProfile(user.username);
-      emit(MeasurementsAvailable(measurements: measurements, profile: p));
+      Stream<List<Measurement>> measurementsStream =
+          _measureRepo.listMeasurements();
+      await measurementsStream.forEach((measurements) =>
+          emit(MeasurementsAvailable(measurements: measurements, profile: p)));
     } catch (ex) {
       emit(MeasurementsFailed(error: ex.toString()));
     }

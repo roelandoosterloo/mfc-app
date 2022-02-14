@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/add_measurement/add_measurement_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/utils/input_formatter.dart';
+import 'package:mfc_app/utils/parser.dart';
 import 'package:mfc_app/widgets/date_input.dart';
 
 class AddMeasurementForm extends StatefulWidget {
@@ -18,7 +18,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
   final TextEditingController _noteController = TextEditingController();
 
   late AddMeasurementBloc _measurementBloc;
-  final f = new DateFormat(DATE_FORMAT);
+  final f = new DateFormat.yMd(Intl.getCurrentLocale());
 
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
     BlocProvider.of<AddMeasurementBloc>(context).add(
       MeasurementSubmitted(
         date: f.parse(_dateController.text),
-        weight: double.parse(_weightController.text),
+        weight: Parser.readDouble(_weightController.text)!,
         note: _noteController.text,
       ),
     );
@@ -128,7 +128,9 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
               ),
               TextFormField(
                 controller: _weightController,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 autocorrect: false,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (_) =>

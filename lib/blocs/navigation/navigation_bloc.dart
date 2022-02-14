@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' show Page;
 import 'package:mfc_app/screens/course/list/course_list_page.dart';
 import 'package:mfc_app/screens/course/single/course_single_page.dart';
 import 'package:mfc_app/screens/home/home_page.dart';
+import 'package:mfc_app/screens/init/init_page.dart';
 import 'package:mfc_app/screens/landing/landing_page.dart';
 import 'package:mfc_app/screens/login/login_page.dart';
 import 'package:mfc_app/screens/measurment/add_measurement/add_measurement_page.dart';

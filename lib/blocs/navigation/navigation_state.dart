@@ -16,7 +16,7 @@ abstract class NavigationState extends Equatable {
 
 class NavigationInitial extends NavigationState {
   NavigationInitial(bool wentBack)
-      : super(stack: IStack([LandingPage()]), wentBack: wentBack);
+      : super(stack: IStack([InitPage()]), wentBack: wentBack);
 
   @override
   NavigationState goBack() {

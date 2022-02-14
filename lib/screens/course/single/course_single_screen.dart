@@ -29,6 +29,7 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (context, state) {
         if (state.wentBack && state.stack.peek() is CourseSinglePage) {
@@ -49,7 +50,7 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color(0xff2b8474),
+                  color: theme.primaryColor,
                 ),
               );
             } else if (state is SingleCoursePageLoaded) {
@@ -63,7 +64,7 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
               return Container(
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color(0xff2b8474),
+                  color: theme.primaryColor,
                 ),
                 child: Stack(
                   children: [
@@ -84,8 +85,8 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Color(0xff2b8474).withOpacity(0),
-                            Color(0xff2b8474),
+                            theme.primaryColor.withOpacity(0),
+                            theme.primaryColor,
                           ],
                         ),
                       ),

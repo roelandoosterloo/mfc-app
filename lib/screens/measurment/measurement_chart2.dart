@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mfc_app/constants/colors.dart';
 import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/models/measurement.dart';
@@ -23,7 +24,7 @@ class MeasurementChart2 extends StatefulWidget {
 }
 
 class _MeasurementChart2State extends State<MeasurementChart2> {
-  final f = new DateFormat(DATE_FORMAT);
+  final f = new DateFormat.yMd(Intl.getCurrentLocale());
   final int _leftLabelCount = 6;
   final int _bottomLabelCount = 4;
   List<FlSpot> _values = const [];
@@ -82,7 +83,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
       isCurved: true,
       curveSmoothness: 0.2,
       colors: [
-        Color(0xfff44336),
+        RED,
       ],
     );
   }
@@ -104,7 +105,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
       getTitles: (value) {
         final DateTime date =
             DateTime.fromMillisecondsSinceEpoch(value.toInt());
-        return "${DateFormat.MMM().format(date)}\n${DateFormat.d().format(date)}";
+        return "${DateFormat.MMM(Intl.getCurrentLocale()).format(date)}\n${DateFormat.d().format(date)}";
       },
       margin: 8,
       interval: max(1000 * 60 * 60 * 24, (_maxX - _minX) / _bottomLabelCount),
@@ -145,7 +146,10 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
         rightTitles: SideTitles(showTitles: false),
         topTitles: SideTitles(showTitles: false),
       ),
-      lineBarsData: [_targetLine(), _lineBarData()],
+      lineBarsData: [
+        if (widget._profile?.targetWeight != null) _targetLine(),
+        _lineBarData(),
+      ],
       borderData: FlBorderData(
         border: Border.symmetric(
           vertical: BorderSide.none,

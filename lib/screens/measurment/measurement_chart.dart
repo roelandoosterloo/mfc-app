@@ -16,7 +16,7 @@ class MeasurementChart extends StatelessWidget {
         _profile = profile,
         super(key: key);
 
-  final f = new DateFormat(DATE_FORMAT);
+  final f = new DateFormat.yMd(Intl.getCurrentLocale());
 
   double? bmiWeight(double bmiTarget) {
     if (_profile != null && _profile!.length == null) return null;

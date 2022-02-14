@@ -54,8 +54,11 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     Emitter<HomePageState> emit,
   ) async {
     if (state is HomePageLoaded) {
-      emit((state as HomePageLoaded).setCourseLoading(true));
       HomePageLoaded hplState = (state as HomePageLoaded);
+      if (hplState.loadingCourse != null) {
+        return;
+      }
+      emit((state as HomePageLoaded).setCourseLoading(event.courseId));
       Enrollment? enrollment;
       try {
         enrollment = hplState.enrollments
@@ -67,15 +70,23 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       }
 
       if (enrollment.startedAt == null) {
-        await _courseRepo.setCourseStartedAt(enrollment.id);
+        try {
+          await _courseRepo.setCourseStartedAt(enrollment.id);
+        } catch (ex) {
+          print(ex);
+        }
       }
       if (hplState.profile.currentCourseId != event.courseId) {
-        await _profileRepo.setCurrentCourse(
-          hplState.profile.id,
-          event.courseId,
-        );
+        try {
+          await _profileRepo.setCurrentCourse(
+            hplState.profile.id,
+            event.courseId,
+          );
+        } catch (ex) {
+          print(ex);
+        }
       }
-      emit((state as HomePageLoaded).setCourseLoading(false));
+      emit((state as HomePageLoaded).setCourseLoading(null));
       _navBloc.add(NavigatedToCourse(enrollment.id));
     }
   }

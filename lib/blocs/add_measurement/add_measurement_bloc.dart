@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
-import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/measurement.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
+import 'package:mfc_app/utils/parser.dart';
 import 'package:mfc_app/utils/validators.dart';
 
 part 'add_measurement_event.dart';
@@ -12,7 +12,7 @@ part 'add_measurement_state.dart';
 class AddMeasurementBloc
     extends Bloc<AddMeasurementEvent, AddMeasurementState> {
   MeasurementRepository _measureRepo;
-  final dateFormat = new DateFormat(DATE_FORMAT);
+  final dateFormat = new DateFormat.yMd(Intl.getCurrentLocale());
 
   AddMeasurementBloc({required MeasurementRepository measureRepo})
       : _measureRepo = measureRepo,
@@ -39,20 +39,18 @@ class AddMeasurementBloc
     MeasurementWeightChanged event,
     Emitter<AddMeasurementState> emit,
   ) {
-    try {
-      double weight = double.parse(event.weight);
-      emit(
-        state.update(
-          isWeightValid: Validators.isNumberInRange(
-            value: weight,
-            lower: 0,
-            upper: 300,
-          ),
-        ),
-      );
-    } catch (ex) {
-      emit(state.update(isWeightValid: false));
+    double? weight = Parser.readDouble(event.weight);
+    if (weight == null) {
+      return emit(state.update(isWeightValid: false));
     }
+    emit(
+      state.update(
+          isWeightValid: Validators.isNumberInRange(
+        value: weight,
+        lower: 0,
+        upper: 300,
+      )),
+    );
   }
 
   void _onNoteChanged(
