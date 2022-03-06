@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:mfc_app/utils/formatter.dart';
 
 class DateInput extends StatelessWidget {
-  final f = new DateFormat.yMd(Intl.getCurrentLocale());
   final TextEditingController _controller;
   final Function(DateTime)? _onDateSelected;
   final String _labelText;
@@ -53,7 +52,7 @@ class DateInput extends StatelessWidget {
             initialDate: _initialDate ?? DateTime.now(),
           ).then((value) {
             if (value != null) {
-              _controller.text = f.format(value);
+              _controller.text = Formatter.formatDate(value) ?? "";
               if (_onDateSelected != null) {
                 _onDateSelected!(value);
               }

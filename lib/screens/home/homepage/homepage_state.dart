@@ -49,16 +49,16 @@ class HomePageLoaded extends HomePageState {
         .firstWhere((element) => element.course.id == currentCourseId);
   }
 
-  Course? get highlightedCourse {
-    String? currentCourse = profile.currentCourseId;
-    if (currentCourse == null) {
-      if (_enrollments.isEmpty) {
-        return null;
-      }
-      return _enrollments[0].course;
-    }
-    return courses.firstWhere((element) => element.id == currentCourse);
-  }
+  // Course? get highlightedCourse {
+  //   String? currentCourse = profile.currentCourseId;
+  //   if (currentCourse == null) {
+  //     if (_enrollments.isEmpty) {
+  //       return null;
+  //     }
+  //     return _enrollments[0].course;
+  //   }
+  //   return courses.firstWhere((element) => element.id == currentCourse);
+  // }
 
   List<Enrollment> get enrollments {
     return _enrollments;

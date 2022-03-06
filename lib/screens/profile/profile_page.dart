@@ -12,6 +12,7 @@ class ProfilePage extends Page {
       builder: (BuildContext context) => BlocProvider(
         create: (context) => ProfileBloc(
           profileRepo: context.read<ProfileRepository>(),
+          // locale: Localizations.maybeLocaleOf(context),
         ),
         child: ProfileScreen(),
       ),

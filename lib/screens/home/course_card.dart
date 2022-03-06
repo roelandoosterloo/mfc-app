@@ -12,7 +12,9 @@ class CourseCard extends StatelessWidget {
   final CourseState _courseState;
   final bool _isLoading;
 
-  const CourseCard({
+  bool localLoading = false;
+
+  CourseCard({
     Key? key,
     required Course course,
     Function()? onTap,
@@ -37,7 +39,12 @@ class CourseCard extends StatelessWidget {
           child: Stack(
             children: [
               InkWell(
-                onTap: _onTap,
+                onTap: !localLoading
+                    ? () {
+                        localLoading = true;
+                        if (_onTap != null) _onTap!();
+                      }
+                    : null,
                 child: Stack(
                   children: [
                     S3Image(

@@ -84,21 +84,6 @@ class LoginScreen extends StatelessWidget {
                         ),
                       );
                   }
-                  // if (state.isLoading) {
-                  //   ScaffoldMessenger.of(context)
-                  //     ..removeCurrentSnackBar()
-                  //     ..showSnackBar(
-                  //       SnackBar(
-                  //         content: Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             Text("Loading..."),
-                  //             CircularProgressIndicator(),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     );
-                  // }
                   if (state.isSuccess) {
                     _navBloc.add(NavigatedToHome());
                     ScaffoldMessenger.of(context).removeCurrentSnackBar();

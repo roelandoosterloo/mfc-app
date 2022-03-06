@@ -4,11 +4,26 @@ import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/measurement/measurement_bloc.dart';
 import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/screens/measurment/measurement_chart2.dart';
+import 'package:mfc_app/screens/measurment/measurement_list.dart';
 import 'package:mfc_app/screens/measurment/statistic_card.dart';
+import 'package:mfc_app/utils/formatter.dart';
 
-class MeasurementOverview extends StatelessWidget {
-  final f = new DateFormat.yMd(Intl.getCurrentLocale());
-  final n = new NumberFormat(SINGLE_DECIMAL_FORMAT);
+part 'measurement_statistics.dart';
+
+class MeasurementOverview extends StatefulWidget {
+  @override
+  State<MeasurementOverview> createState() => _MeasurementOverviewState();
+}
+
+class _MeasurementOverviewState extends State<MeasurementOverview>
+    with TickerProviderStateMixin {
+  late TabController tabController;
+
+  @override
+  void initState() {
+    tabController = new TabController(length: 2, vsync: this);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,65 +32,49 @@ class MeasurementOverview extends StatelessWidget {
         if (state is MeasurementsAvailable) {
           return Container(
             child: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Card(
-                      color: Theme.of(context).primaryColor,
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: state.measurements.isEmpty
-                            ? AspectRatio(
-                                aspectRatio: 1.7,
-                                child: Placeholder(),
-                              )
-                            : MeasurementChart2(
-                                measurements: state.measurements,
-                                profile: state.profile,
-                              ),
-                      ),
+              child: Column(
+                children: [
+                  Card(
+                    color: Theme.of(context).primaryColor,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 15,
                     ),
-                    GridView.count(
-                      primary: false,
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 15,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: state.measurements.isEmpty
+                          ? AspectRatio(
+                              aspectRatio: 1.7,
+                              child: Placeholder(),
+                            )
+                          : MeasurementChart2(
+                              measurements: state.measurements,
+                              profile: state.profile,
+                            ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: TabBarView(
+                      controller: tabController,
                       children: [
-                        StatisticCard(
-                          title: "Huidige gewicht",
-                          subText: state.currentWeight != null
-                              ? "${n.format(state.currentWeight!)} kg"
-                              : "Niet beschikbaar",
-                          icon: Icons.monitor_weight_outlined,
-                          iconColor: Colors.white,
+                        MeasurementStatistics(
+                          currentWeight: state.currentWeight,
+                          targetWeight: state.profile.targetWeight,
+                          totalWeightLost: state.totalWeightLost,
                         ),
-                        StatisticCard(
-                          title: "Streefgewicht",
-                          subText:
-                              "${state.profile.targetWeight != null ? n.format(state.profile.targetWeight) : "-"} kg",
-                          icon: Icons.flag_outlined,
-                          iconColor: Colors.white,
+                        MeasurementList(
+                          measurements: state.measurements,
                         ),
-                        StatisticCard(
-                          title: "Totaal afgevallen",
-                          mainText: state.totalWeightLost != null
-                              ? n.format(state.totalWeightLost)
-                              : "-",
-                          subText: "kg",
-                          iconColor: Colors.white,
-                        )
                       ],
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                  TabPageSelector(
+                    controller: tabController,
+                  ),
+                ],
               ),
             ),
           );

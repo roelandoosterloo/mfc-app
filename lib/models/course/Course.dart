@@ -66,7 +66,7 @@ class Course extends Model {
     buffer.write("Course {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("name=" + "$_name" + ", ");
-    buffer.write("description=" + "$_description" + ", ");
+    buffer.write("description=" + "${_description?.substring(0, 10)}" + ", ");
     buffer.write("coverImage=" + "$_coverImage");
     buffer.write("}");
 
@@ -91,4 +91,16 @@ class Course extends Model {
         'coverImage': _coverImage,
         'modules': _modules?.map((e) => e.toJson()).toList()
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is Course &&
+      id == other.id &&
+      _name == other.name &&
+      _description == other.description &&
+      _coverImage == other.coverImage &&
+      _modules == other.modules;
+
+  @override
+  int get hashCode => super.hashCode;
 }

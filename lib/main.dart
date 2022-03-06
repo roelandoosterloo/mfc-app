@@ -5,6 +5,7 @@ import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mfc_app/amplifyconfiguration.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/screens/init/init_screen.dart';
 import 'package:mfc_app/utils/color_generator.dart';
 import 'package:mfc_app/utils/simple_bloc_observer.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
 
@@ -34,6 +36,15 @@ class MyAmplifyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('nl'),
+        Locale('en'),
+      ],
       title: 'MyFoodCoach',
       theme: ThemeData(
         primarySwatch: createMaterialColor(

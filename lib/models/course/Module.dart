@@ -151,4 +151,21 @@ class Module extends Model {
         'delayUOM': _delayUOM,
         'assignments': _assignments?.map((e) => e.toJson()).toList()
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is Module &&
+      id == other.id &&
+      _courseId == other.courseId &&
+      _name == other.name &&
+      _index == other.index &&
+      _description == other.description &&
+      _coverImage == other.coverImage &&
+      _videoUrl == other.videoUrl &&
+      _delayNumber == other.delayNumber &&
+      _delayUOM == other.delayUOM &&
+      _assignments == other.assignments;
+
+  @override
+  int get hashCode => super.hashCode;
 }

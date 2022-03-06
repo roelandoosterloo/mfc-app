@@ -3,8 +3,6 @@ part of 'course_single_screen.dart';
 class ModuleCard extends StatelessWidget {
   final ModuleProgress _progress;
 
-  final f = new DateFormat.yMd(Intl.getCurrentLocale());
-
   ModuleCard({Key? key, required ModuleProgress progress})
       : _progress = progress,
         super(key: key);
@@ -94,7 +92,7 @@ class ModuleCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      f.format(_progress.availableAt),
+                      Formatter.formatDate(_progress.availableAt) ?? "",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.white,

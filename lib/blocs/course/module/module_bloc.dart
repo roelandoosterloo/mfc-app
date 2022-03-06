@@ -38,8 +38,9 @@ class ModuleProgressBloc
       } else {
         emit(ModuleProgressNotFound());
       }
-    } catch (ex) {
+    } catch (ex, s) {
       print(ex);
+      print(s);
       emit(ModuleProgressLoadingFailed(error: ex.toString()));
     }
   }

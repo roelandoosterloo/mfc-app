@@ -38,7 +38,7 @@ class LandingScreen extends StatelessWidget {
                     height: 50,
                   ),
                   Image.asset(
-                    "assets/images/logo_color.png",
+                    "assets/images/logo_hd.png",
                     fit: BoxFit.cover,
                   ),
                   Spacer(flex: 1),

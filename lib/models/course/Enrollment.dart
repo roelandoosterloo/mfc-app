@@ -105,4 +105,17 @@ class Enrollment extends Model {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Enrollment &&
+      id == other.id &&
+      _startedAt == other.startedAt &&
+      _enrolledAt == other.enrolledAt &&
+      _completedAt == other.completedAt &&
+      _course == other.course &&
+      _moduleSchedule == other.moduleSchedule;
+
+  @override
+  int get hashCode => super.hashCode;
 }

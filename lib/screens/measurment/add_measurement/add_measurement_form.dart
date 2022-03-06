@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/add_measurement/add_measurement_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/utils/input_formatter.dart';
@@ -18,7 +17,6 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
   final TextEditingController _noteController = TextEditingController();
 
   late AddMeasurementBloc _measurementBloc;
-  final f = new DateFormat.yMd(Intl.getCurrentLocale());
 
   @override
   void initState() {
@@ -53,7 +51,7 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
   void submitMeasurement() {
     BlocProvider.of<AddMeasurementBloc>(context).add(
       MeasurementSubmitted(
-        date: f.parse(_dateController.text),
+        date: Parser.readDateLocal(_dateController.text)!,
         weight: Parser.readDouble(_weightController.text)!,
         note: _noteController.text,
       ),

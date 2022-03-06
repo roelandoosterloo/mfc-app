@@ -54,4 +54,14 @@ class Option extends Model {
 
   Map<String, dynamic> toJson() =>
       {'id': id, 'questionId': _questionId, 'label': _label};
+
+  @override
+  bool operator ==(Object other) =>
+      other is Option &&
+      id == other.id &&
+      _questionId == other.questionId &&
+      _label == other.label;
+
+  @override
+  int get hashCode => super.hashCode;
 }

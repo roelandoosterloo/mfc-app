@@ -24,13 +24,53 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool courseCanBeOpened(
-      Course selected, Enrollment? currentEnrollment, String? loadingCourse) {
+    Course selected,
+    Enrollment? currentEnrollment,
+    String? loadingCourse,
+  ) {
     if (loadingCourse != null) return false;
     if (currentEnrollment == null) return true;
     if (currentEnrollment.isCourseDone()) return true;
     if (selected.id == currentEnrollment.course.id) return true;
 
     return false;
+  }
+
+  void onTap(Course course) {
+    HomePageBloc bloc = BlocProvider.of<HomePageBloc>(context);
+    if (bloc.state is HomePageLoaded) {
+      HomePageLoaded st = bloc.state as HomePageLoaded;
+      if (st.loadingCourse != null) return;
+      if (st.currentEnrollment == null ||
+          st.currentEnrollment!.isCourseDone() ||
+          st.currentEnrollment!.course.id == course.id)
+        return BlocProvider.of<HomePageBloc>(context)
+            .add(CourseSelected(course.id));
+
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              "Rond eerst \"${st.currentEnrollment!.course.name}\" af om verder te gaan.",
+            ),
+          ),
+        );
+    }
+  }
+
+  CourseState courseState(Course course) {
+    HomePageBloc bloc = BlocProvider.of<HomePageBloc>(context);
+    if (bloc.state is HomePageLoaded) {
+      HomePageLoaded st = bloc.state as HomePageLoaded;
+      if (st.currentEnrollment != null &&
+          course != st.currentEnrollment!.course) {
+        return CourseState.locked;
+      } else {
+        return CourseState.availble;
+      }
+    }
+    return CourseState.locked;
   }
 
   @override
@@ -112,9 +152,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         HomeHeader(
                           firstName: state.profile.firstName,
-                          highlightCourse: state.highlightedCourse,
+                          highlightCourse: state.currentEnrollment?.course,
                           loading: state.loadingCourse ==
-                              state.highlightedCourse?.id,
+                              state.currentEnrollment?.course.id,
                         ),
                         SubHeader("Beschikbaar"),
                         SingleChildScrollView(
@@ -123,22 +163,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: state.courses
                                 .map((course) => CourseCard(
                                       course: course,
-                                      courseState: courseCanBeOpened(
-                                                  course,
-                                                  state.currentEnrollment,
-                                                  state.loadingCourse) ||
-                                              course.id ==
-                                                  state.highlightedCourse?.id
-                                          ? CourseState.availble
-                                          : CourseState.locked,
-                                      onTap: () => courseCanBeOpened(
-                                              course,
-                                              state.currentEnrollment,
-                                              state.loadingCourse)
-                                          ? BlocProvider.of<HomePageBloc>(
-                                                  context)
-                                              .add(CourseSelected(course.id))
-                                          : null,
+                                      courseState: courseState(course),
+                                      onTap: () => onTap(course),
                                       isLoading: state.loadingCourse != null &&
                                           state.loadingCourse == course.id,
                                     ))

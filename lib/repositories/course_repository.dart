@@ -173,9 +173,14 @@ class CourseRepository {
             completedAt
             module {
               index
+              courseId
               name
               id
               coverImage
+              description
+              videoUrl
+              delayNumber
+              delayUOM
             }
           }
         }
@@ -202,23 +207,25 @@ class CourseRepository {
         module {
           coverImage
           description
+          courseId
           id
           name
           videoUrl
           index
+          delayNumber
+          delayUOM
           assignments {
             items {
               id
+              moduleId
               type
               introduction
               question
-              answer {
-                id
-                answer
-              }
+              index
               options {
                 items {
                   id
+                  questionId
                   label
                 }
               }
@@ -229,6 +236,7 @@ class CourseRepository {
           items {
             id
             questionId
+            moduleProgressId
             answer
           }
         }
@@ -338,6 +346,7 @@ class CourseRepository {
         cognitoId: "$userId"
         courseId: "$courseId"
         enrolledAt: "${DateTime.now().toUtc().toIso8601String()}"
+        startedAt: "${DateTime.now().toUtc().toIso8601String()}"
       }) {
         id
         enrolledAt

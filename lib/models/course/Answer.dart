@@ -74,4 +74,15 @@ class Answer extends Model {
         'moduleProgressId': _moduleProgressId,
         'answer': _answer,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is Answer &&
+      id == other.id &&
+      _questionId == other.questionId &&
+      _moduleProgressId == other.moduleProgressId &&
+      _answer == other.answer;
+
+  @override
+  int get hashCode => super.hashCode;
 }

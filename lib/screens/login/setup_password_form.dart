@@ -53,9 +53,7 @@ class _SetupPasswordFormState extends State<SetupPasswordForm> {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
-        print("state changed");
         if (state is SetupPassword) {
-          print(state.isPasswordValid);
           return Padding(
             padding: const EdgeInsets.all(20),
             child: Column(

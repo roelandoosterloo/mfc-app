@@ -74,7 +74,7 @@ class Measurement extends Model {
 
   Measurement.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        _date = _dateFormat.parse(json['date']),
+        _date = _dateFormat.parseUtc(json['date']),
         _weight = json['weight'].toDouble(),
         _note = json['note'];
 
@@ -85,4 +85,15 @@ class Measurement extends Model {
         'note': _note,
         'type': _type,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is Measurement &&
+      id == other.id &&
+      _date == other.date &&
+      _weight == other.weight &&
+      _note == other.note;
+
+  @override
+  int get hashCode => super.hashCode;
 }

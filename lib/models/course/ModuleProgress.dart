@@ -95,4 +95,17 @@ class ModuleProgress extends Model {
     // TODO: implement toJson
     throw UnimplementedError();
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is ModuleProgress &&
+      id == other.id &&
+      _availableAt == other.availableAt &&
+      _startedAt == other.startedAt &&
+      _completedAt == other.completedAt &&
+      _module == other.module &&
+      _workbook == other.workbook;
+
+  @override
+  int get hashCode => super.hashCode;
 }

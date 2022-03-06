@@ -125,4 +125,19 @@ class Question extends Model {
         'introduction': _introduction,
         'options': _options?.map((e) => e.toJson()).toList()
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is Question &&
+      id == other.id &&
+      _moduleId == other.moduleId &&
+      _type == other.type &&
+      _introduction == other.introduction &&
+      _question == other.question &&
+      _index == other.index &&
+      _options == other.options &&
+      _answer == other.answer;
+
+  @override
+  int get hashCode => super.hashCode;
 }

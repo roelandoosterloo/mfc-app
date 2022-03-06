@@ -59,6 +59,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         return;
       }
       emit((state as HomePageLoaded).setCourseLoading(event.courseId));
+      // await Future.delayed(Duration(seconds: 10));
       Enrollment? enrollment;
       try {
         enrollment = hplState.enrollments
@@ -67,6 +68,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       if (enrollment == null) {
         enrollment = await _courseRepo.createEnrollment(
             hplState.profile.getId(), event.courseId);
+        this.add(HomePageOpened());
       }
 
       if (enrollment.startedAt == null) {

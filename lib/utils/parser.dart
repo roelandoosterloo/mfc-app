@@ -1,6 +1,26 @@
+import 'dart:io';
+
 import 'package:intl/intl.dart';
 
 class Parser {
+  static DateTime? readDateUtc(Object? value) {
+    if (value == null) return null;
+    if (value is String) {
+      DateFormat f = new DateFormat.yMd(Platform.localeName);
+      return f.parseUtc(value);
+    }
+    return null;
+  }
+
+  static DateTime? readDateLocal(Object? value) {
+    if (value == null) return null;
+    if (value is String) {
+      DateFormat f = new DateFormat.yMd(Platform.localeName);
+      return f.parse(value);
+    }
+    return null;
+  }
+
   static double? readDouble(Object? value) {
     if (value == null) {
       return null;
@@ -13,8 +33,8 @@ class Parser {
     }
     if (value is String) {
       try {
-        double? v =
-            NumberFormat(Intl.getCurrentLocale()).parse(value) as double?;
+        double? v = NumberFormat.decimalPattern(Platform.localeName)
+            .parse(value) as double?;
         return v;
       } catch (_) {
         return double.tryParse(value);

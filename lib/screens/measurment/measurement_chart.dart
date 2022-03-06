@@ -1,8 +1,6 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/models/measurement.dart';
 
@@ -15,8 +13,6 @@ class MeasurementChart extends StatelessWidget {
       : _measurements = measurements,
         _profile = profile,
         super(key: key);
-
-  final f = new DateFormat.yMd(Intl.getCurrentLocale());
 
   double? bmiWeight(double bmiTarget) {
     if (_profile != null && _profile!.length == null) return null;

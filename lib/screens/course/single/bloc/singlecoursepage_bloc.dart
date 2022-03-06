@@ -38,6 +38,7 @@ class SingleCoursePageBloc
       }
     } catch (e) {
       emit(SingleCoursePageError(e.toString()));
+      print(e);
     }
   }
 

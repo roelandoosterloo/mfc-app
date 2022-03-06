@@ -5,7 +5,6 @@ import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/login/login_event.dart';
 import 'package:mfc_app/blocs/login/login_state.dart';
-import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/validators.dart';
 

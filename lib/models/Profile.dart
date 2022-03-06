@@ -43,6 +43,7 @@ class Profile extends Model {
     if (_birthDate != null) {
       return _dateFormat.format(_birthDate!);
     }
+    return null;
   }
 
   const Profile._internal({
@@ -127,4 +128,18 @@ class Profile extends Model {
         'targetWeight': targetWeight,
         'currentCourseId': _currentCourseId,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is Profile &&
+      id == other.id &&
+      _firstName == other.firstName &&
+      _lastName == other.lastName &&
+      _birthDate == other.birthDate &&
+      _length == other.length &&
+      _targetWeight == other.targetWeight &&
+      _currentCourseId == other.currentCourseId;
+
+  @override
+  int get hashCode => super.hashCode;
 }

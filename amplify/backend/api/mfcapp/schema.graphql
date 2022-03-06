@@ -175,6 +175,7 @@ type Measurement
   id: ID!
   date: AWSDate!
   weight: Float!
+  owner: String!
   note: String
   type: String!
 }

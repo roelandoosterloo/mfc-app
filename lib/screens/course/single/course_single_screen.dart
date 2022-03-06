@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/Module.dart';
 import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 import 'package:mfc_app/screens/course/single/bloc/singlecoursepage_bloc.dart';
 import 'package:mfc_app/screens/course/single/course_single_page.dart';
+import 'package:mfc_app/utils/formatter.dart';
 import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 

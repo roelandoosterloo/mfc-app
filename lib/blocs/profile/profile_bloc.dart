@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
-import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/utils/parser.dart';
@@ -12,7 +11,6 @@ part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepo;
-  final dateFormat = new DateFormat.yMd(Intl.getCurrentLocale());
 
   ProfileBloc({required ProfileRepository profileRepo})
       : _profileRepo = profileRepo,
@@ -73,7 +71,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       return;
     }
     try {
-      DateTime date = dateFormat.parse(event.date);
+      DateTime? date = Parser.readDateLocal(event.date);
+      if (date == null)
+        return emit((state as EditProfileState).update(isBirthDateValid: true));
       emit(
         (state as EditProfileState).update(
           isBirthDateValid: Validators.isDateInRange(
@@ -143,7 +143,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
 
     try {
-      DateTime birthDate = dateFormat.parse(event.birthDate ?? "");
+      DateTime birthDate = Parser.readDateLocal(event.birthDate ?? "")!;
       double? length = Parser.readDouble(event.length);
       double? targetWeight = Parser.readDouble(event.targetWeight);
 

@@ -3,11 +3,10 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/constants/colors.dart';
-import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/models/measurement.dart';
+import 'package:mfc_app/utils/formatter.dart';
 
 class MeasurementChart2 extends StatefulWidget {
   final List<Measurement> _measurements;
@@ -24,7 +23,6 @@ class MeasurementChart2 extends StatefulWidget {
 }
 
 class _MeasurementChart2State extends State<MeasurementChart2> {
-  final f = new DateFormat.yMd(Intl.getCurrentLocale());
   final int _leftLabelCount = 6;
   final int _bottomLabelCount = 4;
   List<FlSpot> _values = const [];
@@ -40,33 +38,44 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
     _prepareData();
   }
 
+  @override
+  void didUpdateWidget(MeasurementChart2 old) {
+    super.didUpdateWidget(old);
+    _prepareData();
+  }
+
   void _prepareData() {
     widget._measurements.sort((m1, m2) => m1.date.compareTo(m2.date));
-    _values = widget._measurements
-        .map((e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.weight))
-        .toList();
+    setState(() {
+      _values = widget._measurements
+          .map(
+              (e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.weight))
+          .toList();
 
-    _maxX = _values
-        .map((e) => e.x)
-        .reduce((value, element) => value > element ? value : element);
-    _minX = _values
-        .map((e) => e.x)
-        .reduce((value, element) => value < element ? value : element);
-    _maxY = _values
-        .map((e) => e.y)
-        .reduce((value, element) => value > element ? value : element);
-    _minY = _values
-        .map((e) => e.y)
-        .reduce((value, element) => value < element ? value : element);
+      _maxX = _values
+          .map((e) => e.x)
+          .reduce((value, element) => value > element ? value : element);
+      _minX = _values
+          .map((e) => e.x)
+          .reduce((value, element) => value < element ? value : element);
+      _maxY = _values
+          .map((e) => e.y)
+          .reduce((value, element) => value > element ? value : element);
+      _minY = _values
+          .map((e) => e.y)
+          .reduce((value, element) => value < element ? value : element);
 
-    _maxY = max(_maxY, widget._profile?.targetWeight ?? 0);
-    _minY = min(_minY, widget._profile?.targetWeight ?? double.infinity);
+      _maxY = max(_maxY, widget._profile?.targetWeight ?? 0);
+      _minY = min(_minY, widget._profile?.targetWeight ?? double.infinity);
 
-    _leftTitlesInterval =
-        max(5, ((_maxY - _minY) / (_leftLabelCount - 2)).ceilToDouble());
+      _leftTitlesInterval =
+          max(5, ((_maxY - _minY) / (_leftLabelCount - 2)).ceilToDouble());
 
-    _minY = (_minY / _leftTitlesInterval).floorToDouble() * _leftTitlesInterval;
-    _maxY = (_maxY / _leftTitlesInterval).ceilToDouble() * _leftTitlesInterval;
+      _minY =
+          (_minY / _leftTitlesInterval).floorToDouble() * _leftTitlesInterval;
+      _maxY =
+          (_maxY / _leftTitlesInterval).ceilToDouble() * _leftTitlesInterval;
+    });
   }
 
   double? bmiWeight(double bmiTarget) {
@@ -83,7 +92,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
       isCurved: true,
       curveSmoothness: 0.2,
       colors: [
-        RED,
+        GREY,
       ],
     );
   }
@@ -105,7 +114,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
       getTitles: (value) {
         final DateTime date =
             DateTime.fromMillisecondsSinceEpoch(value.toInt());
-        return "${DateFormat.MMM(Intl.getCurrentLocale()).format(date)}\n${DateFormat.d().format(date)}";
+        return "${Formatter.formatDate(date, datePattern: "MMM")}\n${Formatter.formatDate(date, datePattern: 'd')}";
       },
       margin: 8,
       interval: max(1000 * 60 * 60 * 24, (_maxX - _minX) / _bottomLabelCount),

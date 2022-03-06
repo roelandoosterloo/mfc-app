@@ -1,16 +1,22 @@
+import 'dart:io';
+
 import 'package:intl/intl.dart';
 import 'package:mfc_app/constants/values.dart';
 
 class Formatter {
-  static final _localDateFormat = new DateFormat.yMd(Intl.getCurrentLocale());
-  static final _singleDecimal =
-      new NumberFormat(SINGLE_DECIMAL_FORMAT, Intl.getCurrentLocale());
-  static final _doubleDecimal =
-      new NumberFormat(DOUBLE_DECIMAL_FORMAT, Intl.getCurrentLocale());
+  static String locale = Platform.localeName;
+  static DateFormat _localDateFormat = new DateFormat.yMd(locale);
+  static NumberFormat _singleDecimal =
+      new NumberFormat(SINGLE_DECIMAL_FORMAT, locale);
+  static NumberFormat _doubleDecimal =
+      new NumberFormat(DOUBLE_DECIMAL_FORMAT, locale);
 
-  static String? formatDate(DateTime? date) {
+  static String? formatDate(DateTime? date, {String? datePattern}) {
     if (date == null) {
       return null;
+    }
+    if (datePattern != null) {
+      return new DateFormat(datePattern, locale).format(date);
     }
     return _localDateFormat.format(date);
   }

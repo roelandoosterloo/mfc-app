@@ -12,7 +12,6 @@ part 'add_measurement_state.dart';
 class AddMeasurementBloc
     extends Bloc<AddMeasurementEvent, AddMeasurementState> {
   MeasurementRepository _measureRepo;
-  final dateFormat = new DateFormat.yMd(Intl.getCurrentLocale());
 
   AddMeasurementBloc({required MeasurementRepository measureRepo})
       : _measureRepo = measureRepo,
@@ -28,7 +27,7 @@ class AddMeasurementBloc
     Emitter<AddMeasurementState> emit,
   ) {
     try {
-      dateFormat.parse(event.date);
+      Parser.readDateLocal(event.date);
       emit(state.update(isDateValid: true));
     } catch (ex) {
       emit(state.update(isDateValid: false));
