@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
@@ -37,9 +39,14 @@ class LandingScreen extends StatelessWidget {
                   SizedBox(
                     height: 50,
                   ),
-                  Image.asset(
-                    "assets/images/logo_hd.png",
-                    fit: BoxFit.cover,
+                  SizedBox(
+                    width: min(MediaQuery.of(context).size.height,
+                            MediaQuery.of(context).size.width) -
+                        20,
+                    child: Image.asset(
+                      "assets/images/logo_hd.png",
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   Spacer(flex: 1),
                   ElevatedButton(

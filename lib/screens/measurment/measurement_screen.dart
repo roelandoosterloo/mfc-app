@@ -31,7 +31,6 @@ class MeasurementScreen extends StatelessWidget {
         child: BlocListener<NavigationBloc, NavigationState>(
           listener: (context, state) {
             if (state.wentBack && state.stack.peek() is MeasurementPage) {
-              print("refresh");
               BlocProvider.of<MeasurementBloc>(context)
                   .add(MeasurementsDataRequested());
             }

@@ -1,6 +1,6 @@
 part of 'home_screen.dart';
 
-class HomeHeader extends StatelessWidget {
+class HomeHeader extends StatefulWidget {
   final String firstName;
   final Course? highlightCourse;
   final bool loading;
@@ -12,16 +12,34 @@ class HomeHeader extends StatelessWidget {
     this.loading = false,
   }) : super(key: key);
 
+  @override
+  State<HomeHeader> createState() => _HomeHeaderState();
+}
+
+class _HomeHeaderState extends State<HomeHeader> {
+  Timer? _timer;
+  String greet = "Hi!";
+
+  void initState() {
+    super.initState();
+    greet = greeting();
+    _timer = Timer.periodic(Duration(minutes: 30), (timer) {
+      setState(() {
+        greet = greeting();
+      });
+    });
+  }
+
   String greeting() {
     int hour = DateTime.now().hour;
     if (hour >= 6 && hour < 12) {
-      return "Goedemorgen, $firstName!";
+      return "Goedemorgen, ${widget.firstName}!";
     } else if (hour < 17) {
-      return "Goedemiddag, $firstName!";
+      return "Goedemiddag, ${widget.firstName}!";
     } else if (hour < 23) {
-      return "Goedenavond, $firstName!";
+      return "Goedenavond, ${widget.firstName}!";
     }
-    return "Hallo, $firstName!";
+    return "Hallo, ${widget.firstName}!";
   }
 
   @override
@@ -40,7 +58,7 @@ class HomeHeader extends StatelessWidget {
               height: 20,
             ),
             Text(
-              greeting(),
+              greet,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -49,14 +67,14 @@ class HomeHeader extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            if (highlightCourse != null)
+            if (widget.highlightCourse != null)
               CourseCard(
-                course: highlightCourse!,
+                course: widget.highlightCourse!,
                 courseState: CourseState.availble,
-                isLoading: loading,
+                isLoading: widget.loading,
                 onTap: () {
                   BlocProvider.of<HomePageBloc>(context)
-                      .add(CourseSelected(highlightCourse!.id));
+                      .add(CourseSelected(widget.highlightCourse!.id));
                 },
               ),
           ],

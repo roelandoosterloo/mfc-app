@@ -51,6 +51,8 @@ class MeasurementsAvailable extends MeasurementState {
   List<Object> get props => [_measurements, profile];
 }
 
+class NoMeasurementsAvailable extends MeasurementState {}
+
 class MeasurementsFailed extends MeasurementState {
   final String _error;
 

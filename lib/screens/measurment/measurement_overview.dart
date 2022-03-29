@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +31,35 @@ class _MeasurementOverviewState extends State<MeasurementOverview>
   Widget build(BuildContext context) {
     return BlocBuilder<MeasurementBloc, MeasurementState>(
       builder: (context, state) {
-        if (state is MeasurementsAvailable) {
+        if (state is NoMeasurementsAvailable) {
+          return Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: min(MediaQuery.of(context).size.width,
+                          MediaQuery.of(context).size.height) *
+                      0.7,
+                  child: Image.asset(
+                    "assets/images/scale.png",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                Text(
+                  "Geen metingen beschikbaar",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else if (state is MeasurementsAvailable) {
           return Container(
             child: SafeArea(
               child: Column(

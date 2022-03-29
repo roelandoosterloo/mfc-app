@@ -25,85 +25,89 @@ class LoginScreen extends StatelessWidget {
           userRepo: _userRepository,
           authBloc: context.read<AuthenticationBloc>(),
         ),
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                height: 120,
-                width: double.infinity,
-                color: Theme.of(context).primaryColor,
-                child: Column(
-                  children: [
-                    Spacer(),
-                    SizedBox(
-                      width: 150.0,
-                      child: Image.asset(
-                        "assets/images/logo.png",
-                        fit: BoxFit.contain,
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                Container(
+                  height: 120,
+                  width: double.infinity,
+                  color: Theme.of(context).primaryColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top,
+                        ),
+                        child: SizedBox(
+                          width: 150.0,
+                          child: Image.asset(
+                            "assets/images/logo.png",
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Spacer(
-                flex: 1,
-              ),
-              BlocConsumer<LoginBloc, LoginState>(
-                listener: (context, state) {
-                  if (state.isFailure) {
-                    ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              if (state.error != null &&
-                                  state.error!.isNotEmpty)
-                                Flexible(
-                                  child: Text(
-                                    state.error!,
+                SizedBox(
+                  height: 24,
+                ),
+                BlocConsumer<LoginBloc, LoginState>(
+                  listener: (context, state) {
+                    if (state.isFailure) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (state.error != null &&
+                                    state.error!.isNotEmpty)
+                                  Flexible(
+                                    child: Text(
+                                      state.error!,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    "Login mislukt",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                                )
-                              else
-                                Text(
-                                  "Login mislukt",
-                                  style: TextStyle(color: Colors.white),
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.white,
                                 ),
-                              Icon(
-                                Icons.error,
-                                color: Colors.white,
-                              ),
-                            ],
+                              ],
+                            ),
+                            backgroundColor: Colors.red[400],
                           ),
-                          backgroundColor: Colors.red[400],
-                        ),
-                      );
-                  }
-                  if (state.isSuccess) {
-                    _navBloc.add(NavigatedToHome());
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  }
-                },
-                builder: (context, state) {
-                  if (state is LoggingIn) {
-                    return LoginForm();
-                  }
-                  if (state is SetupPassword) {
-                    return SetupPasswordForm();
-                  }
-                  return Container();
-                },
-              ),
-              if (MediaQuery.of(context).viewInsets.bottom == 0)
-                Spacer(
-                  flex: 3,
-                )
-            ],
+                        );
+                    }
+                    if (state.isSuccess) {
+                      _navBloc.add(NavigatedToHome());
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is LoggingIn) {
+                      return LoginForm();
+                    }
+                    if (state is SetupPassword) {
+                      return SetupPasswordForm();
+                    }
+                    return Container();
+                  },
+                ),
+                // if (MediaQuery.of(context).viewInsets.bottom == 0)
+                //   Spacer(
+                //     flex: 3,
+                //   )
+              ],
+            ),
           ),
         ),
       ),

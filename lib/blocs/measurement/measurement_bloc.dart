@@ -37,9 +37,15 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
       Profile p = await _profileRepo.getProfile(user.username);
       Stream<List<Measurement>> measurementsStream =
           _measureRepo.listMeasurements();
-      await measurementsStream.forEach((measurements) =>
-          emit(MeasurementsAvailable(measurements: measurements, profile: p)));
+      await measurementsStream.forEach((measurements) {
+        if (measurements.isEmpty) {
+          emit(NoMeasurementsAvailable());
+        } else {
+          emit(MeasurementsAvailable(measurements: measurements, profile: p));
+        }
+      });
     } catch (ex) {
+      print(ex);
       emit(MeasurementsFailed(error: ex.toString()));
     }
   }

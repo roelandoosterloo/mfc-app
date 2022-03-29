@@ -14,7 +14,7 @@ class AddMeasurementScreen extends StatelessWidget {
       ),
       body: BlocProvider<AddMeasurementBloc>(
         create: (context) => AddMeasurementBloc(measureRepo: _measureRepo),
-        child: AddMeasurementForm(),
+        child: SingleChildScrollView(child: AddMeasurementForm()),
       ),
     );
   }

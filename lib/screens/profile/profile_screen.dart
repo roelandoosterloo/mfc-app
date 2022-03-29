@@ -164,79 +164,81 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
         },
         builder: (context, state) {
-          return Container(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Column(
-                children: [
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (_) => !state.isFirstNameValid
-                        ? 'Voornaam is niet geldig'
-                        : null,
-                    keyboardType: TextInputType.name,
-                    controller: _firstNameController,
-                    decoration: InputDecoration(labelText: "Voornaam"),
-                  ),
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (_) => !state.isLastNameValid
-                        ? 'Achternaam niet geldig'
-                        : null,
-                    keyboardType: TextInputType.name,
-                    controller: _lastNameController,
-                    decoration: InputDecoration(labelText: "Achternaam"),
-                  ),
-                  DateInput(
-                    labelText: "Geboortedatum",
-                    validator: (_) => !state.isLengthValid
-                        ? 'Ingevulde lengte ongeldig'
-                        : null,
-                    controller: _birthDateController,
-                    onDateSelected: (p0) => null,
-                    firstDate: DateTime.parse("1940-01-01"),
-                  ),
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (_) => !state.isLengthValid
-                        ? 'Ingevulde lengte ongeldig'
-                        : null,
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: true,
+          return SingleChildScrollView(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (_) => !state.isFirstNameValid
+                          ? 'Voornaam is niet geldig'
+                          : null,
+                      keyboardType: TextInputType.name,
+                      controller: _firstNameController,
+                      decoration: InputDecoration(labelText: "Voornaam"),
                     ),
-                    controller: _lengthController,
-                    autocorrect: false,
-                    decoration: InputDecoration(
-                      labelText: "Lengte",
-                      suffix: Text("m"),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (_) => !state.isLastNameValid
+                          ? 'Achternaam niet geldig'
+                          : null,
+                      keyboardType: TextInputType.name,
+                      controller: _lastNameController,
+                      decoration: InputDecoration(labelText: "Achternaam"),
                     ),
-                  ),
-                  TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (_) => !state.isWeightValid
-                        ? 'Ingevulde gewicht ongeldig'
-                        : null,
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: true,
+                    DateInput(
+                      labelText: "Geboortedatum",
+                      validator: (_) => !state.isLengthValid
+                          ? 'Ingevulde lengte ongeldig'
+                          : null,
+                      controller: _birthDateController,
+                      onDateSelected: (p0) => null,
+                      firstDate: DateTime.parse("1940-01-01"),
                     ),
-                    controller: _targetWeightController,
-                    autocorrect: false,
-                    decoration: InputDecoration(
-                      labelText: "Streefgewicht",
-                      suffix: Text("kg"),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (_) => !state.isLengthValid
+                          ? 'Ingevulde lengte ongeldig'
+                          : null,
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      controller: _lengthController,
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        labelText: "Lengte",
+                        suffix: Text("m"),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 40),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size.fromHeight(40),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (_) => !state.isWeightValid
+                          ? 'Ingevulde gewicht ongeldig'
+                          : null,
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      controller: _targetWeightController,
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        labelText: "Streefgewicht",
+                        suffix: Text("kg"),
+                      ),
                     ),
-                    onPressed: state.isValid() ? _onSubmit : null,
-                    child: Text("Opslaan"),
-                  ),
-                  if (!state.isValid())
-                    Text("Niet alle velden zijn goed ingevuld"),
-                ],
+                    SizedBox(height: 40),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size.fromHeight(40),
+                      ),
+                      onPressed: state.isValid() ? _onSubmit : null,
+                      child: Text("Opslaan"),
+                    ),
+                    if (!state.isValid())
+                      Text("Niet alle velden zijn goed ingevuld"),
+                  ],
+                ),
               ),
             ),
           );

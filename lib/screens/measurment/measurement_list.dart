@@ -19,6 +19,7 @@ class MeasurementList extends StatelessWidget {
             title: Text(Formatter.formatDate(m.date) ?? "Geen datum"),
             subtitle: m.note != null ? Text(m.note!) : null,
             leading: CircleAvatar(
+                radius: 25,
                 child: Text((Formatter.formatDecimal(m.weight) ?? "-"))),
           ),
         );
