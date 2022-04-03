@@ -79,4 +79,20 @@ class MeasurementRepository {
     }
     _measurements = measurements;
   }
+
+  Future removeMeasurement(String id) async {
+    GraphQLOperation op =
+        Amplify.API.mutate(request: GraphQLRequest(document: '''
+    mutation deleteMeasurement {
+      deleteMeasurement(input: {id: "$id"}) {
+        id
+      }
+    }
+    '''));
+    GraphQLResponse response = await op.response;
+    if (response.errors.isNotEmpty) {
+      throw Exception("Measurement not deleted");
+    }
+    return;
+  }
 }

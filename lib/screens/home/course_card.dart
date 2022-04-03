@@ -11,6 +11,7 @@ class CourseCard extends StatelessWidget {
   final Function()? _onTap;
   final CourseState _courseState;
   final bool _isLoading;
+  final bool _isCurrentCourse;
 
   bool localLoading = false;
 
@@ -20,10 +21,12 @@ class CourseCard extends StatelessWidget {
     Function()? onTap,
     required CourseState courseState,
     bool isLoading = false,
+    bool isCurrentCourse = false,
   })  : _course = course,
         _onTap = onTap,
         _courseState = courseState,
         _isLoading = isLoading,
+        _isCurrentCourse = isCurrentCourse,
         super(key: key);
 
   @override
@@ -61,13 +64,23 @@ class CourseCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: StatusBadge(
-                                state: this._courseState,
-                              ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _isCurrentCourse ? "NU BEZIG" : "",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Stratum",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                StatusBadge(state: this._courseState)
+                              ],
                             ),
                           ),
                           Padding(

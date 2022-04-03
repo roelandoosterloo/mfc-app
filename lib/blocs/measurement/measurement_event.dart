@@ -20,3 +20,9 @@ class MeasurementLoadingFailed extends MeasurementEvent {
 
   MeasurementLoadingFailed(this.error);
 }
+
+class MeasurementDeleteClicked extends MeasurementEvent {
+  final String id;
+
+  MeasurementDeleteClicked(this.id);
+}

@@ -97,6 +97,10 @@ class _MeasurementOverviewState extends State<MeasurementOverview>
                         ),
                         MeasurementList(
                           measurements: state.measurements,
+                          onDelete: (String id) =>
+                              BlocProvider.of<MeasurementBloc>(context).add(
+                            new MeasurementDeleteClicked(id),
+                          ),
                         ),
                       ],
                     ),

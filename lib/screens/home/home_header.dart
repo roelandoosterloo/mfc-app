@@ -72,6 +72,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                 course: widget.highlightCourse!,
                 courseState: CourseState.availble,
                 isLoading: widget.loading,
+                isCurrentCourse: true,
                 onTap: () {
                   BlocProvider.of<HomePageBloc>(context)
                       .add(CourseSelected(widget.highlightCourse!.id));

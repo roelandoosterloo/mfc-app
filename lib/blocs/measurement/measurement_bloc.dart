@@ -25,10 +25,11 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
         _profileRepo = profileRepo,
         super(MeasurementInitial()) {
     on<MeasurementsDataRequested>(_onRequestMeasurements);
+    on<MeasurementDeleteClicked>(_onMeasurementDeleteClicked);
   }
 
   void _onRequestMeasurements(
-    MeasurementsDataRequested event,
+    MeasurementsDataRequested _,
     Emitter<MeasurementState> emit,
   ) async {
     emit(MeasurementLoading());
@@ -47,6 +48,18 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
     } catch (ex) {
       print(ex);
       emit(MeasurementsFailed(error: ex.toString()));
+    }
+  }
+
+  void _onMeasurementDeleteClicked(
+    MeasurementDeleteClicked event,
+    Emitter<MeasurementState> emit,
+  ) async {
+    try {
+      _measureRepo.removeMeasurement(event.id);
+      this.add(new MeasurementsDataRequested());
+    } catch (ex) {
+      print(ex);
     }
   }
 }

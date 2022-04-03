@@ -4,8 +4,13 @@ import 'package:mfc_app/utils/formatter.dart';
 
 class MeasurementList extends StatelessWidget {
   final List<Measurement> _measurements;
-  const MeasurementList({Key? key, required List<Measurement> measurements})
-      : _measurements = measurements,
+  final Function _onRemove;
+  const MeasurementList({
+    Key? key,
+    required List<Measurement> measurements,
+    required Function onDelete,
+  })  : _measurements = measurements,
+        _onRemove = onDelete,
         super(key: key);
 
   @override
@@ -14,13 +19,31 @@ class MeasurementList extends StatelessWidget {
       itemCount: _measurements.length,
       itemBuilder: (context, index) {
         Measurement m = _measurements[index];
-        return Card(
-          child: ListTile(
-            title: Text(Formatter.formatDate(m.date) ?? "Geen datum"),
-            subtitle: m.note != null ? Text(m.note!) : null,
-            leading: CircleAvatar(
-                radius: 25,
-                child: Text((Formatter.formatDecimal(m.weight) ?? "-"))),
+        return Dismissible(
+          key: Key(m.id),
+          onDismissed: (direction) {
+            _onRemove(m.id);
+          },
+          background: Container(
+            color: Colors.red,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Icon(Icons.delete),
+                )
+              ],
+            ),
+          ),
+          child: Card(
+            child: ListTile(
+              title: Text(Formatter.formatDate(m.date) ?? "Geen datum"),
+              subtitle: m.note != null ? Text(m.note!) : null,
+              leading: CircleAvatar(
+                  radius: 25,
+                  child: Text((Formatter.formatDecimal(m.weight) ?? "-"))),
+            ),
           ),
         );
       },
