@@ -78,7 +78,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           print(ex);
         }
       }
-      if (hplState.profile.currentCourseId != event.courseId) {
+      if (!hplState.isCourseDone(event.courseId) &&
+          hplState.profile.currentCourseId != event.courseId) {
         try {
           await _profileRepo.setCurrentCourse(
             hplState.profile.id,

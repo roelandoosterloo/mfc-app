@@ -84,6 +84,7 @@ class CourseRepository {
           moduleSchedule {
             items {
               id
+              enrollmentId
               availableAt
               completedAt
             }
@@ -168,6 +169,7 @@ class CourseRepository {
         moduleSchedule {
           items {
             id
+            enrollmentId
             availableAt
             startedAt
             completedAt
@@ -203,6 +205,7 @@ class CourseRepository {
     query GetModuleProgress {
       getModuleProgress(id: "$progressId") {
         id
+        enrollmentId
         availableAt
         module {
           coverImage
@@ -259,6 +262,26 @@ class CourseRepository {
     mutation completeModule {
       updateModuleProgress(input: {
         id: "$moduleProgressId",
+        completedAt: "${DateTime.now().toUtc().toIso8601String()}"
+      }) {
+        id    
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    var result = await op.response;
+    return true;
+  }
+
+  Future<bool> completeCourse(String enrollmentId) async {
+    String graphQLDocument = '''
+    mutation completeCourse {
+      updateEnrollment(input: {
+        id: "$enrollmentId",
         completedAt: "${DateTime.now().toUtc().toIso8601String()}"
       }) {
         id    

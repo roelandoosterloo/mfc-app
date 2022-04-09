@@ -7,6 +7,7 @@ import 'package:mfc_app/models/course/Module.dart';
 @immutable
 class ModuleProgress extends Model {
   final String id;
+  final String _enrollmentId;
   final DateTime _availableAt;
   final DateTime? _startedAt;
   final DateTime? _completedAt;
@@ -16,6 +17,10 @@ class ModuleProgress extends Model {
   @override
   String getId() {
     return id;
+  }
+
+  String get enrollmentId {
+    return _enrollmentId;
   }
 
   DateTime get availableAt {
@@ -42,14 +47,20 @@ class ModuleProgress extends Model {
     return _availableAt.isBefore(DateTime.now());
   }
 
+  bool isComleted() {
+    return _completedAt != null;
+  }
+
   const ModuleProgress._internal({
     required this.id,
+    required enrollmentId,
     required availableAt,
     module,
     workbook,
     startedAt,
     completedAt,
   })  : _availableAt = availableAt,
+        _enrollmentId = enrollmentId,
         _startedAt = startedAt,
         _completedAt = completedAt,
         _module = module,
@@ -57,6 +68,7 @@ class ModuleProgress extends Model {
 
   factory ModuleProgress({
     String? id,
+    required String enrollmentId,
     required DateTime availableAt,
     DateTime? startedAt,
     DateTime? completedAt,
@@ -65,6 +77,7 @@ class ModuleProgress extends Model {
   }) {
     return ModuleProgress._internal(
       id: id == null ? UUID.getUUID() : id,
+      enrollmentId: enrollmentId,
       availableAt: availableAt,
       startedAt: startedAt,
       completedAt: completedAt,
@@ -75,6 +88,7 @@ class ModuleProgress extends Model {
 
   ModuleProgress.fromJson(Map<String, dynamic> json)
       : id = json['id'],
+        _enrollmentId = json['enrollmentId'],
         _availableAt = DateTime.parse(json['availableAt']),
         _startedAt = json['startedAt'] != null
             ? DateTime.parse(json['startedAt'])
@@ -100,6 +114,7 @@ class ModuleProgress extends Model {
   bool operator ==(Object other) =>
       other is ModuleProgress &&
       id == other.id &&
+      _enrollmentId == other.enrollmentId &&
       _availableAt == other.availableAt &&
       _startedAt == other.startedAt &&
       _completedAt == other.completedAt &&

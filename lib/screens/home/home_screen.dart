@@ -45,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
       if (st.loadingCourse != null) return;
       if (st.currentEnrollment == null ||
           st.currentEnrollment!.isCourseDone() ||
-          st.currentEnrollment!.course.id == course.id)
+          st.currentEnrollment!.course.id == course.id ||
+          st.isCourseDone(course.id))
         return BlocProvider.of<HomePageBloc>(context)
             .add(CourseSelected(course.id));
 
@@ -66,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (bloc.state is HomePageLoaded) {
       HomePageLoaded st = bloc.state as HomePageLoaded;
       if (st.currentEnrollment != null &&
-          course != st.currentEnrollment!.course) {
+          course != st.currentEnrollment!.course &&
+          !st.currentEnrollment!.isCourseDone()) {
         return CourseState.locked;
       } else {
         return CourseState.availble;
@@ -166,6 +168,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .map((course) => CourseCard(
                                       course: course,
                                       courseState: courseState(course),
+                                      onTap: () => onTap(course),
+                                      isLoading: state.loadingCourse != null &&
+                                          state.loadingCourse == course.id,
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                        SubHeader("Eerder afgerond"),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: state.completedCourses
+                                .map((course) => CourseCard(
+                                      course: course,
+                                      courseState: CourseState.done,
                                       onTap: () => onTap(course),
                                       isLoading: state.loadingCourse != null &&
                                           state.loadingCourse == course.id,

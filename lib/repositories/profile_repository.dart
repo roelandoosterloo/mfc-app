@@ -16,6 +16,7 @@ class ProfileRepository {
             birthDate
             length
             targetWeight
+            currentCourseId
         }
       }
     }

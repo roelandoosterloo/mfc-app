@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Answer.dart';
+import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
@@ -67,12 +68,26 @@ class ModuleProgressBloc
     }
   }
 
+  Future<bool> completeCourseWhenDone(String enrollmentId) async {
+    Enrollment? enrollment = await _courseRepo.getEnrollment(enrollmentId);
+    if (enrollment != null &&
+        enrollment.moduleSchedule != null &&
+        enrollment.isCourseDone()) {
+      return await _courseRepo.completeCourse(enrollmentId);
+    }
+    return false;
+  }
+
   void _onModuleCompleted(
     ModuleCompleted event,
     Emitter<ModuleProgressState> emit,
   ) async {
     try {
       _courseRepo.completeModule(event.moduleProgressId);
+      ModuleProgress mp = event.moduleProgress;
+      String enrollmentId = mp.enrollmentId;
+      await completeCourseWhenDone(enrollmentId);
+
       _navBloc.add(NavigatedBack());
     } catch (ex) {
       print(ex);

@@ -31,9 +31,8 @@ class HomePageLoaded extends HomePageState {
 
   List<Course> get courses {
     List<Course> courses = _enrollments
-        .map(
-          (e) => e.course,
-        )
+        .where((element) => !element.isCourseDone())
+        .map((e) => e.course)
         .toList();
     courses.addAll(_courses.where((element) =>
         !_enrollments.map((e) => e.course.id).contains(element.id)));
@@ -49,19 +48,19 @@ class HomePageLoaded extends HomePageState {
         .firstWhere((element) => element.course.id == currentCourseId);
   }
 
-  // Course? get highlightedCourse {
-  //   String? currentCourse = profile.currentCourseId;
-  //   if (currentCourse == null) {
-  //     if (_enrollments.isEmpty) {
-  //       return null;
-  //     }
-  //     return _enrollments[0].course;
-  //   }
-  //   return courses.firstWhere((element) => element.id == currentCourse);
-  // }
+  List<Course> get completedCourses {
+    return _enrollments
+        .where((element) => element.isCourseDone())
+        .map((e) => e.course)
+        .toList();
+  }
 
   List<Enrollment> get enrollments {
     return _enrollments;
+  }
+
+  bool isCourseDone(String courseId) {
+    return completedCourses.any((element) => element.id == courseId);
   }
 
   @override

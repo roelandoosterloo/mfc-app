@@ -4,6 +4,7 @@ enum CourseState {
   locked,
   availble,
   started,
+  done,
 }
 
 class CourseCard extends StatelessWidget {
@@ -137,6 +138,8 @@ class StatusBadge extends StatelessWidget {
         return Icons.play_arrow;
       case CourseState.started:
         return Icons.play_arrow;
+      case CourseState.done:
+        return Icons.flag;
     }
   }
 
