@@ -78,6 +78,16 @@ const generateCourseSchedule = async (username, startDate, courseId, enrollmentI
     return true;
 }
 
+const purchaseProgram = async (username, productId, transactionId) => {
+    try {
+        const program = await graphApi.getProgramByProductId(productId);
+        await graphApi.createMembership(username, program.id);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 const resolvers = {
     Query: {
         adminListUsers: async ctx => {
@@ -116,8 +126,12 @@ const resolvers = {
         generateCourseSchedule: async ctx => {
             const {startDate, courseId, enrollmentId} = ctx.arguments;
             const { username } = ctx.identity;
-            console.log(ctx.identity);
             return await generateCourseSchedule(username, startDate, courseId, enrollmentId);
+        },
+        purchaseProgram: async ctx => {
+            const {productId, transactionId} = ctx.arguments;
+            const {username} = ctx.identity;
+            return await purchaseProgram(username, productId, transactionId);
         }
     }
 }

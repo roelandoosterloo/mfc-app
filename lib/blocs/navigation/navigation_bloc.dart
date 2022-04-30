@@ -12,6 +12,7 @@ import 'package:mfc_app/screens/measurment/measurement_page.dart';
 import 'package:mfc_app/screens/module/single/module_single_page.dart';
 import 'package:mfc_app/screens/password_reset/password_reset_page.dart';
 import 'package:mfc_app/screens/profile/profile_page.dart';
+import 'package:mfc_app/screens/program/list/list_program_page.dart';
 import 'package:mfc_app/screens/register/register_page.dart';
 import 'package:mfc_app/utils/stack.dart';
 
@@ -31,6 +32,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<NavigatedToModule>(_onNavigatedToModule);
     on<NavigatedToCourseList>(_onNavigatedToCourseList);
     on<NavigatedToProfile>(_onNavigatedToProfile);
+    on<NavigatedToPrograms>(_onNavigatedToPrograms);
   }
 
   void _onNavigatedBack(
@@ -120,5 +122,12 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) {
     emit(state.goTo(ProfilePage()));
+  }
+
+  void _onNavigatedToPrograms(
+    NavigatedToPrograms event,
+    Emitter<NavigationState> emit,
+  ) {
+    emit(state.goTo(ListProgramPage()));
   }
 }

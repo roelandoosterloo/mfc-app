@@ -1,0 +1,33 @@
+{
+  "identifier" : "E42CE178",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "399",
+      "familyShareable" : false,
+      "internalID" : "F634D3D7",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "12 Weekse afvalplan",
+          "locale" : "nl"
+        }
+      ],
+      "productID" : "12_weekse",
+      "referenceName" : "12 Weekse afvalplan",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 1,
+    "minor" : 2
+  }
+}

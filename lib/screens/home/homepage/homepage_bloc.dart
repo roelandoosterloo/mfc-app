@@ -45,6 +45,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         HomePageLoaded(courses, enrollments, profile),
       );
     } catch (ex) {
+      print(ex);
       emit(HomePageError(ex.toString()));
     }
   }

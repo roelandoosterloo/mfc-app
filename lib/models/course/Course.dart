@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
@@ -66,7 +68,12 @@ class Course extends Model {
     buffer.write("Course {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("name=" + "$_name" + ", ");
-    buffer.write("description=" + "${_description?.substring(0, 10)}" + ", ");
+    buffer.write("description=" +
+        "${_description?.substring(0, min(
+              10,
+              description?.length ?? 10,
+            ))}" +
+        ", ");
     buffer.write("coverImage=" + "$_coverImage");
     buffer.write("}");
 

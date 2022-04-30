@@ -111,6 +111,18 @@ class _RegisterFormState extends State<RegisterForm> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
+              Text(
+                "WELKOM",
+                style: TextStyle(
+                  fontFamily: 'Stratum',
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,

@@ -14,6 +14,8 @@ import 'package:mfc_app/navigation/router_delegate.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
+import 'package:mfc_app/repositories/program_repository.dart';
+import 'package:mfc_app/repositories/store_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/screens/init/init_screen.dart';
 import 'package:mfc_app/utils/color_generator.dart';
@@ -168,6 +170,12 @@ class _MainPageState extends State<MainPage> {
             ),
             RepositoryProvider<ProfileRepository>(
               create: (context) => ProfileRepository(),
+            ),
+            RepositoryProvider<ProgramRepository>(
+              create: (context) => ProgramRepository(),
+            ),
+            RepositoryProvider<StoreRepository>(
+              create: (context) => StoreRepository(),
             ),
           ],
           child: BlocProvider(

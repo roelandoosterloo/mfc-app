@@ -53,3 +53,5 @@ class NavigatedToModule extends NavigationEvent {
   @override
   List<Object> get props => [moduleProgressId];
 }
+
+class NavigatedToPrograms extends NavigationEvent {}

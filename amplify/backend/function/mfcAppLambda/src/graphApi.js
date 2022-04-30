@@ -107,6 +107,25 @@ const getCourse = async (id) => {
   }
 }
 
+const getProgramByProductId = async (productId) => {
+  const programQuery = `
+  query listProgram {
+    listPrograms(filter: {productStoreId: {eq: "12_weekse"}}) {
+      items {
+        id
+      }
+    }
+  }
+  `
+  const response = await request(programQuery);
+  if (hasData(response)) {
+    return response.data.data.listPrograms.items[0];
+  }
+  if (hasError(response)) {
+    throw Error(toErrorMessage(response));
+  }
+}
+
 const createEnrollment = async (cognitoId, courseId, enrolledAt) => {
   const enrollmentMutation = `
     mutation enrollUser($input: CreateEnrollmentInput!) {
@@ -176,9 +195,32 @@ const createUser = async (cognitoId, email, firstName, lastName) => {
   }
 }
 
+const createMembership = async(user, programId) => {
+  const membershipMutation = `
+  mutation createMembership($input: CreateMembershipInput!) {
+    createMembership(input: $input) {
+      id
+    }
+  }
+  `;
+  const input = {
+    cognitoId: user,
+    programId,
+  };
+
+  const response = await request(membershipMutation, {input });
+  if(hasData(response)) {
+    return response.data.data.createMembership;
+  } else {
+    return Error(toErrorMessage(repsonse));
+  }
+}
+
 module.exports = {
   createEnrollment,
   createModuleProgress,
   createUser,
-  getCourse
+  getCourse,
+  createMembership,
+  getProgramByProductId,
 }

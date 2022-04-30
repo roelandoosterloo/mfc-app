@@ -23,9 +23,15 @@ type Program
   ]){
   id: ID!
   name: String!
+  isForSale: Boolean!
+  price: Float
+  description: String!
+  imageUrl: String!
+  productUrl: String!
+  productStoreId: String
   courses: [ProgramCourse]! @connection(keyName: "byProgram", fields: ["id"])
 }
-type ProgramCourse
+type ProgramCourse  
   @model
   @auth(rules: [
     { allow: groups, groups: ["admin"] }
@@ -42,7 +48,7 @@ type ProgramCourse
 type Membership 
   @model
   @auth(rules: [
-    { allow: groups, groups:["admin"]}
+    { allow: groups, groups:["admin"] }
     { allow: owner, ownerField: "cognitoId", operations: [read] }
   ])
   {
@@ -58,6 +64,7 @@ type Enrollment
     { allow: owner } ] ) 
   @key(name: "ofCourse" fields: ["courseId"] ){
   id: ID!
+  owner: String!
   cognitoId: ID!
   courseId: ID!
   enrolledAt: AWSDateTime
@@ -266,6 +273,9 @@ type Mutation {
     @function(name: "mfcAppLambda-${env}")
     @auth(rules: [{allow: groups, groups:["admin"]}])
   generateCourseSchedule(startDate: AWSDateTime, courseId: String, enrollmentId: String): Boolean
+    @function(name: "mfcAppLambda-${env}")
+    @auth(rules: [{allow: private }])
+  purchaseProgram(productId: String, transactionId: String): Boolean
     @function(name: "mfcAppLambda-${env}")
     @auth(rules: [{allow: private }])
 }

@@ -18,41 +18,36 @@ class RegisterScreen extends StatelessWidget {
       ),
       body: BlocProvider<RegisterBloc>(
         create: (context) => RegisterBloc(userRepo: _userRepository),
-        child: Container(
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: SingleChildScrollView(
-            child: Stack(
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
               children: [
-                CurvedWidget(
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 75, left: 50),
-                    width: double.infinity,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          theme.primaryColor,
-                          theme.primaryColor,
-                          theme.primaryColor.withOpacity(0.2),
-                        ],
+                Container(
+                  height: 120,
+                  width: double.infinity,
+                  color: Theme.of(context).primaryColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top,
+                        ),
+                        child: SizedBox(
+                          width: 150.0,
+                          child: Image.asset(
+                            "assets/images/logo.png",
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: Colors.white,
-                      ),
-                    ),
+                    ],
                   ),
                 ),
+                SizedBox(
+                  height: 24,
+                ),
                 Container(
-                  margin: const EdgeInsets.only(top: 250),
                   child: RegisterForm(),
                 ),
               ],

@@ -12,7 +12,11 @@ class LandingScreen extends StatelessWidget {
     BlocProvider.of<NavigationBloc>(context).add(NavigatedToLogin());
   }
 
-  _onRegister() async {
+  _onRegister(BuildContext context) {
+    BlocProvider.of<NavigationBloc>(context).add(NavigatedToRegister());
+  }
+
+  _onMoreInfo() async {
     if (!await launch(
         'https://myfoodcoach.nl/12weekseafvalplan?utm_source=mfc_app&utm_medium=landing_page&utm_campaign=mfc_app')) {
       throw "Could not open URL";
@@ -50,23 +54,37 @@ class LandingScreen extends StatelessWidget {
                   ),
                   Spacer(flex: 1),
                   ElevatedButton(
-                    onPressed: _onRegister,
+                    onPressed: () => _onLogin(context),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24.0,
                         vertical: 12.0,
                       ),
-                      child: Text("MELD JE AAN"),
+                      child: Text("INLOGGEN"),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () => _onLogin(context),
-                    child: Text(
-                      "Inloggen",
-                      style: TextStyle(
-                        color: Colors.white,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: _onMoreInfo,
+                        child: Text(
+                          "Meer info",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                      TextButton(
+                        onPressed: () => _onRegister(context),
+                        child: Text(
+                          "Registreren",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 30,

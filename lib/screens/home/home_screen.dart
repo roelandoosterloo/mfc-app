@@ -160,36 +160,61 @@ class _HomeScreenState extends State<HomeScreen> {
                           loading: state.loadingCourse ==
                               state.currentEnrollment?.course.id,
                         ),
-                        SubHeader("Beschikbaar"),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: state.courses
-                                .map((course) => CourseCard(
-                                      course: course,
-                                      courseState: courseState(course),
-                                      onTap: () => onTap(course),
-                                      isLoading: state.loadingCourse != null &&
-                                          state.loadingCourse == course.id,
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                        SubHeader("Eerder afgerond"),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: state.completedCourses
-                                .map((course) => CourseCard(
-                                      course: course,
-                                      courseState: CourseState.done,
-                                      onTap: () => onTap(course),
-                                      isLoading: state.loadingCourse != null &&
-                                          state.loadingCourse == course.id,
-                                    ))
-                                .toList(),
-                          ),
-                        ),
+                        ...(state.courses.isNotEmpty
+                            ? [
+                                SubHeader("Beschikbaar"),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: state.courses
+                                        .map((course) => CourseCard(
+                                              course: course,
+                                              courseState: courseState(course),
+                                              onTap: () => onTap(course),
+                                              isLoading:
+                                                  state.loadingCourse != null &&
+                                                      state.loadingCourse ==
+                                                          course.id,
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                                SubHeader("Eerder afgerond"),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: state.completedCourses
+                                        .map((course) => CourseCard(
+                                              course: course,
+                                              courseState: CourseState.done,
+                                              onTap: () => onTap(course),
+                                              isLoading:
+                                                  state.loadingCourse != null &&
+                                                      state.loadingCourse ==
+                                                          course.id,
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                              ]
+                            : [
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.only(top: 140),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () =>
+                                            _navBloc.add(NavigatedToPrograms()),
+                                        child: Text("Beschikbare programma's"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]),
                       ],
                     ),
                   ),
