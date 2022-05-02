@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/models/measurement.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
+import 'package:mfc_app/repositories/profile_repository.dart';
+import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/parser.dart';
 import 'package:mfc_app/utils/validators.dart';
 
@@ -12,9 +13,13 @@ part 'add_measurement_state.dart';
 class AddMeasurementBloc
     extends Bloc<AddMeasurementEvent, AddMeasurementState> {
   MeasurementRepository _measureRepo;
+  UserRepository _userRepo;
 
-  AddMeasurementBloc({required MeasurementRepository measureRepo})
-      : _measureRepo = measureRepo,
+  AddMeasurementBloc({
+    required MeasurementRepository measureRepo,
+    required UserRepository userRepo,
+  })  : _measureRepo = measureRepo,
+        _userRepo = userRepo,
         super(AddMeasurementState.initial()) {
     on<MeasurementDateChanged>(_onDateChanged);
     on<MeasurementWeightChanged>(_onWeightChanged);
@@ -69,11 +74,14 @@ class AddMeasurementBloc
   ) async {
     emit(AddMeasurementState.loading());
     try {
-      await _measureRepo.addMeasurement(Measurement(
-        date: event.date,
-        weight: event.weight,
-        note: event.note,
-      ));
+      String userName = (await _userRepo.getUser()).username;
+      await _measureRepo.addMeasurement(
+          Measurement(
+            date: event.date,
+            weight: event.weight,
+            note: event.note,
+          ),
+          userName);
       emit(AddMeasurementState.success());
     } catch (_) {
       emit(AddMeasurementState.failure());

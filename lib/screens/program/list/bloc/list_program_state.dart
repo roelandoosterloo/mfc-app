@@ -76,3 +76,15 @@ class PaymentFailed extends Loaded {
         _message,
       ];
 }
+
+class PaymentSucceeded extends Loaded {
+  PaymentSucceeded(
+    List<Program> programs,
+    List<Membership> memberships,
+  ) : super(programs, memberships);
+
+  @override
+  List<Object> get props => [
+        ...super.props,
+      ];
+}

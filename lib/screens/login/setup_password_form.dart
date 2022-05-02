@@ -73,8 +73,14 @@ class _SetupPasswordFormState extends State<SetupPasswordForm> {
                   obscureText: true,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (_) =>
-                      !state.isPasswordValid ? 'Ongeldig wachtwoord' : null,
+                  validator: (_) => !state.isPasswordValid
+                      ? '''Ongeldig wachtwoord. 
+Verwacht minstens 6 tekens waarvan 
+  1 hoofdletter, 
+  1 kleine letter, 
+  1 cijfer en 
+  1 speicaal teken (@\$!%*?&)'''
+                      : null,
                   decoration: InputDecoration(
                     icon: Icon(Icons.lock),
                     labelText: "Nieuw wachtwoord",

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -14,6 +15,7 @@ part 'list_program_state.dart';
 class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
   final ProgramRepository _programRepo;
   final StoreRepository _storeRepo;
+  StreamSubscription? _purchaseListener;
 
   ListProgramBloc({
     required ProgramRepository programRepo,
@@ -24,30 +26,46 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
     on<ListProgramOpened>(_onListProgramOpened);
     on<PurchaseProgram>(_onProgramPurchased);
     on<PurchaseFailed>(_onPurchaseFailed);
+    on<PurchaseCompleted>(_onPurchaseCompleted);
 
     _storeRepo.purchaseStream().then(
-          (stream) => stream.listen((List<PurchaseDetails> detailList) {
-            detailList.forEach((PurchaseDetails details) async {
-              if (details.status != PurchaseStatus.pending) {
-                if (details.status == PurchaseStatus.error) {
-                  print(details.error);
-                  add(
-                    PurchaseFailed(details.error!.message),
-                  );
-                } else if (details.status == PurchaseStatus.purchased ||
-                    details.status == PurchaseStatus.restored) {
-                  await _programRepo.createMembership(
-                    details.productID,
-                    details.purchaseID!,
-                  );
+      (stream) {
+        _purchaseListener = stream.listen((List<PurchaseDetails> detailList) {
+          detailList.forEach((PurchaseDetails details) async {
+            if (details.status != PurchaseStatus.pending) {
+              if (details.status == PurchaseStatus.error) {
+                add(
+                  PurchaseFailed(details.error!.message),
+                );
+              } else if (details.status == PurchaseStatus.purchased ||
+                  details.status == PurchaseStatus.restored) {
+                bool success = await _programRepo.createMembership(
+                  details.productID,
+                  details.purchaseID!,
+                );
+                if (success == false) {
+                  add(PurchaseFailed("Aanmelding mislukt"));
                 }
-                if (details.pendingCompletePurchase) {
-                  await _storeRepo.completePurchase(details);
+                if (success == true) {
+                  add(PurchaseCompleted());
                 }
               }
-            });
-          }),
-        );
+              if (details.pendingCompletePurchase) {
+                await _storeRepo.completePurchase(details);
+              }
+            }
+          });
+        });
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    if (_purchaseListener != null) {
+      _purchaseListener!.cancel();
+    }
+    return super.close();
   }
 
   void _onListProgramOpened(
@@ -106,5 +124,21 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
       programs: (state as Loaded).programs,
       memberships: (state as Loaded).memberships,
     ));
+  }
+
+  Future<void> _onPurchaseCompleted(
+    PurchaseCompleted event,
+    Emitter<ListProgramState> emit,
+  ) async {
+    try {
+      List<Membership> memberships = await _programRepo.listMemberships();
+      emit(PaymentSucceeded(
+        (state as Loaded).programs,
+        memberships,
+      ));
+    } on Exception catch (e) {
+      log(e.toString());
+      emit(FailedLoading(e.toString()));
+    }
   }
 }

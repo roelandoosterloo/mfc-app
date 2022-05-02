@@ -75,6 +75,9 @@ class LandingScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        width: 20,
+                      ),
                       TextButton(
                         onPressed: () => _onRegister(context),
                         child: Text(

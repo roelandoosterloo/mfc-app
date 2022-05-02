@@ -88,8 +88,8 @@ class LoginScreen extends StatelessWidget {
                         );
                     }
                     if (state.isSuccess) {
-                      _navBloc.add(NavigatedToHome());
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      _navBloc.add(NavigatedToHome());
                     }
                   },
                   builder: (context, state) {

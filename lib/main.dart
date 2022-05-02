@@ -2,10 +2,10 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/amplifyconfiguration.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
@@ -30,7 +30,7 @@ void main() {
     () => runApp(
       MyAmplifyApp(),
     ),
-    blocObserver: SimpleBlocObserver(),
+    blocObserver: kDebugMode ? SimpleBlocObserver() : null,
   );
 }
 

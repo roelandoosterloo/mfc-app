@@ -24,6 +24,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<NavigatedBack>(_onNavigatedBack);
     on<NavigatedToRegister>(_onNavigatedToRegister);
     on<NavigatedToLogin>(_onNavigatedToLogin);
+    on<ResetToLogin>(_onResetToLogin);
     on<NavigatedToResetPassword>(_onNavigatedToResetPassword);
     on<NavigatedToHome>(_onNavigatedToHome);
     on<NavigatedToMeasurements>(_onNavigatedToMeasurements);
@@ -57,6 +58,13 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       return emit(state.goTo(LoginPage()));
     }
     emit(AuthenticationNavigation.initial());
+  }
+
+  void _onResetToLogin(
+    ResetToLogin event,
+    Emitter<NavigationState> emit,
+  ) {
+    emit(AuthenticationNavigation.initial().goTo(LoginPage()));
   }
 
   void _onNavigatedToResetPassword(

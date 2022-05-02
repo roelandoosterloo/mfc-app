@@ -5,18 +5,49 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:mfc_app/models/Profile.dart';
 
 class ProfileRepository {
-  Future<Profile> getProfile(String id) async {
+  Future<Profile> createProfile(String cognitoId) async {
+    String graphQLDocument = '''
+    mutation createProfile {
+      createProfile(input: {
+        cognitoId: "$cognitoId"
+      }) {
+        id
+        firstName
+        lastName
+        birthDate
+        length
+        targetWeight
+        currentCourseId
+      }
+    }
+    ''';
+    GraphQLOperation op = Amplify.API.query(
+      request: GraphQLRequest(
+        document: graphQLDocument,
+      ),
+    );
+    try {
+      GraphQLResponse response = await op.response;
+      Map<String, dynamic> json = jsonDecode(response.data);
+      return Profile.fromJson(json['createProfile']);
+    } catch (ex) {
+      print(ex);
+      throw ex;
+    }
+  }
+
+  Future<Profile> getProfile(String cognitoId) async {
     String graphQLDocument = '''
     query MyQuery {
-      listProfiles(filter: {cognitoId: {eq: "$id"}}) {
+      listProfiles(filter: {cognitoId: {eq: "$cognitoId"}}) {
         items {
-            id
-            firstName
-            lastName
-            birthDate
-            length
-            targetWeight
-            currentCourseId
+          id
+          firstName
+          lastName
+          birthDate
+          length
+          targetWeight
+          currentCourseId
         }
       }
     }
@@ -29,6 +60,9 @@ class ProfileRepository {
     GraphQLResponse response = await op.response;
     Map<String, dynamic> json = jsonDecode(response.data);
     List<dynamic> items = json['listProfiles']['items'];
+    if (items.isEmpty) {
+      return createProfile(cognitoId);
+    }
     List<Profile> profiles = items.map((it) => Profile.fromJson(it)).toList();
     return profiles.first;
   }

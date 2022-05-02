@@ -20,6 +20,7 @@ type Program
   @auth(rules: [
     { allow: groups, groups: ["admin"] }
     { allow: private, operations: [read] }
+    { allow: private, provider: iam, operations: [read] }
   ]){
   id: ID!
   name: String!
@@ -49,6 +50,7 @@ type Membership
   @model
   @auth(rules: [
     { allow: groups, groups:["admin"] }
+    { allow: private, provider: iam }
     { allow: owner, ownerField: "cognitoId", operations: [read] }
   ])
   {

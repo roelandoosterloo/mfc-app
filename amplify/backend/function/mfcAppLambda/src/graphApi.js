@@ -110,7 +110,7 @@ const getCourse = async (id) => {
 const getProgramByProductId = async (productId) => {
   const programQuery = `
   query listProgram {
-    listPrograms(filter: {productStoreId: {eq: "12_weekse"}}) {
+    listPrograms(filter: {productStoreId: {eq: "${productId}"}}) {
       items {
         id
       }
@@ -118,11 +118,12 @@ const getProgramByProductId = async (productId) => {
   }
   `
   const response = await request(programQuery);
+  if (hasError(response)) {
+    console.log(response.data.errors);
+    throw Error(toErrorMessage(response));
+  }
   if (hasData(response)) {
     return response.data.data.listPrograms.items[0];
-  }
-  if (hasError(response)) {
-    throw Error(toErrorMessage(response));
   }
 }
 
@@ -196,6 +197,21 @@ const createUser = async (cognitoId, email, firstName, lastName) => {
 }
 
 const createMembership = async(user, programId) => {
+  const memberships = `
+  query listMemberships {
+    listMemberships(filter: {and: {programId: {eq: "e89e45b2-a825-4d40-bdd1-f6d8fbe39c6e	"}, cognitoId: {eq: "rcoosterloo"}}}) {
+      nextToken
+      items {
+        id
+      }
+    }
+  }
+  `;
+  const qResponse = await request(memberships);
+  if(hasData(qResponse) && qResponse.data.data.listMemberships != null
+    && qResponse.data.data.listMemberships.items != null && qResponse.data.data.listMemberships.items.length > 0) {
+      return true;
+  }
   const membershipMutation = `
   mutation createMembership($input: CreateMembershipInput!) {
     createMembership(input: $input) {

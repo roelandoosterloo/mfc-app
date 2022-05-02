@@ -13,6 +13,8 @@ class NavigatedToRegister extends NavigationEvent {}
 
 class NavigatedToLogin extends NavigationEvent {}
 
+class ResetToLogin extends NavigationEvent {}
+
 class NavigatedToResetPassword extends NavigationEvent {
   final String? _username;
 

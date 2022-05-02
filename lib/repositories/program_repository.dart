@@ -73,7 +73,7 @@ class ProgramRepository {
     mutation purchaseProgram {
       purchaseProgram(
         productId: "$productId",
-        transactionid: "$purchaseId"
+        transactionId: "$purchaseId"
       )
     }
     ''';

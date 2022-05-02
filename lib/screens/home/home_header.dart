@@ -32,12 +32,13 @@ class _HomeHeaderState extends State<HomeHeader> {
 
   String greeting() {
     int hour = DateTime.now().hour;
+    String? name = widget.firstName;
     if (hour >= 6 && hour < 12) {
-      return "Goedemorgen, ${widget.firstName}!";
+      return "Goedemorgen${name != null ? ", ${widget.firstName}!" : ""}!";
     } else if (hour < 17) {
-      return "Goedemiddag, ${widget.firstName}!";
+      return "Goedemiddag${name != null ? ", ${widget.firstName}!" : ""}!";
     } else if (hour < 23) {
-      return "Goedenavond, ${widget.firstName}!";
+      return "Goedenavond${name != null ? ", ${widget.firstName}" : ""}!";
     }
     return "Hallo, ${widget.firstName}!";
   }

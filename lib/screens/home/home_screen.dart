@@ -209,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ElevatedButton(
                                         onPressed: () =>
                                             _navBloc.add(NavigatedToPrograms()),
-                                        child: Text("Beschikbare programma's"),
+                                        child: Text("BEKIJK PROGRAMMA'S"),
                                       ),
                                     ],
                                   ),

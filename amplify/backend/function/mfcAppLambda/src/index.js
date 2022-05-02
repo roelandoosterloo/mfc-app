@@ -81,9 +81,10 @@ const generateCourseSchedule = async (username, startDate, courseId, enrollmentI
 const purchaseProgram = async (username, productId, transactionId) => {
     try {
         const program = await graphApi.getProgramByProductId(productId);
-        await graphApi.createMembership(username, program.id);
+        const result = await graphApi.createMembership(username, program.id);
         return true;
     } catch (error) {
+        console.error(error);
         return false;
     }
 }

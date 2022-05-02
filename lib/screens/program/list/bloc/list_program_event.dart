@@ -28,3 +28,5 @@ class PurchaseFailed extends ListProgramEvent {
   @override
   List<Object> get props => [_error];
 }
+
+class PurchaseCompleted extends ListProgramEvent {}

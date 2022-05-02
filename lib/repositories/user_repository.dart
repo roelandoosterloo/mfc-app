@@ -4,7 +4,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 class UserRepository {
   Future<SignUpResult> createUser(String email, String password) async {
     SignUpResult result = await Amplify.Auth.signUp(
-      username: email,
+      username: email.replaceAll('@', '#'),
       password: password.trim(),
       options: CognitoSignUpOptions(
         userAttributes: {CognitoUserAttributeKey.email: email},
@@ -13,9 +13,13 @@ class UserRepository {
     return result;
   }
 
+  Future<ResendSignUpCodeResult> resendSignUpCode(String email) async {
+    return Amplify.Auth.resendSignUpCode(username: email.replaceAll("@", "#"));
+  }
+
   Future<SignUpResult> confirmSignUp(String email, String code) async {
     SignUpResult result = await Amplify.Auth.confirmSignUp(
-      username: email.trim(),
+      username: email.replaceAll('@', '#'),
       confirmationCode: code,
     );
     return result;

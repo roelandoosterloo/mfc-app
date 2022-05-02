@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'register_bloc.dart';
 
 abstract class RegisterEvent extends Equatable {
   @override
@@ -23,6 +23,19 @@ class RegisterPasswordChanged extends RegisterEvent {
   List<Object> get props => [password];
 }
 
+class RepeatPasswordChanged extends RegisterEvent {
+  final String password;
+  final String repeat;
+
+  RepeatPasswordChanged({
+    required this.password,
+    required this.repeat,
+  });
+
+  @override
+  List<Object> get props => [password, repeat];
+}
+
 class RegisterWithCredentialsSubmitted extends RegisterEvent {
   final String email;
   final String password;
@@ -32,4 +45,26 @@ class RegisterWithCredentialsSubmitted extends RegisterEvent {
 
   @override
   List<Object> get props => [email, password];
+}
+
+class ConfirmCodeSubmitted extends RegisterEvent {
+  final String _code;
+
+  ConfirmCodeSubmitted(this._code);
+
+  get code => _code;
+
+  @override
+  List<Object> get props => [_code];
+}
+
+class SignUpCompleted extends RegisterEvent {
+  final String _email;
+
+  SignUpCompleted(this._email);
+
+  String get email => _email;
+
+  @override
+  List<Object> get props => [_email];
 }

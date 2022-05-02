@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
-import 'package:mfc_app/blocs/register/register_bloc.dart';
-import 'package:mfc_app/blocs/register/register_event.dart';
-import 'package:mfc_app/blocs/register/register_state.dart';
+
+import 'bloc/register_bloc.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({Key? key}) : super(key: key);
@@ -16,6 +15,7 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repeatController = TextEditingController();
 
   late RegisterBloc _registerBloc;
 
@@ -25,17 +25,11 @@ class _RegisterFormState extends State<RegisterForm> {
     _registerBloc = BlocProvider.of<RegisterBloc>(context);
     _emailController.addListener(_onEmailChange);
     _passwordController.addListener(_onPasswordChange);
+    _repeatController.addListener(_onRepeatChange);
   }
 
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
-
-  bool canSubmit(RegisterState state) {
-    return state.isEmailValid &&
-        state.isPasswordValid &&
-        isPopulated &&
-        !state.isSubmitting;
-  }
 
   _onRegister() {
     _registerBloc.add(RegisterWithCredentialsSubmitted(
@@ -51,6 +45,13 @@ class _RegisterFormState extends State<RegisterForm> {
         .add(RegisterPasswordChanged(password: _passwordController.text));
   }
 
+  _onRepeatChange() {
+    _registerBloc.add(RepeatPasswordChanged(
+      password: _passwordController.text,
+      repeat: _repeatController.text,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<RegisterBloc, RegisterState>(
@@ -63,10 +64,10 @@ class _RegisterFormState extends State<RegisterForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (state.error.isNotEmpty)
+                    if (state.error?.isNotEmpty ?? false)
                       Flexible(
                         child: Text(
-                          state.error,
+                          state.error!,
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -85,7 +86,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
             );
         }
-        if (state.isSubmitting) {
+        if (state.isLoading) {
           ScaffoldMessenger.of(context)
             ..removeCurrentSnackBar()
             ..showSnackBar(
@@ -107,60 +108,85 @@ class _RegisterFormState extends State<RegisterForm> {
         }
       },
       child: BlocBuilder<RegisterBloc, RegisterState>(
-        builder: (context, state) => Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Text(
-                "WELKOM",
-                style: TextStyle(
-                  fontFamily: 'Stratum',
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) => !state.isEmailValid ? 'Invalid email' : null,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.email),
-                  labelText: 'Email',
-                ),
-              ),
-              TextFormField(
-                controller: _passwordController,
-                autocorrect: false,
-                obscureText: true,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) =>
-                    !state.isPasswordValid ? 'Invalid password' : null,
-                decoration: InputDecoration(
-                  icon: Icon(Icons.lock),
-                  labelText: 'Password',
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              SizedBox(
-                width: 130,
-                child: ElevatedButton(
-                  onPressed: canSubmit(state) ? _onRegister : null,
-                  child: Row(
-                    children: [Icon(Icons.check), Text("Register")],
+        builder: (context, state) {
+          if (state is Registering) {
+            return Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Text(
+                    "WELKOM",
+                    style: TextStyle(
+                      fontFamily: 'Stratum',
+                      fontSize: 40.0,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (_) =>
+                        !state.isEmailValid ? 'Ongeldig email adres' : null,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.email),
+                      labelText: 'Email',
+                    ),
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    autocorrect: false,
+                    obscureText: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (_) => !state.isPasswordValid
+                        ? '''Ongeldig wachtwoord. 
+Verwacht minstens 6 tekens waarvan 
+  1 hoofdletter, 
+  1 kleine letter, 
+  1 cijfer en 
+  1 speicaal teken (@\$!%*?&)'''
+                        : null,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.lock),
+                      labelText: 'Wachtwoord',
+                    ),
+                  ),
+                  TextFormField(
+                    controller: _repeatController,
+                    autocorrect: false,
+                    obscureText: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (_) => !state.isRepeatValid
+                        ? 'Wachtwoord komt niet overeen'
+                        : null,
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.lock),
+                      labelText: 'Herhaal wachtwoord',
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SizedBox(
+                    width: 130,
+                    child: ElevatedButton(
+                      onPressed: state.canSubmit() ? _onRegister : null,
+                      child: Row(
+                        children: [Icon(Icons.check), Text("Register")],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }

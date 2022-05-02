@@ -8,12 +8,18 @@ import 'package:mfc_app/models/measurement.dart';
 class MeasurementRepository {
   List<Measurement>? _measurements;
 
-  Future<void> addMeasurement(Measurement measurement) async {
+  Future<void> addMeasurement(Measurement measurement, String userName) async {
     GraphQLOperation op = Amplify.API.mutate(
       request: GraphQLRequest<String>(
         document: '''
-    mutation CreateMeasurement(\$date: AWSDate!, \$weight: Float!, \$note: String, \$type: String!){
-      createMeasurement(input: {date: \$date, weight: \$weight, note: \$note, type: \$type}) {
+    mutation CreateMeasurement(\$date: AWSDate!, \$weight: Float!, \$note: String, \$type: String!, \$owner: String!){
+      createMeasurement(input: {
+        date: \$date, 
+        weight: \$weight, 
+        note: \$note, 
+        type: \$type, 
+        owner: \$owner
+      }) {
         id
       }
     }
@@ -23,6 +29,7 @@ class MeasurementRepository {
           "weight": measurement.weight,
           "note": measurement.note,
           "type": measurement.type,
+          "owner": userName,
         },
       ),
     );

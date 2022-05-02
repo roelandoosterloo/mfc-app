@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Program.dart';
 import 'package:mfc_app/screens/program/list/bloc/list_program_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,6 +25,14 @@ class ListProgramScreen extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..removeCurrentSnackBar()
             ..showSnackBar(SnackBar(content: Text(state.message)));
+        }
+        if (state is PaymentSucceeded) {
+          ScaffoldMessenger.of(context)
+            ..removeCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+              content: Text("Aanmelding succesvol afgerond"),
+            ));
+          BlocProvider.of<NavigationBloc>(context).add(NavigatedBack());
         }
       },
       builder: (context, state) {
