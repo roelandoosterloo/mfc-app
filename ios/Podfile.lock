@@ -56,26 +56,26 @@ PODS:
     - AWSCore (~> 2.27.0)
     - AWSPluginsCore (= 1.19.0)
     - AWSS3 (~> 2.27.0)
-  - AppSyncRealTimeClient (1.6.0):
-    - Starscream (~> 3.1.1)
-  - AWSAuthCore (2.27.1):
-    - AWSCore (= 2.27.1)
-  - AWSCognitoIdentityProvider (2.27.1):
-    - AWSCognitoIdentityProviderASF (= 2.27.1)
-    - AWSCore (= 2.27.1)
-  - AWSCognitoIdentityProviderASF (2.27.1):
-    - AWSCore (= 2.27.1)
-  - AWSCore (2.27.1)
-  - AWSMobileClient (2.27.1):
-    - AWSAuthCore (= 2.27.1)
-    - AWSCognitoIdentityProvider (= 2.27.1)
-    - AWSCognitoIdentityProviderASF (= 2.27.1)
-    - AWSCore (= 2.27.1)
+  - AppSyncRealTimeClient (1.9.1):
+    - Starscream (~> 4.0.4)
+  - AWSAuthCore (2.27.7):
+    - AWSCore (= 2.27.7)
+  - AWSCognitoIdentityProvider (2.27.7):
+    - AWSCognitoIdentityProviderASF (= 2.27.7)
+    - AWSCore (= 2.27.7)
+  - AWSCognitoIdentityProviderASF (2.27.7):
+    - AWSCore (= 2.27.7)
+  - AWSCore (2.27.7)
+  - AWSMobileClient (2.27.7):
+    - AWSAuthCore (= 2.27.7)
+    - AWSCognitoIdentityProvider (= 2.27.7)
+    - AWSCognitoIdentityProviderASF (= 2.27.7)
+    - AWSCore (= 2.27.7)
   - AWSPluginsCore (1.19.0):
     - Amplify (= 1.19.0)
     - AWSCore (~> 2.27.0)
-  - AWSS3 (2.27.1):
-    - AWSCore (= 2.27.1)
+  - AWSS3 (2.27.7):
+    - AWSCore (= 2.27.7)
   - Flutter (1.0.0)
   - flutter_inappwebview (0.0.1):
     - Flutter
@@ -95,9 +95,9 @@ PODS:
   - SQLite.swift (0.12.2):
     - SQLite.swift/standard (= 0.12.2)
   - SQLite.swift/standard (0.12.2)
-  - Starscream (3.1.1)
-  - SwiftFormat/CLI (0.49.4)
-  - SwiftLint (0.46.2)
+  - Starscream (4.0.4)
+  - SwiftFormat/CLI (0.49.8)
+  - SwiftLint (0.47.1)
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -169,26 +169,26 @@ SPEC CHECKSUMS:
   amplify_flutter: 565399b1213f406463a5d99443ea5973a78f494c
   amplify_storage_s3: 75177da2ac83c3af4c8818fe4ef9b1d995d24bdf
   AmplifyPlugins: 3f43645652234700ee62aba927a67ff4eebacf46
-  AppSyncRealTimeClient: 8b5ec94085b8ee9bb6fb9d9d76a157beb538ec6f
-  AWSAuthCore: 9528c60ccdac6df6024fb0af1ed6a43782fd2d3d
-  AWSCognitoIdentityProvider: 4de7f96340be72c1dca35c0ba835c6b9b69a28c0
-  AWSCognitoIdentityProviderASF: 727f7c1c80d667a2da79e408c8c8745eac981d58
-  AWSCore: f859f6955a8e52dcb3e79fac95fef058639d1049
-  AWSMobileClient: 9c1edcbe7088b3c9b910aaf6faf2db43a8f1568d
+  AppSyncRealTimeClient: cdee78ab78249cb87a71d975e1436e692813a606
+  AWSAuthCore: 039a730c4608a862e114a7eabcf09e1451335a75
+  AWSCognitoIdentityProvider: b8d5b7a15d1b418658e591fce2aec82091254f0e
+  AWSCognitoIdentityProviderASF: 70269c1a788f3705d98e31dc8c8cebfa32535103
+  AWSCore: 9b302330a83a8c0ea1a22b1f115d6af14f4429e3
+  AWSMobileClient: c9063df967681d42522c2e19804d6cfca45361e4
   AWSPluginsCore: a74522db575247a0156f97d868713627099f3297
-  AWSS3: 3389c12e5b0cbfdfb6894c5921c094f58ec84df0
+  AWSS3: 6e41ccb946031c1e49c899563e5ecf42aec63692
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_inappwebview: bfd58618f49dc62f2676de690fc6dcda1d6c3721
   in_app_purchase_storekit: d7fcf4646136ec258e237872755da8ea6c1b6096
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
-  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
-  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
-  SwiftFormat: 8acc16efcecb563206cbe90b4cb047cfdf9aafdb
-  SwiftLint: 6bc52a21f0fd44cab9aa2dc8e534fb9f5e3ec507
-  url_launcher_ios: 02f1989d4e14e998335b02b67a7590fa34f971af
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+  SwiftFormat: e2342d528f9aee7062abb644ba6c7c01446919d7
+  SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
 PODFILE CHECKSUM: 1345ea6ec7c65bc1c571e4609d2c6646fc6d85ce
 
