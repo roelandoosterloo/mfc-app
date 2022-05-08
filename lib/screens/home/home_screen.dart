@@ -145,83 +145,96 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ];
           },
-          body: BlocBuilder<HomePageBloc, HomePageState>(
-            builder: (context, state) {
-              if (state is HomePageLoaded) {
-                return Container(
-                  child: SingleChildScrollView(
-                    physics: ClampingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        HomeHeader(
-                          firstName: state.profile.firstName,
-                          highlightCourse: state.currentEnrollment?.course,
-                          loading: state.loadingCourse ==
-                              state.currentEnrollment?.course.id,
-                        ),
-                        ...(state.courses.isNotEmpty
-                            ? [
-                                SubHeader("Beschikbaar"),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: state.courses
-                                        .map((course) => CourseCard(
-                                              course: course,
-                                              courseState: courseState(course),
-                                              onTap: () => onTap(course),
-                                              isLoading:
-                                                  state.loadingCourse != null &&
-                                                      state.loadingCourse ==
-                                                          course.id,
-                                            ))
-                                        .toList(),
-                                  ),
-                                ),
-                                SubHeader("Eerder afgerond"),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: state.completedCourses
-                                        .map((course) => CourseCard(
-                                              course: course,
-                                              courseState: CourseState.done,
-                                              onTap: () => onTap(course),
-                                              isLoading:
-                                                  state.loadingCourse != null &&
-                                                      state.loadingCourse ==
-                                                          course.id,
-                                            ))
-                                        .toList(),
-                                  ),
-                                ),
-                              ]
-                            : [
-                                Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.only(top: 140),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () =>
-                                            _navBloc.add(NavigatedToPrograms()),
-                                        child: Text("BEKIJK PROGRAMMA'S"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ]),
-                      ],
-                    ),
-                  ),
-                );
+          body: BlocListener<HomePageBloc, HomePageState>(
+            listener: (context, state) {
+              if (state is HomePageError) {
+                ScaffoldMessenger.of(context)
+                  ..removeCurrentSnackBar()
+                  ..showSnackBar(SnackBar(content: Text(state.error)));
               }
-              return Container();
             },
+            child: BlocBuilder<HomePageBloc, HomePageState>(
+              builder: (context, state) {
+                if (state is HomePageLoaded) {
+                  return Container(
+                    child: SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          HomeHeader(
+                            firstName: state.profile.firstName,
+                            highlightCourse: state.currentEnrollment?.course,
+                            loading: state.loadingCourse ==
+                                state.currentEnrollment?.course.id,
+                          ),
+                          ...(state.courses.isNotEmpty
+                              ? [
+                                  SubHeader("Beschikbaar"),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: state.courses
+                                          .map((course) => CourseCard(
+                                                course: course,
+                                                courseState:
+                                                    courseState(course),
+                                                onTap: () => onTap(course),
+                                                isLoading:
+                                                    state.loadingCourse !=
+                                                            null &&
+                                                        state.loadingCourse ==
+                                                            course.id,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                  SubHeader("Eerder afgerond"),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: state.completedCourses
+                                          .map((course) => CourseCard(
+                                                course: course,
+                                                courseState: CourseState.done,
+                                                onTap: () => onTap(course),
+                                                isLoading:
+                                                    state.loadingCourse !=
+                                                            null &&
+                                                        state.loadingCourse ==
+                                                            course.id,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                ]
+                              : [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.only(top: 140),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () => _navBloc
+                                              .add(NavigatedToPrograms()),
+                                          child: Text("BEKIJK PROGRAMMA'S"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ]),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
           ),
         ),
       ),

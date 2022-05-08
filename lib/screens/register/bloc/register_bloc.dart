@@ -106,7 +106,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     Emitter<RegisterState> emit,
   ) async {
     try {
-      // await _profileRepo.createProfile(event.email.replaceAll("@", "#"));
       emit(RegisterState(isLoading: false, isSuccess: true, isFailure: false));
     } catch (ex) {
       print(ex);
