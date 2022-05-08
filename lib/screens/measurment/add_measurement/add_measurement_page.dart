@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mfc_app/screens/measurment/add_measurement/add_measurement_screen.dart';
 
 class AddMeasurementPage extends Page {
+  AddMeasurementPage() : super(name: "AddMeasurementPage");
+
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(

@@ -5,6 +5,7 @@ import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/screens/profile/profile_screen.dart';
 
 class ProfilePage extends Page {
+  ProfilePage() : super(name: "ProfilePage");
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(

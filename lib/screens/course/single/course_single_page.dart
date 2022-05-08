@@ -9,7 +9,7 @@ import 'course_single_screen.dart';
 class CourseSinglePage extends Page {
   final String _courseId;
 
-  CourseSinglePage(this._courseId);
+  CourseSinglePage(this._courseId) : super(name: "CourseSinglePage");
 
   @override
   Route createRoute(BuildContext context) {

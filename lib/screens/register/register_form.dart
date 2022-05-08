@@ -177,7 +177,7 @@ Verwacht minstens 6 tekens waarvan
                     child: ElevatedButton(
                       onPressed: state.canSubmit() ? _onRegister : null,
                       child: Row(
-                        children: [Icon(Icons.check), Text("Register")],
+                        children: [Icon(Icons.check), Text("REGISTREER")],
                       ),
                     ),
                   ),

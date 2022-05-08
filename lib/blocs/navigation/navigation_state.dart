@@ -55,6 +55,9 @@ class AuthenticationNavigation extends NavigationState {
 
   @override
   NavigationState goTo(Page p) {
+    if (p.name == stack.peek()?.name) {
+      return AuthenticationNavigation(stack: stack);
+    }
     return AuthenticationNavigation(stack: stack.push(p));
   }
 

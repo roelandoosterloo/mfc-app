@@ -5,6 +5,7 @@ import 'package:mfc_app/repositories/recipe_repository.dart';
 import 'package:mfc_app/screens/recipe/list/recipe_list_screen.dart';
 
 class RecipeListPage extends Page {
+  RecipeListPage() : super(name: "RecipeListPage");
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(

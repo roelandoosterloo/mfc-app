@@ -9,6 +9,8 @@ import 'package:mfc_app/screens/home/home_screen.dart';
 import 'homepage/homepage_bloc.dart';
 
 class HomePage extends Page {
+  HomePage() : super(name: "HomePage");
+
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(

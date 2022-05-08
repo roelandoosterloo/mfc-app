@@ -8,7 +8,7 @@ import 'package:mfc_app/screens/password_reset/password_reset_screen.dart';
 class PasswordResetPage extends Page {
   final String? username;
 
-  PasswordResetPage({this.username}) : super();
+  PasswordResetPage({this.username}) : super(name: "PasswordResetPage");
 
   @override
   Route createRoute(BuildContext context) {

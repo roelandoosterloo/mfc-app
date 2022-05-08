@@ -8,7 +8,7 @@ import 'package:mfc_app/screens/module/single/module_single_screen.dart';
 class ModuleSinglePage extends Page {
   final String progressId;
 
-  ModuleSinglePage(this.progressId);
+  ModuleSinglePage(this.progressId) : super(name: "ModuleSinglePage");
 
   @override
   Route createRoute(BuildContext context) {
