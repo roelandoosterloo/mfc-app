@@ -5,13 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Program.dart';
 import 'package:mfc_app/screens/program/list/bloc/list_program_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:mfc_app/widgets/s3_image.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ListProgramScreen extends StatelessWidget {
   const ListProgramScreen({Key? key}) : super(key: key);
 
   _onMoreInfo(Program p) async {
-    if (!await launch(p.productUrl)) {
+    if (!await launchUrlString(p.productUrl)) {
       throw "Could not open URL";
     }
   }
@@ -60,7 +61,7 @@ class ListProgramScreen extends StatelessWidget {
                           ),
                           AspectRatio(
                             aspectRatio: 1.77,
-                            child: Image.network(
+                            child: S3Image(
                               p.imageUrl,
                               fit: BoxFit.cover,
                             ),
