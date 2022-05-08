@@ -1,13 +1,13 @@
 part of 'home_screen.dart';
 
 class HomeHeader extends StatefulWidget {
-  final String firstName;
+  final String? firstName;
   final Course? highlightCourse;
   final bool loading;
 
   const HomeHeader({
     Key? key,
-    required this.firstName,
+    this.firstName,
     this.highlightCourse,
     this.loading = false,
   }) : super(key: key);
@@ -33,12 +33,14 @@ class _HomeHeaderState extends State<HomeHeader> {
   String greeting() {
     int hour = DateTime.now().hour;
     String? name = widget.firstName;
+    if (name == null) return "Hi!";
+
     if (hour >= 6 && hour < 12) {
-      return "Goedemorgen${name != null ? ", ${widget.firstName}!" : ""}!";
+      return "Goedemorgen, ${widget.firstName}!";
     } else if (hour < 17) {
-      return "Goedemiddag${name != null ? ", ${widget.firstName}!" : ""}!";
+      return "Goedemiddag, ${widget.firstName}!";
     } else if (hour < 23) {
-      return "Goedenavond${name != null ? ", ${widget.firstName}" : ""}!";
+      return "Goedenavond, ${widget.firstName}!";
     }
     return "Hallo, ${widget.firstName}!";
   }

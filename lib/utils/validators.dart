@@ -11,7 +11,6 @@ class Validators {
   }
 
   static isValidEmail(String email) {
-    return true;
     return _emailRegExp.hasMatch(email);
   }
 

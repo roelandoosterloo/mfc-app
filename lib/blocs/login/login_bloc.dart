@@ -32,7 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) {
     if (state is LoggingIn) {
       emit((state as LoggingIn)
-          .update(isEmailValid: Validators.isValidEmail(event.email)));
+          .update(isEmailValid: Validators.isNotEmpty(event.email)));
     }
   }
 
@@ -92,8 +92,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     } on InvalidStateException catch (ex) {
       print(ex);
-      emit(LoggingIn.failure(error: ex.message));
       _authBloc.add(AuthenticationLoggedOut());
+      emit(LoggingIn.failure(error: ex.message));
     } on AmplifyException catch (ex) {
       print(ex);
       emit(LoggingIn.failure(error: ex.message));

@@ -24,6 +24,7 @@ class IStack<T> {
 
   T? peek() {
     if (_stack.isNotEmpty) return _stack.last;
+    return null;
   }
 
   void clear() {

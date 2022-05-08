@@ -1,11 +1,9 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/authentication/authentication_bloc.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/profile/profile_bloc.dart';
-import 'package:mfc_app/constants/values.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/formatter.dart';
 import 'package:mfc_app/widgets/date_input.dart';
@@ -116,8 +114,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (state is EditProfileState &&
               state.profile != null &&
               !state.loaded) {
-            _firstNameController.text = state.profile!.firstName;
-            _lastNameController.text = state.profile!.lastName;
+            _firstNameController.text = state.profile?.firstName ?? "";
+            _lastNameController.text = state.profile?.lastName ?? "";
             _birthDateController.text =
                 Formatter.formatDate(state.profile!.birthDate) ?? "";
             _lengthController.text =

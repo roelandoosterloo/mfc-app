@@ -6,8 +6,8 @@ import 'package:mfc_app/models/Model.dart';
 @immutable
 class Profile extends Model {
   final String id;
-  final String _firstName;
-  final String _lastName;
+  final String? _firstName;
+  final String? _lastName;
   final DateTime? _birthDate;
   final double? _length;
   final double? _targetWeight;
@@ -15,11 +15,11 @@ class Profile extends Model {
 
   static final DateFormat _dateFormat = new DateFormat("yyyy-MM-dd");
 
-  String get firstName {
+  String? get firstName {
     return _firstName;
   }
 
-  String get lastName {
+  String? get lastName {
     return _lastName;
   }
 
@@ -48,8 +48,8 @@ class Profile extends Model {
 
   const Profile._internal({
     required this.id,
-    required String firstName,
-    required String lastName,
+    String? firstName,
+    String? lastName,
     DateTime? birthDate,
     double? length,
     double? targetWeight,
@@ -63,8 +63,8 @@ class Profile extends Model {
 
   factory Profile({
     String? id,
-    required String firstName,
-    required String lastName,
+    String? firstName,
+    String? lastName,
     DateTime? birthDate,
     double? length,
     double? targetWeight,

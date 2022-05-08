@@ -12,7 +12,6 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     UserRepository _userRepository = context.read<UserRepository>();
     ProfileRepository _profileRepository = context.read<ProfileRepository>();
-    ThemeData theme = Theme.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
