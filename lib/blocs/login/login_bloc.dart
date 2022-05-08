@@ -90,6 +90,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           emit(SetupPassword.initial());
         }
       }
+    } on InvalidStateException catch (ex) {
+      print(ex);
+      emit(LoggingIn.failure(error: ex.message));
+      _authBloc.add(AuthenticationLoggedOut());
     } on AmplifyException catch (ex) {
       print(ex);
       emit(LoggingIn.failure(error: ex.message));
