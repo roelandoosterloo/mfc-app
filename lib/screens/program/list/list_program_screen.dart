@@ -131,7 +131,31 @@ class ListProgramScreen extends StatelessWidget {
                 ));
               } else if (state is NoProgramAvailable) {
                 return Container(
-                  child: Text("No data"),
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: min(MediaQuery.of(context).size.width,
+                                MediaQuery.of(context).size.height) *
+                            0.4,
+                        child: Image.asset(
+                          "assets/images/no-results.png",
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Text(
+                        "Geen programma's gevonden",
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               } else if (state is FailedLoading) {
                 return Container(
@@ -163,7 +187,7 @@ class ListProgramScreen extends StatelessWidget {
                   ),
                 );
               }
-              return Container(child: Text("Not laoded"));
+              return Container();
             })());
       },
     );
