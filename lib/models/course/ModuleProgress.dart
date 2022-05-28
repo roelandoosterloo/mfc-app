@@ -1,4 +1,4 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 import 'package:mfc_app/models/course/Answer.dart';
@@ -76,7 +76,7 @@ class ModuleProgress extends Model {
     List<Answer>? workbook,
   }) {
     return ModuleProgress._internal(
-      id: id == null ? UUID.getUUID() : id,
+      id: id == null ? amplify.UUID.getUUID() : id,
       enrollmentId: enrollmentId,
       availableAt: availableAt,
       startedAt: startedAt,
@@ -123,4 +123,12 @@ class ModuleProgress extends Model {
 
   @override
   int get hashCode => super.hashCode;
+
+  int compareTo(ModuleProgress that) {
+    if (this.module?.index != null && that.module?.index != null) {
+      return this.module!.index! - that.module!.index!;
+    }
+    return this.availableAt.millisecondsSinceEpoch -
+        that.availableAt.millisecondsSinceEpoch;
+  }
 }

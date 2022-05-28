@@ -66,9 +66,11 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         enrollment = hplState.enrollments
             .firstWhere((enrollment) => enrollment.course.id == event.courseId);
       } catch (ex) {}
+
       if (enrollment == null) {
+        AuthUser user = await _userRepo.getUser();
         enrollment = await _courseRepo.createEnrollment(
-            hplState.profile.getId(), event.courseId);
+            user.username.replaceAll("@", "#"), event.courseId);
         this.add(HomePageOpened());
       }
 

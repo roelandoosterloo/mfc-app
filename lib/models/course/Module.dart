@@ -1,7 +1,7 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
+import 'package:mfc_app/models/Model.dart';
 
-import '../Model.dart';
 import 'Question.dart';
 
 @immutable
@@ -91,7 +91,7 @@ class Module extends Model {
       required String delayUOM,
       List<Question>? assignments}) {
     return Module._internal(
-        id: id == null ? UUID.getUUID() : id,
+        id: id == null ? amplify.UUID.getUUID() : id,
         courseId: courseId,
         name: name,
         index: index,

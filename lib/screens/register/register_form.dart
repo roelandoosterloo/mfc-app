@@ -173,10 +173,11 @@ Verwacht minstens 6 tekens waarvan
                     height: 40,
                   ),
                   SizedBox(
-                    width: 130,
+                    width: 180,
                     child: ElevatedButton(
                       onPressed: state.canSubmit() ? _onRegister : null,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [Icon(Icons.check), Text("REGISTREER")],
                       ),
                     ),

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 
@@ -49,7 +49,7 @@ class Course extends Model {
       String? coverImage,
       List<Module>? modules}) {
     return Course._internal(
-        id: id == null ? UUID.getUUID() : id,
+        id: id == null ? amplify.UUID.getUUID() : id,
         name: name,
         description: description,
         coverImage: coverImage,

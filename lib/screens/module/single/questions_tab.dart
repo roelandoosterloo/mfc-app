@@ -97,7 +97,7 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
           flex: 1,
           child: PageView(
             controller: widget.controller,
-            scrollDirection: Axis.vertical,
+            scrollDirection: Axis.horizontal,
             onPageChanged: (int page) {
               setState(() {
                 _page = page;

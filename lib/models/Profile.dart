@@ -1,4 +1,4 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:mfc_app/models/Model.dart';
@@ -71,7 +71,7 @@ class Profile extends Model {
     String? currentCourseId,
   }) {
     return Profile._internal(
-      id: id ?? UUID.getUUID(),
+      id: id ?? amplify.UUID.getUUID(),
       firstName: firstName,
       lastName: lastName,
       birthDate: birthDate,

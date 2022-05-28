@@ -1,7 +1,7 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
+import 'package:mfc_app/models/Model.dart';
 
-import '../Model.dart';
 import 'Answer.dart';
 import 'Option.dart';
 import 'QuestionType.dart';
@@ -77,7 +77,7 @@ class Question extends Model {
       List<Option>? options,
       Answer? answer}) {
     return Question._internal(
-        id: id == null ? UUID.getUUID() : id,
+        id: id == null ? amplify.UUID.getUUID() : id,
         moduleId: moduleId,
         type: type,
         index: index,

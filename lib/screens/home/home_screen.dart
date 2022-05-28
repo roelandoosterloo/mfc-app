@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Padding(
                                           padding: const EdgeInsets.all(16.0),
                                           child: Text(
-                                            "Je hebt nog geen programma's. Klik hieronder om de programma's te bekijken. Heb je al wel een programma gekocht en deze niet zien, neem dan even contact op met info@myfoodcoach.nl",
+                                            "Je hebt nog geen programma's. Klik hieronder om de programma's te bekijken. Heb je al wel een programma gekocht en kan je deze niet zien, neem dan even contact op met info@myfoodcoach.nl",
                                           ),
                                         ),
                                         ElevatedButton(

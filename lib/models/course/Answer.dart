@@ -1,4 +1,4 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 
@@ -42,7 +42,7 @@ class Answer extends Model {
     required String moduleProgressId,
   }) {
     return Answer._internal(
-      id: id == null ? UUID.getUUID() : id,
+      id: id == null ? amplify.UUID.getUUID() : id,
       questionId: questionId,
       answer: answer,
       moduleProgressId: moduleProgressId,

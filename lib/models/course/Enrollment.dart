@@ -1,4 +1,4 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
@@ -70,7 +70,7 @@ class Enrollment extends Model {
       required Course course,
       List<ModuleProgress>? moduleSchedule}) {
     return Enrollment._internal(
-      id: id == null ? UUID.getUUID() : id,
+      id: id == null ? amplify.UUID.getUUID() : id,
       startedAt: startedAt,
       enrolledAt: startedAt,
       completedAt: startedAt,

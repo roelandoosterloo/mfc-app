@@ -1,4 +1,4 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
 import 'package:mfc_app/models/Model.dart';
 
@@ -29,7 +29,7 @@ class Option extends Model {
   factory Option(
       {String? id, required String questionId, required String label}) {
     return Option._internal(
-        id: id == null ? UUID.getUUID() : id,
+        id: id == null ? amplify.UUID.getUUID() : id,
         questionId: questionId,
         label: label);
   }

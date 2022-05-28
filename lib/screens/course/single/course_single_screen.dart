@@ -56,9 +56,7 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
               Enrollment enrollment = state.enrollment!;
               Course course = enrollment.course;
               List<ModuleProgress> modules = enrollment.moduleSchedule ?? [];
-              modules.sort((a, b) =>
-                  a.availableAt.millisecondsSinceEpoch -
-                  b.availableAt.millisecondsSinceEpoch);
+              modules.sort((a, b) => a.compareTo(b));
 
               return Container(
                 height: double.infinity,

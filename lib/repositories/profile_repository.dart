@@ -61,7 +61,7 @@ class ProfileRepository {
     Map<String, dynamic> json = jsonDecode(response.data);
     List<dynamic> items = json['listProfiles']['items'];
     if (items.isEmpty) {
-      return createProfile(cognitoId);
+      return createProfile(cognitoId.replaceAll('@', '#'));
     }
     List<Profile> profiles = items.map((it) => Profile.fromJson(it)).toList();
     return profiles.first;

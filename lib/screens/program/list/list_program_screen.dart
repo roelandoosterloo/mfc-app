@@ -6,14 +6,20 @@ import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Program.dart';
 import 'package:mfc_app/screens/program/list/bloc/list_program_bloc.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ListProgramScreen extends StatelessWidget {
   const ListProgramScreen({Key? key}) : super(key: key);
 
   _onMoreInfo(Program p) async {
-    if (!await launchUrlString(p.productUrl)) {
-      throw "Could not open URL";
+    Uri url = Uri.parse(p.productUrl);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      return;
     }
   }
 
@@ -25,7 +31,18 @@ class ListProgramScreen extends StatelessWidget {
         if (state is PaymentFailed) {
           ScaffoldMessenger.of(context)
             ..removeCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(state.message)));
+            ..showSnackBar(
+              SnackBar(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Betaling mislukt"),
+                    Text(state.message),
+                  ],
+                ),
+              ),
+            );
         }
         if (state is PaymentSucceeded) {
           ScaffoldMessenger.of(context)

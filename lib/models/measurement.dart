@@ -1,9 +1,7 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:mfc_app/constants/values.dart';
-
-import 'Model.dart';
+import 'package:mfc_app/models/Model.dart';
 
 @immutable
 class Measurement extends Model {
@@ -52,7 +50,7 @@ class Measurement extends Model {
       required double weight,
       String? note}) {
     return Measurement._internal(
-        id: id == null ? UUID.getUUID() : id,
+        id: id == null ? amplify.UUID.getUUID() : id,
         date: date,
         weight: weight,
         note: note);

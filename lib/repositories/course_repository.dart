@@ -39,6 +39,7 @@ class CourseRepository {
     List<dynamic> courses = memberships
         .map((item) => item["program"]["courses"]["items"])
         .expand((element) => element)
+        .where((element) => element != null)
         .map((item) => item["course"])
         .toList();
     List<Course> enrolledCourses =
@@ -366,7 +367,7 @@ class CourseRepository {
     String graphQLDocument = '''
     mutation createEnrollment {
       createEnrollment(input: {
-        cognitoId: "$userId"
+        owner: "$userId"
         courseId: "$courseId"
         enrolledAt: "${DateTime.now().toUtc().toIso8601String()}"
         startedAt: "${DateTime.now().toUtc().toIso8601String()}"

@@ -66,8 +66,7 @@ type Enrollment
     { allow: owner } ] ) 
   @key(name: "ofCourse" fields: ["courseId"] ){
   id: ID!
-  owner: String!
-  cognitoId: ID!
+  owner: String
   courseId: ID!
   enrolledAt: AWSDateTime
   startedAt: AWSDateTime
