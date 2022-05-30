@@ -1,9 +1,11 @@
 part of 'add_measurement_bloc.dart';
 
+enum FieldState { valid, invalid, pristine }
+
 class AddMeasurementState extends Equatable {
-  final bool isDateValid;
-  final bool isWeightValid;
-  final bool isNoteValid;
+  final FieldState isDateValid;
+  final FieldState isWeightValid;
+  final FieldState isNoteValid;
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
@@ -21,9 +23,9 @@ class AddMeasurementState extends Equatable {
 
   factory AddMeasurementState.initial() {
     return AddMeasurementState(
-      isDateValid: true,
-      isWeightValid: true,
-      isNoteValid: true,
+      isDateValid: FieldState.pristine,
+      isWeightValid: FieldState.pristine,
+      isNoteValid: FieldState.pristine,
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
@@ -31,9 +33,9 @@ class AddMeasurementState extends Equatable {
   }
   factory AddMeasurementState.loading() {
     return AddMeasurementState(
-      isDateValid: true,
-      isWeightValid: true,
-      isNoteValid: true,
+      isDateValid: FieldState.pristine,
+      isWeightValid: FieldState.pristine,
+      isNoteValid: FieldState.pristine,
       isSubmitting: true,
       isSuccess: false,
       isFailure: false,
@@ -41,9 +43,9 @@ class AddMeasurementState extends Equatable {
   }
   factory AddMeasurementState.success() {
     return AddMeasurementState(
-      isDateValid: true,
-      isWeightValid: true,
-      isNoteValid: true,
+      isDateValid: FieldState.pristine,
+      isWeightValid: FieldState.pristine,
+      isNoteValid: FieldState.pristine,
       isSubmitting: false,
       isSuccess: true,
       isFailure: false,
@@ -52,9 +54,9 @@ class AddMeasurementState extends Equatable {
 
   factory AddMeasurementState.failure({String? error}) {
     return AddMeasurementState(
-      isDateValid: true,
-      isWeightValid: true,
-      isNoteValid: true,
+      isDateValid: FieldState.pristine,
+      isWeightValid: FieldState.pristine,
+      isNoteValid: FieldState.pristine,
       isSubmitting: false,
       isSuccess: false,
       isFailure: true,
@@ -63,11 +65,9 @@ class AddMeasurementState extends Equatable {
   }
 
   AddMeasurementState update({
-    bool? isDateValid,
-    bool? isWeightValid,
-    bool? isHipsValid,
-    bool? isWaistValid,
-    bool? isNoteValid,
+    FieldState? isDateValid,
+    FieldState? isWeightValid,
+    FieldState? isNoteValid,
   }) {
     return AddMeasurementState(
       isDateValid: isDateValid ?? this.isDateValid,
@@ -80,7 +80,9 @@ class AddMeasurementState extends Equatable {
   }
 
   bool isValid() {
-    return isDateValid && isWeightValid && isNoteValid;
+    return isDateValid == FieldState.valid &&
+        isWeightValid == FieldState.valid &&
+        (isNoteValid == FieldState.valid || isNoteValid == FieldState.pristine);
   }
 
   @override

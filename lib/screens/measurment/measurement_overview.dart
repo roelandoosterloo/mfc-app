@@ -2,9 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/blocs/measurement/measurement_bloc.dart';
-import 'package:mfc_app/constants/values.dart';
+import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/screens/measurment/measurement_chart2.dart';
 import 'package:mfc_app/screens/measurment/measurement_list.dart';
 import 'package:mfc_app/screens/measurment/statistic_card.dart';

@@ -131,8 +131,9 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                 ),
                 autocorrect: false,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) =>
-                    !state.isWeightValid ? 'Gewicht ongeldig' : null,
+                validator: (_) => state.isWeightValid == FieldState.invalid
+                    ? 'Gewicht ongeldig'
+                    : null,
                 decoration: InputDecoration(
                   icon: Icon(Icons.fitness_center),
                   suffix: Text("kg"),
@@ -147,8 +148,9 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (_) =>
-                    !state.isNoteValid ? 'Notitie ongeldig' : null,
+                validator: (_) => state.isNoteValid == FieldState.invalid
+                    ? 'Notitie ongeldig'
+                    : null,
                 decoration: InputDecoration(
                   icon: Icon(Icons.sticky_note_2),
                   labelText: "Notitie",

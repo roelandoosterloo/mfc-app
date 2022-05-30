@@ -33,9 +33,9 @@ class AddMeasurementBloc
   ) {
     try {
       Parser.readDateLocal(event.date);
-      emit(state.update(isDateValid: true));
+      emit(state.update(isDateValid: FieldState.valid));
     } catch (ex) {
-      emit(state.update(isDateValid: false));
+      emit(state.update(isDateValid: FieldState.invalid));
     }
   }
 
@@ -45,15 +45,17 @@ class AddMeasurementBloc
   ) {
     double? weight = Parser.readDouble(event.weight);
     if (weight == null) {
-      return emit(state.update(isWeightValid: false));
+      return emit(state.update(isWeightValid: FieldState.invalid));
     }
+    bool weightValid = Validators.isNumberInRange(
+      value: weight,
+      lower: 0,
+      upper: 300,
+    );
     emit(
       state.update(
-          isWeightValid: Validators.isNumberInRange(
-        value: weight,
-        lower: 0,
-        upper: 300,
-      )),
+        isWeightValid: weightValid ? FieldState.valid : FieldState.invalid,
+      ),
     );
   }
 
@@ -63,7 +65,7 @@ class AddMeasurementBloc
   ) {
     emit(
       state.update(
-        isNoteValid: true,
+        isNoteValid: FieldState.valid,
       ),
     );
   }

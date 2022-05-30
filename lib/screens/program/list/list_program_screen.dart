@@ -6,20 +6,20 @@ import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Program.dart';
 import 'package:mfc_app/screens/program/list/bloc/list_program_bloc.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class ListProgramScreen extends StatelessWidget {
+class ListProgramScreen extends StatefulWidget {
   const ListProgramScreen({Key? key}) : super(key: key);
 
-  _onMoreInfo(Program p) async {
-    Uri url = Uri.parse(p.productUrl);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
-      return;
+  @override
+  State<ListProgramScreen> createState() => _ListProgramScreenState();
+}
+
+class _ListProgramScreenState extends State<ListProgramScreen> {
+  _onSelectMenuItem(String value) {
+    switch (value) {
+      case 'Aankoop terugzetten':
+        BlocProvider.of<ListProgramBloc>(context)
+            .add(PurchasesRestoreRequested());
     }
   }
 
@@ -48,7 +48,7 @@ class ListProgramScreen extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..removeCurrentSnackBar()
             ..showSnackBar(SnackBar(
-              content: Text("Aanmelding succesvol afgerond"),
+              content: Text("Aanmelden gelukt"),
             ));
           BlocProvider.of<NavigationBloc>(context).add(NavigatedBack());
         }
@@ -59,6 +59,19 @@ class ListProgramScreen extends StatelessWidget {
               title: Text(
                 "Programma's",
               ),
+              actions: [
+                PopupMenuButton(
+                  onSelected: _onSelectMenuItem,
+                  itemBuilder: (BuildContext context) {
+                    return {'Aankoop terugzetten'}
+                        .map((String choice) => PopupMenuItem(
+                              child: Text(choice),
+                              value: choice,
+                            ))
+                        .toList();
+                  },
+                ),
+              ],
             ),
             body: (() {
               if (state is Loaded) {
@@ -94,12 +107,6 @@ class ListProgramScreen extends StatelessWidget {
                           ButtonBar(
                             alignment: MainAxisAlignment.start,
                             children: [
-                              TextButton(
-                                onPressed: () {
-                                  _onMoreInfo(p);
-                                },
-                                child: const Text('MEER INFO'),
-                              ),
                               if (state.memberships
                                   .any((element) => element.programId == p.id))
                                 TextButton(

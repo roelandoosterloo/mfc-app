@@ -30,14 +30,22 @@ class StoreRepository {
     return response.productDetails.first;
   }
 
-  Future<void> makePurchase(ProductDetails details) async {
+  Future<void> makePurchase(ProductDetails details, String username) async {
     await InAppPurchase.instance.isAvailable();
-    final PurchaseParam purchaseParam = PurchaseParam(productDetails: details);
+    final PurchaseParam purchaseParam = PurchaseParam(
+      productDetails: details,
+      applicationUserName: username,
+    );
     bool result = await InAppPurchase.instance
         .buyNonConsumable(purchaseParam: purchaseParam);
   }
 
   Future<void> completePurchase(PurchaseDetails details) {
     return InAppPurchase.instance.completePurchase(details);
+  }
+
+  Future<void> restorePurchases(String username) {
+    return InAppPurchase.instance
+        .restorePurchases(applicationUserName: username);
   }
 }

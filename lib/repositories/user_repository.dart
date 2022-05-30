@@ -67,4 +67,9 @@ class UserRepository {
   Future<AuthUser> getUser() async {
     return await Amplify.Auth.getCurrentUser();
   }
+
+  Future<String> getUsername() async {
+    AuthUser user = await Amplify.Auth.getCurrentUser();
+    return user.username.replaceAll("@", "#");
+  }
 }

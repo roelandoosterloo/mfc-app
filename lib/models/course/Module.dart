@@ -101,7 +101,8 @@ class Module extends Model {
         delayNumber: delayNumber,
         delayUOM: delayUOM,
         assignments: assignments != null
-            ? List<Question>.unmodifiable(assignments)
+            ? List<Question>.unmodifiable(
+                assignments..sort(((a, b) => a.index.compareTo(b.index))))
             : assignments);
   }
 
@@ -137,7 +138,10 @@ class Module extends Model {
             ? (json['assignments']["items"] as List)
                 .map((e) => Question.fromJson(new Map<String, dynamic>.from(e)))
                 .toList()
-            : null;
+            : null {
+    if (_assignments != null)
+      _assignments!.sort(((a, b) => a.index.compareTo(b.index)));
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,

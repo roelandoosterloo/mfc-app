@@ -46,6 +46,14 @@ class Profile extends Model {
     return null;
   }
 
+  bool get isProfileComplete {
+    return firstName != null &&
+        lastName != null &&
+        birthDate != null &&
+        length != null &&
+        targetWeight != null;
+  }
+
   const Profile._internal({
     required this.id,
     String? firstName,

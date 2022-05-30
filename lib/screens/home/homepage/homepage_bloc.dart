@@ -39,8 +39,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     try {
       List<Enrollment> enrollments = await _courseRepo.listEnrolledCourses();
       List<Course> courses = await _courseRepo.listSubscribedCourses();
-      AuthUser user = await _userRepo.getUser();
-      Profile profile = await _profileRepo.getProfile(user.username);
+      String username = await _userRepo.getUsername();
+      Profile profile = await _profileRepo.getProfile(username);
       emit(
         HomePageLoaded(courses, enrollments, profile),
       );
@@ -68,9 +68,9 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       } catch (ex) {}
 
       if (enrollment == null) {
-        AuthUser user = await _userRepo.getUser();
-        enrollment = await _courseRepo.createEnrollment(
-            user.username.replaceAll("@", "#"), event.courseId);
+        String username = await _userRepo.getUsername();
+        enrollment =
+            await _courseRepo.createEnrollment(username, event.courseId);
         this.add(HomePageOpened());
       }
 

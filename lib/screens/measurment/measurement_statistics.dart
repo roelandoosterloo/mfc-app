@@ -33,13 +33,21 @@ class MeasurementStatistics extends StatelessWidget {
           icon: Icons.monitor_weight_outlined,
           iconColor: Colors.white,
         ),
-        StatisticCard(
-          title: "Streefgewicht",
-          subText:
-              "${_targetWeight != null ? Formatter.formatDecimal(_targetWeight) : "-"} kg",
-          icon: Icons.flag_outlined,
-          iconColor: Colors.white,
-        ),
+        if (_targetWeight != null)
+          StatisticCard(
+            title: "Streefgewicht",
+            subText:
+                "${_targetWeight != null ? Formatter.formatDecimal(_targetWeight) : "-"} kg",
+            icon: Icons.flag_outlined,
+            iconColor: Colors.white,
+          ),
+        if (_targetWeight == null)
+          ElevatedButton(
+            child: Text("VUL JE STREEFGEWICHT IN"),
+            onPressed: () => BlocProvider.of<NavigationBloc>(context).add(
+              NavigatedToProfile(),
+            ),
+          ),
         StatisticCard(
           title: "Totaal afgevallen",
           mainText: _totalWeightLost != null

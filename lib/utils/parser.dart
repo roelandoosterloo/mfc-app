@@ -14,6 +14,7 @@ class Parser {
 
   static DateTime? readDateLocal(Object? value) {
     if (value == null) return null;
+    if (value == "") return null;
     if (value is String) {
       DateFormat f = new DateFormat.yMd(Platform.localeName);
       return f.parse(value);

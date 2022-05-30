@@ -30,3 +30,5 @@ class PurchaseFailed extends ListProgramEvent {
 }
 
 class PurchaseCompleted extends ListProgramEvent {}
+
+class PurchasesRestoreRequested extends ListProgramEvent {}

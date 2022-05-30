@@ -34,8 +34,8 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
   ) async {
     emit(MeasurementLoading());
     try {
-      AuthUser user = await _userRepo.getUser();
-      Profile p = await _profileRepo.getProfile(user.username);
+      String username = await _userRepo.getUsername();
+      Profile p = await _profileRepo.getProfile(username);
       Stream<List<Measurement>> measurementsStream =
           _measureRepo.listMeasurements();
       await measurementsStream.forEach((measurements) {

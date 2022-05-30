@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     padding: EdgeInsets.only(top: 140),
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceEvenly,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -229,6 +229,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                               .add(NavigatedToPrograms()),
                                           child: Text("BEKIJK PROGRAMMA'S"),
                                         ),
+                                        if (!state
+                                            .profile.isProfileComplete) ...[
+                                          Text("Of"),
+                                          ElevatedButton(
+                                            onPressed: () => _navBloc
+                                                .add(NavigatedToProfile()),
+                                            child: Text(
+                                                "MAAK JE PROFIEL COMPLEET"),
+                                          ),
+                                        ],
                                       ],
                                     ),
                                   ),

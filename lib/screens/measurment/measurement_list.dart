@@ -20,6 +20,7 @@ class MeasurementList extends StatelessWidget {
       itemBuilder: (context, index) {
         Measurement m = _measurements[index];
         return Dismissible(
+          direction: DismissDirection.endToStart,
           key: Key(m.id),
           onDismissed: (direction) {
             _onRemove(m.id);

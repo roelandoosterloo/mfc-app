@@ -8,6 +8,7 @@ import 'package:mfc_app/models/course/Membership.dart';
 import 'package:mfc_app/models/course/Program.dart';
 import 'package:mfc_app/repositories/program_repository.dart';
 import 'package:mfc_app/repositories/store_repository.dart';
+import 'package:mfc_app/repositories/user_repository.dart';
 
 part 'list_program_event.dart';
 part 'list_program_state.dart';
@@ -15,18 +16,22 @@ part 'list_program_state.dart';
 class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
   final ProgramRepository _programRepo;
   final StoreRepository _storeRepo;
+  final UserRepository _userRepo;
   StreamSubscription? _purchaseListener;
 
   ListProgramBloc({
     required ProgramRepository programRepo,
     required StoreRepository storeRepo,
+    required UserRepository userRepo,
   })  : _programRepo = programRepo,
         _storeRepo = storeRepo,
+        _userRepo = userRepo,
         super(ListProgramInitial()) {
     on<ListProgramOpened>(_onListProgramOpened);
     on<PurchaseProgram>(_onProgramPurchased);
     on<PurchaseFailed>(_onPurchaseFailed);
     on<PurchaseCompleted>(_onPurchaseCompleted);
+    on<PurchasesRestoreRequested>(_onRestorePurchases);
 
     _storeRepo.purchaseStream().then(
       (stream) {
@@ -39,15 +44,20 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
                 );
               } else if (details.status == PurchaseStatus.purchased ||
                   details.status == PurchaseStatus.restored) {
-                bool success = await _programRepo.createMembership(
-                  details.productID,
-                  details.purchaseID!,
-                );
-                if (success == false) {
-                  add(PurchaseFailed("Aanmelding mislukt"));
-                }
-                if (success == true) {
-                  add(PurchaseCompleted());
+                try {
+                  bool success = await _programRepo.createMembership(
+                    details.productID,
+                    details.purchaseID!,
+                  );
+                  if (success == false) {
+                    add(PurchaseFailed("Aanmelding mislukt"));
+                  }
+                  if (success == true) {
+                    add(PurchaseCompleted());
+                  }
+                } catch (ex) {
+                  add(PurchaseFailed(
+                      "Aanmelden mislukt probeer later opnieuw"));
                 }
               }
               if (details.pendingCompletePurchase) {
@@ -102,9 +112,10 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
       return;
     }
     try {
+      String username = await _userRepo.getUsername();
       ProductDetails detail =
           await _storeRepo.getProduct(event.program.productStoreId!);
-      await _storeRepo.makePurchase(detail);
+      await _storeRepo.makePurchase(detail, username);
     } on StoreException catch (ex) {
       print(ex.error);
       emit(PaymentFailed(
@@ -139,6 +150,18 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
     } on Exception catch (e) {
       log(e.toString());
       emit(FailedLoading(e.toString()));
+    }
+  }
+
+  Future<void> _onRestorePurchases(
+    PurchasesRestoreRequested event,
+    Emitter<ListProgramState> emit,
+  ) async {
+    try {
+      String username = await _userRepo.getUsername();
+      return _storeRepo.restorePurchases(username);
+    } catch (ex) {
+      this.add(PurchaseFailed("Kon aankopen niet herstellen"));
     }
   }
 }
