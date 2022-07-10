@@ -5,9 +5,8 @@ const cognitoClient = new CognitoIdentityServiceProvider();
 const POOL_ID = process.env.AUTH_MFCAPPF4FDFC42_USERPOOLID;
 
 const createUser = async (email, firstName, lastName) => {
-
   try {
-    const userId = `${firstName}.${lastName}`;
+    const userId = email.replace(/@/,"#");
     const user = await cognitoClient.adminCreateUser({
       UserPoolId: POOL_ID,
       Username: userId,
@@ -30,7 +29,7 @@ const createUser = async (email, firstName, lastName) => {
     return user.User;
   } catch (ex) {
     console.error(ex);
-    throw new Error("user not created");
+    throw new Error("user not created. " + ex.toString());
   }
 }
 

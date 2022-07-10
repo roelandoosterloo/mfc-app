@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:mfc_app/constants/values.dart';
 
 class Formatter {
-  static String locale = Platform.localeName;
+  static String locale =
+      "nl_NL"; // Platform.localeName; // <-- actual value, disabled for stupid users
   static DateFormat _localDateFormat = new DateFormat.yMd(locale);
   static NumberFormat _singleDecimal =
       new NumberFormat(SINGLE_DECIMAL_FORMAT, locale);

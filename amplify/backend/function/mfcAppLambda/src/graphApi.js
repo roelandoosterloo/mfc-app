@@ -224,7 +224,7 @@ const createMembership = async(user, programId) => {
     programId,
   };
 
-  const response = await request(membershipMutation, {input });
+  const response = await request(membershipMutation, { input });
   if(hasData(response)) {
     return response.data.data.createMembership;
   } else {

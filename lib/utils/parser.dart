@@ -34,8 +34,11 @@ class Parser {
     }
     if (value is String) {
       try {
-        double? v = NumberFormat.decimalPattern(Platform.localeName)
-            .parse(value) as double?;
+        // instead of a proper localized version, use a forced format
+        // double? v = NumberFormat.decimalPattern(Platform.localeName)
+        // .parse(value) as double?;
+        double? v =
+            NumberFormat.decimalPattern("nl_NL").parse(value) as double?;
         return v;
       } catch (_) {
         return double.tryParse(value);

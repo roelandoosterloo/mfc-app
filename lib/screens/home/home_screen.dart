@@ -168,7 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             loading: state.loadingCourse ==
                                 state.currentEnrollment?.course.id,
                           ),
-                          ...(state.courses.isNotEmpty
+                          ...(state.courses.isNotEmpty ||
+                                  state.completedCourses.isNotEmpty
                               ? [
                                   SubHeader("Beschikbaar"),
                                   SingleChildScrollView(
