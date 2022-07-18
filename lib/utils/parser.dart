@@ -34,11 +34,12 @@ class Parser {
     }
     if (value is String) {
       try {
-        // instead of a proper localized version, use a forced format
-        // double? v = NumberFormat.decimalPattern(Platform.localeName)
-        // .parse(value) as double?;
-        double? v =
-            NumberFormat.decimalPattern("nl_NL").parse(value) as double?;
+        double? v;
+        if (RegExp(r'^[0-9]+\.?[0-9]*$').hasMatch(value)) {
+          v = NumberFormat.decimalPattern('en_US').parse(value) as double?;
+        } else {
+          v = NumberFormat.decimalPattern('nl_NL').parse(value) as double?;
+        }
         return v;
       } catch (_) {
         return double.tryParse(value);
