@@ -143,7 +143,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
 
     try {
-      DateTime birthDate = Parser.readDateLocal(event.birthDate ?? "")!;
+      DateTime? birthDate = Parser.readDateLocal(event.birthDate ?? "");
       double? length = Parser.readDouble(event.length);
       double? targetWeight = Parser.readDouble(event.targetWeight);
 

@@ -139,9 +139,6 @@ class _AddMeasurementFormState extends State<AddMeasurementForm> {
                   suffix: Text("kg"),
                   labelText: "Gewicht",
                 ),
-                inputFormatters: [
-                  buildDecimalFormatter(precision: 2),
-                ],
               ),
               TextFormField(
                 controller: _noteController,
