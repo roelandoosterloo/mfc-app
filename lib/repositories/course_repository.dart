@@ -231,8 +231,18 @@ class CourseRepository {
                   id
                   questionId
                   label
+                  index
                 }
               }
+            }
+          }
+          tools {
+            items {
+              id
+              moduleId
+              name
+              url
+              index
             }
           }
         }

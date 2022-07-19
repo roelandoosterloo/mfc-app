@@ -12,44 +12,11 @@ part of 'Program.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Program _$ProgramFromJson(Map<String, dynamic> json) {
   return _Program.fromJson(json);
 }
-
-/// @nodoc
-class _$ProgramTearOff {
-  const _$ProgramTearOff();
-
-  _Program call(
-      {required String id,
-      required String name,
-      bool isForSale = true,
-      double? price,
-      String? productStoreId,
-      required String description,
-      required String imageUrl,
-      required String productUrl}) {
-    return _Program(
-      id: id,
-      name: name,
-      isForSale: isForSale,
-      price: price,
-      productStoreId: productStoreId,
-      description: description,
-      imageUrl: imageUrl,
-      productUrl: productUrl,
-    );
-  }
-
-  Program fromJson(Map<String, Object?> json) {
-    return Program.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $Program = _$ProgramTearOff();
 
 /// @nodoc
 mixin _$Program {
@@ -231,8 +198,8 @@ class _$_Program implements _Program {
   final String id;
   @override
   final String name;
-  @JsonKey()
   @override
+  @JsonKey()
   final bool isForSale;
   @override
   final double? price;
@@ -268,6 +235,7 @@ class _$_Program implements _Program {
                 .equals(other.productUrl, productUrl));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -293,33 +261,33 @@ class _$_Program implements _Program {
 
 abstract class _Program implements Program {
   const factory _Program(
-      {required String id,
-      required String name,
-      bool isForSale,
-      double? price,
-      String? productStoreId,
-      required String description,
-      required String imageUrl,
-      required String productUrl}) = _$_Program;
+      {required final String id,
+      required final String name,
+      final bool isForSale,
+      final double? price,
+      final String? productStoreId,
+      required final String description,
+      required final String imageUrl,
+      required final String productUrl}) = _$_Program;
 
   factory _Program.fromJson(Map<String, dynamic> json) = _$_Program.fromJson;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
-  bool get isForSale;
+  bool get isForSale => throw _privateConstructorUsedError;
   @override
-  double? get price;
+  double? get price => throw _privateConstructorUsedError;
   @override
-  String? get productStoreId;
+  String? get productStoreId => throw _privateConstructorUsedError;
   @override
-  String get description;
+  String get description => throw _privateConstructorUsedError;
   @override
-  String get imageUrl;
+  String get imageUrl => throw _privateConstructorUsedError;
   @override
-  String get productUrl;
+  String get productUrl => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ProgramCopyWith<_Program> get copyWith =>

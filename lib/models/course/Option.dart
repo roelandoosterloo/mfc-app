@@ -7,6 +7,7 @@ class Option extends Model {
   final String id;
   final String _questionId;
   final String _label;
+  final int? _index;
 
   @override
   String getId() {
@@ -21,17 +22,27 @@ class Option extends Model {
     return _label;
   }
 
+  int get index {
+    return _index ?? 0;
+  }
+
   const Option._internal(
-      {required this.id, required questionId, required label})
+      {required this.id, required questionId, required label, index})
       : _questionId = questionId,
-        _label = label;
+        _label = label,
+        _index = index;
 
   factory Option(
-      {String? id, required String questionId, required String label}) {
+      {String? id,
+      required String questionId,
+      required String label,
+      int? index}) {
     return Option._internal(
-        id: id == null ? amplify.UUID.getUUID() : id,
-        questionId: questionId,
-        label: label);
+      id: id == null ? amplify.UUID.getUUID() : id,
+      questionId: questionId,
+      label: label,
+      index: index,
+    );
   }
 
   @override
@@ -50,7 +61,8 @@ class Option extends Model {
   Option.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         _questionId = json['questionId'],
-        _label = json['label'];
+        _label = json['label'],
+        _index = json['index'];
 
   Map<String, dynamic> toJson() =>
       {'id': id, 'questionId': _questionId, 'label': _label};

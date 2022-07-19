@@ -1,6 +1,8 @@
 import 'package:amplify_flutter/amplify_flutter.dart' as amplify;
 import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mfc_app/models/Model.dart';
+import 'package:mfc_app/models/course/Downloadable.dart';
 
 import 'Question.dart';
 
@@ -16,6 +18,7 @@ class Module extends Model {
   final int _delayNumber;
   final String _delayUOM;
   final List<Question>? _assignments;
+  final List<Downloadable>? _tools;
 
   @override
   String getId() {
@@ -58,7 +61,11 @@ class Module extends Model {
     return _assignments;
   }
 
-  const Module._internal(
+  List<Downloadable>? get tools {
+    return _tools;
+  }
+
+  Module._internal(
       {required this.id,
       required courseId,
       required name,
@@ -68,7 +75,8 @@ class Module extends Model {
       required videoUrl,
       required delayNumber,
       required delayUOM,
-      assignments})
+      assignments,
+      tools})
       : _courseId = courseId,
         _name = name,
         _index = index,
@@ -77,33 +85,40 @@ class Module extends Model {
         _videoUrl = videoUrl,
         _delayNumber = delayNumber,
         _delayUOM = delayUOM,
-        _assignments = assignments;
+        _assignments = assignments,
+        _tools = tools {
+    _tools?.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+  }
 
-  factory Module(
-      {String? id,
-      required String courseId,
-      required String name,
-      int? index,
-      String? description,
-      String? coverImage,
-      required String videoUrl,
-      required int delayNumber,
-      required String delayUOM,
-      List<Question>? assignments}) {
+  factory Module({
+    String? id,
+    required String courseId,
+    required String name,
+    int? index,
+    String? description,
+    String? coverImage,
+    required String videoUrl,
+    required int delayNumber,
+    required String delayUOM,
+    List<Question>? assignments,
+    List<Downloadable>? tools,
+  }) {
     return Module._internal(
-        id: id == null ? amplify.UUID.getUUID() : id,
-        courseId: courseId,
-        name: name,
-        index: index,
-        description: description,
-        coverImage: coverImage,
-        videoUrl: videoUrl,
-        delayNumber: delayNumber,
-        delayUOM: delayUOM,
-        assignments: assignments != null
-            ? List<Question>.unmodifiable(
-                assignments..sort(((a, b) => a.index.compareTo(b.index))))
-            : assignments);
+      id: id == null ? amplify.UUID.getUUID() : id,
+      courseId: courseId,
+      name: name,
+      index: index,
+      description: description,
+      coverImage: coverImage,
+      videoUrl: videoUrl,
+      delayNumber: delayNumber,
+      delayUOM: delayUOM,
+      assignments: assignments != null
+          ? List<Question>.unmodifiable(
+              assignments..sort(((a, b) => a.index.compareTo(b.index))))
+          : assignments,
+      tools: tools,
+    );
   }
 
   @override
@@ -138,6 +153,12 @@ class Module extends Model {
             ? (json['assignments']["items"] as List)
                 .map((e) => Question.fromJson(new Map<String, dynamic>.from(e)))
                 .toList()
+            : null,
+        _tools = json['tools']?["items"] is List
+            ? (json['tools']['items'] as List)
+                .map((e) =>
+                    Downloadable.fromJson(new Map<String, dynamic>.from(e)))
+                .toList()
             : null {
     if (_assignments != null)
       _assignments!.sort(((a, b) => a.index.compareTo(b.index)));
@@ -153,7 +174,8 @@ class Module extends Model {
         'videoUrl': _videoUrl,
         'delayNumber': _delayNumber,
         'delayUOM': _delayUOM,
-        'assignments': _assignments?.map((e) => e.toJson()).toList()
+        'assignments': _assignments?.map((e) => e.toJson()).toList(),
+        'tools': _tools?.map((e) => e.toJson()).toList(),
       };
 
   @override

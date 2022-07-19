@@ -123,6 +123,7 @@ type Module
   delayNumber: Int!
   delayUOM: String!
   assignments: [Question!] @connection( keyName: "ofModule", fields: ["id"] )
+  tools: [Downloadable!] @connection( keyName: "ofModule", fields: ["id"] )
 }
 enum QuestionType {
   SHORT_TEXT
@@ -171,6 +172,7 @@ type Option
   id: ID!
   questionId: ID!
   label: String!
+  index: Int
 }
 type Measurement
   @model 
@@ -187,6 +189,21 @@ type Measurement
   note: String
   type: String!
 }
+type Downloadable
+  @model
+  @key(name: "ofModule", fields: ["moduleId"] )
+  @auth(rules: [
+    { allow: owner },
+    { allow: private, provider: iam },
+    { allow: private, operations: [read]},
+    { allow: groups, groups: ["admin"] }
+  ]) {
+    id: ID!
+    moduleId: ID!
+    name: String!
+    url: String!
+    index: Int
+  }
 enum ContentState {
   LIVE
   DRAFT

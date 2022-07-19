@@ -50,7 +50,7 @@ class Question extends Model {
     return _answer;
   }
 
-  const Question._internal(
+  Question._internal(
       {required this.id,
       required moduleId,
       required type,
@@ -65,7 +65,9 @@ class Question extends Model {
         _index = index,
         _introduction = introduction,
         _options = options,
-        _answer = answer;
+        _answer = answer {
+    _options?.sort((a, b) => a.index - b.index);
+  }
 
   factory Question(
       {String? id,
