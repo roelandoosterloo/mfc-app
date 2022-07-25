@@ -5,6 +5,7 @@ import 'package:mfc_app/models/measurement.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../models/Profile.dart';
 
@@ -45,9 +46,9 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
           emit(MeasurementsAvailable(measurements: measurements, profile: p));
         }
       });
-    } catch (ex) {
-      print(ex);
-      emit(MeasurementsFailed(error: ex.toString()));
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
+      emit(MeasurementsFailed(error: e.toString()));
     }
   }
 
@@ -58,8 +59,8 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
     try {
       _measureRepo.removeMeasurement(event.id);
       this.add(new MeasurementsDataRequested());
-    } catch (ex) {
-      print(ex);
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
     }
   }
 }

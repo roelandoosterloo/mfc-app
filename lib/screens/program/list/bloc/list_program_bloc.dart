@@ -9,6 +9,7 @@ import 'package:mfc_app/models/course/Program.dart';
 import 'package:mfc_app/repositories/program_repository.dart';
 import 'package:mfc_app/repositories/store_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'list_program_event.dart';
 part 'list_program_state.dart';
@@ -56,6 +57,7 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
                     add(PurchaseCompleted());
                   }
                 } catch (ex) {
+                  await Sentry.captureException(ex);
                   add(PurchaseFailed(
                       "Aanmelden mislukt probeer later opnieuw"));
                 }
@@ -93,9 +95,9 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
           emit(Loaded(programs, memberships));
         }
       });
-    } on Exception catch (e) {
-      log(e.toString());
-      emit(FailedLoading(e.toString()));
+    } on Exception catch (ex) {
+      await Sentry.captureException(ex);
+      emit(FailedLoading(ex.toString()));
     }
   }
 
@@ -117,7 +119,7 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
           await _storeRepo.getProduct(event.program.productStoreId!);
       await _storeRepo.makePurchase(detail, username);
     } on StoreException catch (ex) {
-      print(ex.error);
+      await Sentry.captureException(ex);
       emit(PaymentFailed(
         message: ex.error,
         programs: (state as Loaded).programs,
@@ -148,7 +150,7 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
         memberships,
       ));
     } on Exception catch (e) {
-      log(e.toString());
+      await Sentry.captureException(e);
       emit(FailedLoading(e.toString()));
     }
   }
@@ -161,6 +163,7 @@ class ListProgramBloc extends Bloc<ListProgramEvent, ListProgramState> {
       String username = await _userRepo.getUsername();
       return _storeRepo.restorePurchases(username);
     } catch (ex) {
+      await Sentry.captureException(ex);
       this.add(PurchaseFailed("Kon aankopen niet herstellen"));
     }
   }

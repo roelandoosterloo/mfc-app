@@ -150,7 +150,9 @@ class _HomeScreenState extends State<HomeScreen> {
               if (state is HomePageError) {
                 ScaffoldMessenger.of(context)
                   ..removeCurrentSnackBar()
-                  ..showSnackBar(SnackBar(content: Text(state.error)));
+                  ..showSnackBar(SnackBar(
+                      content: Text(
+                          "Er ging iets niet goed bij het ophalen van de data. Probeer het nog eens of log opnieuw in. Mocht dat niet helpen, neem contact op met je coach.")));
               }
             },
             child: BlocBuilder<HomePageBloc, HomePageState>(

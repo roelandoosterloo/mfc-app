@@ -5,6 +5,7 @@ import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/utils/parser.dart';
 import 'package:mfc_app/utils/validators.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -159,7 +160,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else {
         emit(ProfileFailureState(state, "Something went wrong"));
       }
-    } catch (ex) {
+    } catch (ex, stack) {
+      await Sentry.captureException(ex, stackTrace: stack);
       emit(ProfileFailureState(state, "Something went wrong"));
     }
   }

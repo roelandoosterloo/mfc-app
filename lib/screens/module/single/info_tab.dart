@@ -16,7 +16,8 @@ class ModuleInfoTab extends StatelessWidget {
             accessLevel: StorageAccessLevel.guest,
           ));
       return result.url;
-    } catch (_) {
+    } catch (ex) {
+      await Sentry.captureException(ex);
       return null;
     }
   }
@@ -28,10 +29,12 @@ class ModuleInfoTab extends StatelessWidget {
     }
     Uri uri = Uri.parse(url);
     try {
-      if (!await launchUrlString(url)) {
+      if (!await launchUrl(uri)) {
         throw 'Could not launch $url';
       }
-    } catch (_) {}
+    } catch (ex) {
+      await Sentry.captureException(ex);
+    }
   }
 
   @override

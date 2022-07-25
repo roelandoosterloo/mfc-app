@@ -21,16 +21,25 @@ import 'package:mfc_app/screens/init/init_screen.dart';
 import 'package:mfc_app/utils/color_generator.dart';
 import 'package:mfc_app/utils/simple_bloc_observer.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  BlocOverrides.runZoned(
-    () => runApp(
-      MyAmplifyApp(),
+  await Sentry.init(
+    (options) {
+      options.dsn = kDebugMode
+          ? ''
+          : 'https://b7a72c6868214d00a814d9e305388e06@o1334244.ingest.sentry.io/6600508';
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => BlocOverrides.runZoned(
+      () => runApp(
+        MyAmplifyApp(),
+      ),
+      blocObserver: kDebugMode ? SimpleBlocObserver() : null,
     ),
-    blocObserver: kDebugMode ? SimpleBlocObserver() : null,
   );
 }
 
@@ -129,7 +138,8 @@ class _MainPageState extends State<MainPage> {
         _storagePlugin,
       ]);
       await Amplify.configure(amplifyconfig);
-    } catch (e) {
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
       print('An error occurred while configuring Amplify: $e');
     }
   }

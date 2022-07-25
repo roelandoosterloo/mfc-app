@@ -79,10 +79,19 @@ PODS:
     - Flutter
   - ObjectMapper (4.2.0)
   - OrderedSet (5.0.0)
+  - package_info_plus (0.4.5):
+    - Flutter
   - path_provider_ios (0.0.1):
     - Flutter
   - "permission_handler (5.1.0+2)":
     - Flutter
+  - Sentry (7.21.0):
+    - Sentry/Core (= 7.21.0)
+  - Sentry/Core (7.21.0)
+  - sentry_flutter (0.0.1):
+    - Flutter
+    - FlutterMacOS
+    - Sentry (~> 7.21.0)
   - Starscream (4.0.4)
   - SwiftFormat/CLI (0.49.8)
   - SwiftLint (0.47.1)
@@ -98,8 +107,10 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -116,6 +127,7 @@ SPEC REPOS:
     - AWSS3
     - ObjectMapper
     - OrderedSet
+    - Sentry
     - Starscream
     - SwiftFormat
     - SwiftLint
@@ -137,10 +149,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_inappwebview/ios"
   in_app_purchase_storekit:
     :path: ".symlinks/plugins/in_app_purchase_storekit/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
   permission_handler:
     :path: ".symlinks/plugins/permission_handler/ios"
+  sentry_flutter:
+    :path: ".symlinks/plugins/sentry_flutter/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -165,8 +181,11 @@ SPEC CHECKSUMS:
   in_app_purchase_storekit: d7fcf4646136ec258e237872755da8ea6c1b6096
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  Sentry: 194d0a2d4d6ef92c9c08c98d998340b0a63efd81
+  sentry_flutter: ff28e944a04dd35a90473e143bda9dc61ef1d2b5
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftFormat: e2342d528f9aee7062abb644ba6c7c01446919d7
   SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519

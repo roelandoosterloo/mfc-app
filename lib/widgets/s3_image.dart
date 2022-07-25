@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_plugin_interface/amplify_storage_plugin_interface.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class S3Image extends StatefulWidget {
   final String? _fileName;
@@ -64,7 +65,8 @@ class _S3ImageState extends State<S3Image> {
         _file = file;
       });
       return;
-    } on StorageException catch (_) {
+    } on StorageException catch (ex) {
+      await Sentry.captureException(ex);
       print('Error while downloading file');
     } catch (_) {}
     return null;

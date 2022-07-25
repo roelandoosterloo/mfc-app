@@ -7,6 +7,7 @@ import 'package:mfc_app/blocs/profile/profile_bloc.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/formatter.dart';
 import 'package:mfc_app/widgets/date_input.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -71,12 +72,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _onSelectMenu(String value) {
+  _onSelectMenu(String value) async {
     switch (value) {
       case 'Logout':
         _authBloc.add(
           AuthenticationLoggedOut(),
         );
+        break;
+      case 'Account verwijderen':
+        if (!await launchUrl(
+            Uri.parse("https://myfoodcoach.nl/account-verwijderen"))) {
+          throw 'Could not launch account remove page';
+        }
     }
   }
 
@@ -99,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           PopupMenuButton(
             onSelected: _onSelectMenu,
             itemBuilder: (BuildContext context) {
-              return {'Logout'}
+              return {'Account verwijderen', 'Logout'}
                   .map((String choice) => PopupMenuItem(
                         child: Text(choice),
                         value: choice,

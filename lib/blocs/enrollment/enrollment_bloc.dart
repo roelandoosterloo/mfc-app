@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'enrollment_event.dart';
 part 'enrollment_state.dart';
@@ -22,7 +23,8 @@ class EnrollmentBloc extends Bloc<EnrollmentEvent, EnrollmentState> {
       emit(state.copyWith(loading: true, errorMessage: null));
       List<Enrollment> enrollments = await _courseRepo.listEnrolledCourses();
       emit(state.copyWith(enrollments: enrollments));
-    } catch (e) {
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
       emit(state.copyWith(errorMessage: e.toString()));
     } finally {
       emit(state.copyWith(loading: false));
@@ -39,7 +41,8 @@ class EnrollmentBloc extends Bloc<EnrollmentEvent, EnrollmentState> {
       if (course != null) {
         emit(state.copyWith(selected: course));
       }
-    } catch (e) {
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }

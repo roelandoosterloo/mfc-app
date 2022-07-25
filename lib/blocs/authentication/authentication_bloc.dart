@@ -7,6 +7,7 @@ import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/authentication/authentication_state.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -55,7 +56,8 @@ class AuthenticationBloc
       AuthUser user = await _userRepo.getUser();
       emit(AuthenticationSuccess(user));
       _navigationBloc.add(NavigatedToHome());
-    } catch (e) {
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
       emit(AuthenticationFailure());
       _navigationBloc.add(NavigatedToLogin());
     }

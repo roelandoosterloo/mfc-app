@@ -4,6 +4,7 @@ import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'singlecoursepage_event.dart';
 part 'singlecoursepage_state.dart';
@@ -36,9 +37,9 @@ class SingleCoursePageBloc
       if (enrollment != null) {
         emit(SingleCoursePageLoaded(enrollment));
       }
-    } catch (e) {
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
       emit(SingleCoursePageError(e.toString()));
-      print(e);
     }
   }
 

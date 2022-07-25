@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:mfc_app/models/Profile.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class ProfileRepository {
   Future<Profile> createProfile(String cognitoId) async {
@@ -31,6 +32,7 @@ class ProfileRepository {
       Map<String, dynamic> json = jsonDecode(response.data);
       return Profile.fromJson(json['createProfile']);
     } catch (ex) {
+      await Sentry.captureException(ex);
       print(ex);
       throw ex;
     }
@@ -91,7 +93,7 @@ class ProfileRepository {
       GraphQLResponse result = await op.response;
       print(result.errors);
     } catch (ex) {
-      print(ex);
+      await Sentry.captureException(ex);
     }
     return true;
   }
@@ -114,9 +116,8 @@ class ProfileRepository {
     );
     try {
       GraphQLResponse result = await op.response;
-      print(result.errors);
     } catch (ex) {
-      print(ex);
+      await Sentry.captureException(ex);
     }
     return true;
   }

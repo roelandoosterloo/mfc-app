@@ -1,5 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class UserRepository {
   Future<SignUpResult> createUser(String email, String password) async {
@@ -60,6 +61,7 @@ class UserRepository {
       await getUser();
       return true;
     } catch (e) {
+      await Sentry.captureException(e);
       return false;
     }
   }

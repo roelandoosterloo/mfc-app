@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/validators.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'register_event.dart';
 part 'register_state.dart';
@@ -77,7 +78,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     } on InvalidParameterException catch (ex) {
       emit(Registering.failure(errorMessage: ex.message));
     } catch (ex) {
-      print(ex);
+      await Sentry.captureException(ex);
       emit(Registering.failure(errorMessage: ex.toString()));
     }
   }

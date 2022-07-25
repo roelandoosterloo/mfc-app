@@ -59,7 +59,14 @@ class RegisterScreen extends StatelessWidget {
                         ..removeCurrentSnackBar()
                         ..showSnackBar(
                           SnackBar(
-                            content: Text(state.error ?? "Er ging iets fout"),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Er ging iets fout. Probeer het opnieuw."),
+                                if (state.error != null) Text(state.error!)
+                              ],
+                            ),
                           ),
                         );
                     }

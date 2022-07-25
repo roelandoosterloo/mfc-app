@@ -64,19 +64,24 @@ class LoginScreen extends StatelessWidget {
                             content: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                if (state.error != null &&
-                                    state.error!.isNotEmpty)
-                                  Flexible(
-                                    child: Text(
-                                      state.error!,
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Login mislukt",
                                       style: TextStyle(color: Colors.white),
                                     ),
-                                  )
-                                else
-                                  Text(
-                                    "Login mislukt",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                    if (state.error != null &&
+                                        state.error!.isNotEmpty)
+                                      Flexible(
+                                        child: Text(
+                                          state.error!,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      )
+                                  ],
+                                ),
                                 Icon(
                                   Icons.error,
                                   color: Colors.white,

@@ -64,18 +64,22 @@ class _RegisterFormState extends State<RegisterForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (state.error?.isNotEmpty ?? false)
-                      Flexible(
-                        child: Text(
-                          state.error!,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Registratie mislukt. Probeer het opnieuw.",
                           style: TextStyle(color: Colors.white),
                         ),
-                      )
-                    else
-                      Text(
-                        "Registration failed",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                        if (state.error?.isNotEmpty ?? false)
+                          Flexible(
+                            child: Text(
+                              state.error!,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                      ],
+                    ),
                     Icon(
                       Icons.error,
                       color: Colors.white,

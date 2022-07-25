@@ -6,6 +6,7 @@ import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/models/course/ModuleProgress.dart';
 import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'module_event.dart';
 part 'module_state.dart';
@@ -40,8 +41,7 @@ class ModuleProgressBloc
         emit(ModuleProgressNotFound());
       }
     } catch (ex, s) {
-      print(ex);
-      print(s);
+      await Sentry.captureException(ex, stackTrace: s);
       emit(ModuleProgressLoadingFailed(error: ex.toString()));
     }
   }
@@ -63,7 +63,8 @@ class ModuleProgressBloc
           event.value,
         );
       }
-    } catch (ex) {
+    } catch (ex, stack) {
+      await Sentry.captureException(ex, stackTrace: stack);
       print(ex);
     }
   }
@@ -89,8 +90,8 @@ class ModuleProgressBloc
       await completeCourseWhenDone(enrollmentId);
 
       _navBloc.add(NavigatedBack());
-    } catch (ex) {
-      print(ex);
+    } catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
     }
   }
 }

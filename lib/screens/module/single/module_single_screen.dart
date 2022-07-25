@@ -11,8 +11,8 @@ import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/widgets/MySliverPersistentHeaderDelegate.dart';
 import 'package:mfc_app/widgets/questions/question.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 

@@ -8,6 +8,7 @@ import 'package:mfc_app/models/course/Enrollment.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'homepage_event.dart';
 part 'homepage_state.dart';
@@ -44,8 +45,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       emit(
         HomePageLoaded(courses, enrollments, profile),
       );
-    } catch (ex) {
-      print(ex);
+    } catch (ex, stack) {
+      await Sentry.captureException(ex, stackTrace: stack);
       emit(HomePageError(ex.toString()));
     }
   }
@@ -65,7 +66,9 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       try {
         enrollment = hplState.enrollments
             .firstWhere((enrollment) => enrollment.course.id == event.courseId);
-      } catch (ex) {}
+      } catch (ex) {
+        await Sentry.captureException(ex);
+      }
 
       if (enrollment == null) {
         String username = await _userRepo.getUsername();
@@ -78,7 +81,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         try {
           await _courseRepo.setCourseStartedAt(enrollment.id);
         } catch (ex) {
-          print(ex);
+          await Sentry.captureException(ex);
         }
       }
       if (!hplState.isCourseDone(event.courseId) &&
@@ -89,7 +92,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
             event.courseId,
           );
         } catch (ex) {
-          print(ex);
+          await Sentry.captureException(ex);
         }
       }
       emit((state as HomePageLoaded).setCourseLoading(null));

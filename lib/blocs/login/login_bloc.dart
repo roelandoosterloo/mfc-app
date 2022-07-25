@@ -7,6 +7,7 @@ import 'package:mfc_app/blocs/login/login_event.dart';
 import 'package:mfc_app/blocs/login/login_state.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/validators.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   UserRepository _userRepo;
@@ -90,13 +91,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           emit(SetupPassword.initial());
         }
       }
-    } on InvalidStateException catch (ex) {
-      print(ex);
+    } on InvalidStateException catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
       _authBloc.add(AuthenticationLoggedOut());
-      emit(LoggingIn.failure(error: ex.message));
-    } on AmplifyException catch (ex) {
-      print(ex);
-      emit(LoggingIn.failure(error: ex.message));
+      emit(LoggingIn.failure(error: e.message));
+    } on AmplifyException catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
+      emit(LoggingIn.failure(error: e.message));
     }
   }
 
@@ -112,9 +113,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         emit(SetupPassword.failure(error: "Login not confirmed"));
       }
-    } on AmplifyException catch (ex) {
-      print(ex);
-      emit(LoggingIn.failure(error: ex.message));
+    } on AmplifyException catch (e, stack) {
+      await Sentry.captureException(e, stackTrace: stack);
+      emit(LoggingIn.failure(error: e.message));
     }
   }
 }
