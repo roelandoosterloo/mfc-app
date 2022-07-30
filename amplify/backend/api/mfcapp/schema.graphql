@@ -266,7 +266,7 @@ type RecipeStep
   }
 
 type Query  {
-  adminListUsers: [CognitoUser] 
+  adminListUsers(email: String): [CognitoUser] 
     @function(name: "mfcAppLambda-${env}") 
     @auth(rules: [{allow: groups, groups:["admin"]}])
   adminListGroups: [CognitoGroup] 

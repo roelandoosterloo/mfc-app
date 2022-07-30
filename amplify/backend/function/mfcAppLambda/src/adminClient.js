@@ -47,10 +47,11 @@ const addUserToGroup = async (username, groupName) => {
   }
 }
 
-const listUsers = async () => {
+const listUsers = async (email) => {
   try {
     const res = await cognitoClient.listUsers({
       UserPoolId: POOL_ID,
+      Filter: email ? `email^="${email}"` : ""
     }).promise();
     return res.Users;
   } catch (ex) {

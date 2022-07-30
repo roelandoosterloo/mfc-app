@@ -92,7 +92,8 @@ const purchaseProgram = async (username, productId, transactionId) => {
 const resolvers = {
     Query: {
         adminListUsers: async ctx => {
-            return await admin.listUsers();
+            const { email } = ctx.arguments;
+            return await admin.listUsers(email);
         },
         adminListGroups: async ctx => {
             return await admin.listGroups();
