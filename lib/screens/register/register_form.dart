@@ -61,29 +61,21 @@ class _RegisterFormState extends State<RegisterForm> {
             ..removeCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Registratie mislukt. Probeer het opnieuw.",
+                    Text(
+                      "Registratie mislukt. Probeer het opnieuw.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    if (state.error?.isNotEmpty ?? false)
+                      Flexible(
+                        child: Text(
+                          state.error!,
                           style: TextStyle(color: Colors.white),
                         ),
-                        if (state.error?.isNotEmpty ?? false)
-                          Flexible(
-                            child: Text(
-                              state.error!,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                      ],
-                    ),
-                    Icon(
-                      Icons.error,
-                      color: Colors.white,
-                    ),
+                      ),
                   ],
                 ),
                 backgroundColor: Colors.red[400],
@@ -149,7 +141,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (_) => !state.isPasswordValid
                         ? '''Ongeldig wachtwoord. 
-Verwacht minstens 6 tekens waarvan 
+Verwacht minstens 8 tekens waarvan 
   1 hoofdletter, 
   1 kleine letter, 
   1 cijfer en 

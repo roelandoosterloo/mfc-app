@@ -77,8 +77,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       }
     } on InvalidParameterException catch (ex) {
       emit(Registering.failure(errorMessage: ex.message));
-    } catch (ex) {
+    } on AuthException catch (ex) {
       await Sentry.captureException(ex);
+      emit(Registering.failure(errorMessage: ex.message));
+    } catch (ex) {
       emit(Registering.failure(errorMessage: ex.toString()));
     }
   }

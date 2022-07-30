@@ -27,6 +27,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     on<EmailChanged>(_onEmailChanged);
     on<CodeChanged>(_onCodeChanged);
     on<PasswordChanged>(_onPasswordChanged);
+    on<PasswordRepeatChanged>(_onPasswordRepeatChanged);
     on<RequestSubmitted>(_onResetRequested);
     on<ResetConfirmed>(_onResetConfirmed);
 
@@ -69,6 +70,17 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     }
   }
 
+  void _onPasswordRepeatChanged(
+    PasswordRepeatChanged event,
+    Emitter<PasswordResetState> emit,
+  ) {
+    if (state is PasswordResetCodeStep) {
+      emit((state as PasswordResetCodeStep).update(
+        isRepeatValid: event.repeat == event.password,
+      ));
+    }
+  }
+
   void _onResetRequested(
     RequestSubmitted event,
     Emitter<PasswordResetState> emit,
@@ -79,7 +91,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
             await _userRepo.requestPasswordReset(event.email);
         emit(PasswordResetCodeStep(event.email, result));
       } on AmplifyException catch (ex) {
-        emit(PasswordResetRequestedFailure(ex.message));
+        emit((state as PasswordResetEmailStep).failure(ex.message));
       }
     }
   }
@@ -94,7 +106,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
             (state as PasswordResetCodeStep).email, event.password, event.code);
         _navBloc.add(NavigatedToLogin());
       } on AmplifyException catch (ex) {
-        emit(PasswordResetRequestedFailure(ex.message));
+        emit((state as PasswordResetCodeStep).failure(ex.message));
       }
     }
   }

@@ -40,7 +40,12 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
     _passwordResetBloc.add(PasswordChanged(password: _passwordController.text));
   }
 
-  void _onPasswordRepeatChange() {}
+  void _onPasswordRepeatChange() {
+    _passwordResetBloc.add(PasswordRepeatChanged(
+      password: _passwordController.text,
+      repeat: _passwordRepeatController.text,
+    ));
+  }
 
   void _onSubmitCodeRequest() {
     _passwordResetBloc.add(RequestSubmitted(email: _emailController.text));
@@ -72,7 +77,21 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
       ),
       extendBodyBehindAppBar: true,
       body: BlocConsumer<PasswordResetBloc, PasswordResetState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is PasswordResetEmailStep) {
+            if (state.error != null) {
+              ScaffoldMessenger.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text(state.error!)));
+            }
+          } else if (state is PasswordResetCodeStep) {
+            if (state.error != null) {
+              ScaffoldMessenger.of(context)
+                ..removeCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text(state.error!)));
+            }
+          }
+        },
         builder: (context, state) {
           if (state is PasswordResetInitial) {
             return Container();
@@ -130,8 +149,14 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                     autocorrect: false,
                     obscureText: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (_) =>
-                        !state.isPasswordValid ? "Wachtwoord ongeldig" : null,
+                    validator: (_) => !state.isPasswordValid
+                        ? '''Ongeldig wachtwoord. 
+Verwacht minstens 8 tekens waarvan 
+  1 hoofdletter, 
+  1 kleine letter, 
+  1 cijfer en 
+  1 speicaal teken (@\$!%*?&)'''
+                        : null,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
                       labelText: "Nieuw wachtwoord",

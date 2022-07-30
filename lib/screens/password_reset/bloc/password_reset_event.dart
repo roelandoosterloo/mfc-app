@@ -34,6 +34,15 @@ class PasswordChanged extends PasswordResetEvent {
   List<Object> get props => [password];
 }
 
+class PasswordRepeatChanged extends PasswordResetEvent {
+  final String password;
+  final String repeat;
+
+  PasswordRepeatChanged({required this.password, required this.repeat});
+
+  List<Object> get props => [password, repeat];
+}
+
 class RequestSubmitted extends PasswordResetEvent {
   final String email;
 
