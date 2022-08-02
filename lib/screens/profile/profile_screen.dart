@@ -34,9 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _birthDateController.addListener(_onBirthdateChange);
     _lengthController.addListener(_onLengthChange);
     _targetWeightController.addListener(_onTargetWeightChange);
-    context.read<UserRepository>().getUser().then(
-      (AuthUser user) {
-        _profileBloc.add(ProfileOpened(cognitoId: user.username));
+    context.read<UserRepository>().getUsername().then(
+      (String username) {
+        _profileBloc.add(ProfileOpened(cognitoId: username));
       },
     );
   }

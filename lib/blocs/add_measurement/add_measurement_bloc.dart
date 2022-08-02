@@ -76,7 +76,7 @@ class AddMeasurementBloc
   ) async {
     emit(AddMeasurementState.loading());
     try {
-      String userName = (await _userRepo.getUser()).username;
+      String userName = await _userRepo.getUsername();
       await _measureRepo.addMeasurement(
           Measurement(
             date: event.date,

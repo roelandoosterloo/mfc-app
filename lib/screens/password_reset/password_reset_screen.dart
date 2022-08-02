@@ -168,6 +168,9 @@ Verwacht minstens 8 tekens waarvan
                     autocorrect: false,
                     obscureText: true,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (_) => !state.isRepeatValid
+                        ? 'Wachtwoord komt niet overeen'
+                        : null,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
                       labelText: "Herhaal wachtwoord",
