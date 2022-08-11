@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:mfc_app/models/course/Course.dart';
 import 'package:mfc_app/models/course/Enrollment.dart';
@@ -318,7 +317,7 @@ class CourseRepository {
       createAnswer(input: {
         questionId: "$questionId",
         moduleProgressId: "$moduleProgressId",
-        answer: "$value"
+        answer: "${value.replaceAll(RegExp(r'\n'), '\\n')}"
       }) {
         id
       }
@@ -338,7 +337,7 @@ class CourseRepository {
     mutation submitAnswer {
       updateAnswer(input: {
         id: "$answerId",
-        answer: "$value"
+        answer: "${value.replaceAll(RegExp(r'\n'), '\\n')}"
       }) {
         id
       }

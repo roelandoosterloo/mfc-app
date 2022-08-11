@@ -48,6 +48,7 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
     try {
       return widget.answers.firstWhere(
         (element) => element.questionId == widget.questions[page].id,
+        orElse: null,
       );
     } catch (ex) {
       Sentry.captureException(ex);

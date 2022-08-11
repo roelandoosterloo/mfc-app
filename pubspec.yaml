@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.3+23
+version: 1.0.4+24
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -32,7 +32,7 @@ dependencies:
   amplify_storage_s3: ^0.6.5
 
   flutter_bloc: ^8.0.1
-  bloc: ^8.0.3
+  bloc: ^8.1.0
   equatable: ^2.0.3
   intl: ^0.17.0
   charts_flutter:
@@ -62,6 +62,7 @@ dev_dependencies:
   build_runner: any
   freezed: any
   json_serializable: any
+  sentry_dart_plugin: ^1.0.0-beta.1
 
 flutter_icons:
   image_path_android: "assets/icon_android.png"
@@ -121,3 +122,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+sentry:
+  upload_native_symbols: true
+  upload_source_maps: false
+  include_native_sources: false
+  project: mfc-app
+  org: myfoodcoach
+  auth_token: 7e2efd6042264a479caedb928cc8f64d6bda6a16af894d8184af05dc4a5bf06c
+  wait_for_processing: false
+  log_level: warn # possible values: trace, debug, info, warn, error

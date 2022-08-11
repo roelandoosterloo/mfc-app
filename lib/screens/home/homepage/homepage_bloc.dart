@@ -64,8 +64,10 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       // await Future.delayed(Duration(seconds: 10));
       Enrollment? enrollment;
       try {
-        enrollment = hplState.enrollments
-            .firstWhere((enrollment) => enrollment.course.id == event.courseId);
+        enrollment = hplState.enrollments.firstWhere(
+          (enrollment) => enrollment.course.id == event.courseId,
+          orElse: null,
+        );
       } catch (ex) {
         await Sentry.captureException(ex);
       }

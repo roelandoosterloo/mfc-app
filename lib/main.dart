@@ -34,12 +34,14 @@ Future<void> main() async {
           : 'https://b7a72c6868214d00a814d9e305388e06@o1334244.ingest.sentry.io/6600508';
       options.tracesSampleRate = 1.0;
     },
-    appRunner: () => BlocOverrides.runZoned(
-      () => runApp(
+    appRunner: () {
+      if (kDebugMode) {
+        Bloc.observer = SimpleBlocObserver();
+      }
+      return runApp(
         MyAmplifyApp(),
-      ),
-      blocObserver: kDebugMode ? SimpleBlocObserver() : null,
-    ),
+      );
+    },
   );
 }
 
