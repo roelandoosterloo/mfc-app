@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';

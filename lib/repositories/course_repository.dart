@@ -313,20 +313,22 @@ class CourseRepository {
     String value,
   ) async {
     String graphQLDocument = '''
-    mutation submitAnswer {
+    mutation submitAnswer(\$questionId: ID!, \$moduleProgressId: ID!, \$answer: String) {
       createAnswer(input: {
-        questionId: "$questionId",
-        moduleProgressId: "$moduleProgressId",
-        answer: "${jsonEncode(value)}"
+        questionId: \$questionId,
+        moduleProgressId: \$moduleProgressId,
+        answer: \$answer
       }) {
         id
       }
     }
     ''';
     GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
+      request: GraphQLRequest(document: graphQLDocument, variables: {
+        "questionId": questionId,
+        "moduelProgressId": moduleProgressId,
+        "answer": value,
+      }),
     );
     var result = await op.response;
     return true;
@@ -334,22 +336,20 @@ class CourseRepository {
 
   Future<bool> updateAnswer(String answerId, String value) async {
     String graphQLDocument = '''
-    mutation submitAnswer(\$input) {
-      updateAnswer(input: \$input) {
+    mutation submitAnswer(\$id: ID!, \$answer: String) {
+      updateAnswer(input: {
+        id: \$id
+        answer: \$answer
+      }) {
         id
       }
     }
     ''';
     GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-        variables: {
-          "input": {
-            "id": answerId,
-            "answer": value,
-          }
-        },
-      ),
+      request: GraphQLRequest(document: graphQLDocument, variables: {
+        "id": answerId,
+        "answer": value,
+      }),
     );
     var result = await op.response;
     return true;
