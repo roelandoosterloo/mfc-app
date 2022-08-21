@@ -317,7 +317,7 @@ class CourseRepository {
       createAnswer(input: {
         questionId: "$questionId",
         moduleProgressId: "$moduleProgressId",
-        answer: "${value.replaceAll(RegExp(r'\n'), '\\n')}"
+        answer: "${jsonEncode(value)}"
       }) {
         id
       }
@@ -334,11 +334,8 @@ class CourseRepository {
 
   Future<bool> updateAnswer(String answerId, String value) async {
     String graphQLDocument = '''
-    mutation submitAnswer {
-      updateAnswer(input: {
-        id: "$answerId",
-        answer: "${value.replaceAll(RegExp(r'\n'), '\\n')}"
-      }) {
+    mutation submitAnswer(\$input) {
+      updateAnswer(input: \$input) {
         id
       }
     }
@@ -346,9 +343,15 @@ class CourseRepository {
     GraphQLOperation op = Amplify.API.query(
       request: GraphQLRequest(
         document: graphQLDocument,
+        variables: {
+          "input": {
+            "id": answerId,
+            "answer": value,
+          }
+        },
       ),
     );
-    await op.response;
+    var result = await op.response;
     return true;
   }
 
@@ -368,7 +371,7 @@ class CourseRepository {
         document: graphQLDocument,
       ),
     );
-    await op.response;
+    GraphQLResponse res = await op.response;
     return true;
   }
 

@@ -55,7 +55,7 @@ type Membership
   ])
   {
     id: ID!
-    cognitoId: ID!
+    cognitoId: String!
     programId: ID!
     program: Program @connection(fields: ["programId"])
   }
@@ -160,6 +160,7 @@ type Answer
   questionId: ID!
   moduleProgressId: ID!
   answer: String!
+  question: Question @connection(fields: ["questionId"])
 }
 
 type Option 

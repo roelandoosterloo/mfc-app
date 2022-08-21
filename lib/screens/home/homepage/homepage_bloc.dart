@@ -1,4 +1,3 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:collection/collection.dart';
 
 part 'homepage_event.dart';
 part 'homepage_state.dart';

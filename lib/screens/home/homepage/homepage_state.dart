@@ -44,10 +44,8 @@ class HomePageLoaded extends HomePageState {
     if (_enrollments.isEmpty) return null;
     if (currentCourseId == null) return _enrollments[0];
 
-    return _enrollments.firstWhere(
-      (element) => element.course.id == currentCourseId,
-      orElse: null,
-    );
+    return _enrollments
+        .firstWhereOrNull((element) => element.course.id == currentCourseId);
   }
 
   List<Course> get completedCourses {
