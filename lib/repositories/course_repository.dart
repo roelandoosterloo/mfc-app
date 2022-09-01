@@ -313,7 +313,7 @@ class CourseRepository {
     String value,
   ) async {
     String graphQLDocument = '''
-    mutation submitAnswer(\$questionId: ID!, \$moduleProgressId: ID!, \$answer: String) {
+    mutation submitAnswer(\$questionId: ID!, \$moduleProgressId: ID!, \$answer: String!) {
       createAnswer(input: {
         questionId: \$questionId,
         moduleProgressId: \$moduleProgressId,
@@ -326,7 +326,7 @@ class CourseRepository {
     GraphQLOperation op = Amplify.API.query(
       request: GraphQLRequest(document: graphQLDocument, variables: {
         "questionId": questionId,
-        "moduelProgressId": moduleProgressId,
+        "moduleProgressId": moduleProgressId,
         "answer": value,
       }),
     );
@@ -336,7 +336,7 @@ class CourseRepository {
 
   Future<bool> updateAnswer(String answerId, String value) async {
     String graphQLDocument = '''
-    mutation submitAnswer(\$id: ID!, \$answer: String) {
+    mutation submitAnswer(\$id: ID!, \$answer: String!) {
       updateAnswer(input: {
         id: \$id
         answer: \$answer

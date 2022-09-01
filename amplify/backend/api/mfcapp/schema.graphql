@@ -57,6 +57,7 @@ type Membership
     id: ID!
     cognitoId: String!
     programId: ID!
+    endDate: AWSDateTime
     program: Program @connection(fields: ["programId"])
   }
 type Enrollment
