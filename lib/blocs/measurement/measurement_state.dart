@@ -48,7 +48,13 @@ class MeasurementsAvailable extends MeasurementState {
   }
 
   @override
-  List<Object> get props => [_measurements, profile];
+  List<Object> get props => [
+        _measurements.length,
+        _measurements
+            .map((m) => m.weight)
+            .reduce((value, element) => value + element),
+        profile
+      ];
 }
 
 class NoMeasurementsAvailable extends MeasurementState {}

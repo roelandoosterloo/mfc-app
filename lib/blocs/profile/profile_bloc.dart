@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:intl/intl.dart';
 import 'package:mfc_app/models/Profile.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/utils/parser.dart';
@@ -134,7 +133,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     Profile? profile = state.profile;
     if (profile == null) {
-      emit(ProfileFailureState(state, "Could not find profile"));
+      emit(
+          ProfileFailureState(state, "Profiel niet gevonden, log opnieuw in."));
       return;
     }
 

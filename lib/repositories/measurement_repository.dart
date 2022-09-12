@@ -82,8 +82,8 @@ class MeasurementRepository {
     List<Measurement> measurements = [];
     await for (List<Measurement> nextBatch in _list()) {
       measurements.addAll(nextBatch);
-      yield measurements;
     }
+    yield measurements;
     _measurements = measurements;
   }
 

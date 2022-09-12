@@ -81,7 +81,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       await Sentry.captureException(ex);
       emit(Registering.failure(errorMessage: ex.message));
     } catch (ex) {
-      emit(Registering.failure(errorMessage: ex.toString()));
+      emit(Registering.failure(
+          errorMessage: "Er ging iets fout, probeer het opnieuw."));
     }
   }
 
@@ -99,6 +100,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         this.add(SignUpCompleted((state as ConfirmRegistration).email));
         return;
       }
+    } on CodeMismatchException catch (ex) {
+      emit((state as ConfirmRegistration).failure(
+          "Bevestigingscode onjuist, probeer opnieuw. Indien dat niet werkt, probeer opnieuw aan te melden."));
     } catch (ex) {
       emit((state as ConfirmRegistration).failure(ex.toString()));
     }
