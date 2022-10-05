@@ -19,7 +19,7 @@ class ModuleCard extends StatelessWidget {
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: _progress.isAvailable()
+        onTap: moduleAvailable(_progress)
             ? () {
                 BlocProvider.of<SingleCoursePageBloc>(context)
                     .add(SingleCoursePageModuleSelected(_progress));
@@ -64,7 +64,7 @@ class ModuleCard extends StatelessWidget {
               SizedBox(
                 width: 12,
               ),
-              if (_progress.isAvailable())
+              if (moduleAvailable(_progress))
                 Column(
                   children: [
                     CircleAvatar(
@@ -77,7 +77,7 @@ class ModuleCard extends StatelessWidget {
                     ),
                   ],
                 ),
-              if (!_progress.isAvailable())
+              if (!moduleAvailable(_progress))
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -92,7 +92,8 @@ class ModuleCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      Formatter.formatDate(_progress.availableAt) ?? "",
+                      Formatter.formatTemporalDateTime(_progress.availableAt) ??
+                          "",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.white,

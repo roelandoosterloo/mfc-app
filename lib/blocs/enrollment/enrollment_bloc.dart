@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
+import 'package:mfc_app/models/Enrollment.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -21,8 +21,10 @@ class EnrollmentBloc extends Bloc<EnrollmentEvent, EnrollmentState> {
   ) async {
     try {
       emit(state.copyWith(loading: true, errorMessage: null));
-      List<Enrollment> enrollments = await _courseRepo.listEnrolledCourses();
-      emit(state.copyWith(enrollments: enrollments));
+      List<Enrollment?> enrollments = await _courseRepo.listEnrolledCourses();
+      emit(state.copyWith(
+        enrollments: enrollments.whereType<Enrollment>().toList(),
+      ));
     } catch (e, stack) {
       await Sentry.captureException(e, stackTrace: stack);
       emit(state.copyWith(errorMessage: e.toString()));

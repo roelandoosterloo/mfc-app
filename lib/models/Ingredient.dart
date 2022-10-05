@@ -19,20 +19,20 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Measurement type in your schema. */
+/** This is an auto generated class representing the Ingredient type in your schema. */
 @immutable
-class Measurement extends Model {
-  static const classType = const _MeasurementModelType();
+class Ingredient extends Model {
+  static const classType = const _IngredientModelType();
   final String id;
-  final TemporalDate? _date;
-  final double? _weight;
-  final String? _owner;
-  final String? _note;
-  final String? _type;
+  final double? _amount;
+  final Unit? _unit;
+  final Recipe? _recipe;
+  final Product? _product;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -44,9 +44,9 @@ class Measurement extends Model {
     return id;
   }
   
-  TemporalDate get date {
+  double get amount {
     try {
-      return _date!;
+      return _amount!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -57,9 +57,9 @@ class Measurement extends Model {
     }
   }
   
-  double get weight {
+  Unit get unit {
     try {
-      return _weight!;
+      return _unit!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -70,9 +70,9 @@ class Measurement extends Model {
     }
   }
   
-  String get owner {
+  Recipe get recipe {
     try {
-      return _owner!;
+      return _recipe!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -83,13 +83,9 @@ class Measurement extends Model {
     }
   }
   
-  String? get note {
-    return _note;
-  }
-  
-  String get type {
+  Product get product {
     try {
-      return _type!;
+      return _product!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -108,16 +104,15 @@ class Measurement extends Model {
     return _updatedAt;
   }
   
-  const Measurement._internal({required this.id, required date, required weight, required owner, note, required type, createdAt, updatedAt}): _date = date, _weight = weight, _owner = owner, _note = note, _type = type, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Ingredient._internal({required this.id, required amount, required unit, required recipe, required product, createdAt, updatedAt}): _amount = amount, _unit = unit, _recipe = recipe, _product = product, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Measurement({String? id, required TemporalDate date, required double weight, required String owner, String? note, required String type}) {
-    return Measurement._internal(
+  factory Ingredient({String? id, required double amount, required Unit unit, required Recipe recipe, required Product product}) {
+    return Ingredient._internal(
       id: id == null ? UUID.getUUID() : id,
-      date: date,
-      weight: weight,
-      owner: owner,
-      note: note,
-      type: type);
+      amount: amount,
+      unit: unit,
+      recipe: recipe,
+      product: product);
   }
   
   bool equals(Object other) {
@@ -127,13 +122,12 @@ class Measurement extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Measurement &&
+    return other is Ingredient &&
       id == other.id &&
-      _date == other._date &&
-      _weight == other._weight &&
-      _owner == other._owner &&
-      _note == other._note &&
-      _type == other._type;
+      _amount == other._amount &&
+      _unit == other._unit &&
+      _recipe == other._recipe &&
+      _product == other._product;
   }
   
   @override
@@ -143,13 +137,12 @@ class Measurement extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Measurement {");
+    buffer.write("Ingredient {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("date=" + (_date != null ? _date!.format() : "null") + ", ");
-    buffer.write("weight=" + (_weight != null ? _weight!.toString() : "null") + ", ");
-    buffer.write("owner=" + "$_owner" + ", ");
-    buffer.write("note=" + "$_note" + ", ");
-    buffer.write("type=" + "$_type" + ", ");
+    buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
+    buffer.write("unit=" + (_unit != null ? _unit!.toString() : "null") + ", ");
+    buffer.write("recipe=" + (_recipe != null ? _recipe!.toString() : "null") + ", ");
+    buffer.write("product=" + (_product != null ? _product!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -157,61 +150,50 @@ class Measurement extends Model {
     return buffer.toString();
   }
   
-  Measurement copyWith({String? id, TemporalDate? date, double? weight, String? owner, String? note, String? type}) {
-    return Measurement._internal(
+  Ingredient copyWith({String? id, double? amount, Unit? unit, Recipe? recipe, Product? product}) {
+    return Ingredient._internal(
       id: id ?? this.id,
-      date: date ?? this.date,
-      weight: weight ?? this.weight,
-      owner: owner ?? this.owner,
-      note: note ?? this.note,
-      type: type ?? this.type);
+      amount: amount ?? this.amount,
+      unit: unit ?? this.unit,
+      recipe: recipe ?? this.recipe,
+      product: product ?? this.product);
   }
   
-  Measurement.fromJson(Map<String, dynamic> json)  
+  Ingredient.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _date = json['date'] != null ? TemporalDate.fromString(json['date']) : null,
-      _weight = (json['weight'] as num?)?.toDouble(),
-      _owner = json['owner'],
-      _note = json['note'],
-      _type = json['type'],
+      _amount = (json['amount'] as num?)?.toDouble(),
+      _unit = json['unit']?['serializedData'] != null
+        ? Unit.fromJson(new Map<String, dynamic>.from(json['unit']['serializedData']))
+        : null,
+      _recipe = json['recipe']?['serializedData'] != null
+        ? Recipe.fromJson(new Map<String, dynamic>.from(json['recipe']['serializedData']))
+        : null,
+      _product = json['product']?['serializedData'] != null
+        ? Product.fromJson(new Map<String, dynamic>.from(json['product']['serializedData']))
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'date': _date?.format(), 'weight': _weight, 'owner': _owner, 'note': _note, 'type': _type, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'amount': _amount, 'unit': _unit?.toJson(), 'recipe': _recipe?.toJson(), 'product': _product?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField DATE = QueryField(fieldName: "date");
-  static final QueryField WEIGHT = QueryField(fieldName: "weight");
-  static final QueryField OWNER = QueryField(fieldName: "owner");
-  static final QueryField NOTE = QueryField(fieldName: "note");
-  static final QueryField TYPE = QueryField(fieldName: "type");
+  static final QueryField AMOUNT = QueryField(fieldName: "amount");
+  static final QueryField UNIT = QueryField(
+    fieldName: "unit",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Unit).toString()));
+  static final QueryField RECIPE = QueryField(
+    fieldName: "recipe",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Recipe).toString()));
+  static final QueryField PRODUCT = QueryField(
+    fieldName: "product",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Product).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Measurement";
-    modelSchemaDefinition.pluralName = "Measurements";
+    modelSchemaDefinition.name = "Ingredient";
+    modelSchemaDefinition.pluralName = "Ingredients";
     
     modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.OWNER,
-        ownerField: "owner",
-        identityClaim: "cognito:username",
-        provider: AuthRuleProvider.USERPOOLS,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
-      AuthRule(
-        authStrategy: AuthStrategy.PRIVATE,
-        provider: AuthRuleProvider.IAM,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
       AuthRule(
         authStrategy: AuthStrategy.GROUPS,
         groupClaim: "cognito:groups",
@@ -222,43 +204,46 @@ class Measurement extends Model {
           ModelOperation.UPDATE,
           ModelOperation.DELETE,
           ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.PRIVATE,
+        operations: [
+          ModelOperation.READ
         ])
     ];
     
     modelSchemaDefinition.indexes = [
-      ModelIndex(fields: const ["type", "date"], name: "byDate")
+      ModelIndex(fields: const ["recipeId"], name: "forRecipe"),
+      ModelIndex(fields: const ["productId"], name: "forProduct")
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.DATE,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.WEIGHT,
+      key: Ingredient.AMOUNT,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.double)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.OWNER,
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Ingredient.UNIT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      targetName: "ingredientUnitId",
+      ofModelName: (Unit).toString()
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.NOTE,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Ingredient.RECIPE,
+      isRequired: true,
+      targetName: "recipeId",
+      ofModelName: (Recipe).toString()
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.TYPE,
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Ingredient.PRODUCT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      targetName: "productId",
+      ofModelName: (Product).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -277,11 +262,11 @@ class Measurement extends Model {
   });
 }
 
-class _MeasurementModelType extends ModelType<Measurement> {
-  const _MeasurementModelType();
+class _IngredientModelType extends ModelType<Ingredient> {
+  const _IngredientModelType();
   
   @override
-  Measurement fromJson(Map<String, dynamic> jsonData) {
-    return Measurement.fromJson(jsonData);
+  Ingredient fromJson(Map<String, dynamic> jsonData) {
+    return Ingredient.fromJson(jsonData);
   }
 }

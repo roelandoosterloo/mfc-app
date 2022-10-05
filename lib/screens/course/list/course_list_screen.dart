@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Course.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
+import 'package:mfc_app/models/Course.dart';
+import 'package:mfc_app/models/Enrollment.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
 class CourseListScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   Enrollment enrollment = state.enrollments[index];
-                  Course course = enrollment.course;
+                  Course? course = enrollment.course;
 
                   return Card(
                     clipBehavior: Clip.antiAlias,
@@ -47,7 +47,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                           child: Hero(
                             tag: index,
                             child: S3Image(
-                              course.coverImage ??
+                              course?.coverImage ??
                                   "https://placeimg.com/1000/600/any",
                               fit: BoxFit.cover,
                             ),
@@ -55,7 +55,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                         ),
                         ListTile(
                           title: Text(
-                            course.name,
+                            course?.name ?? "Niet gevonden",
                             style: TextStyle(fontSize: 24),
                           ),
                           // subtitle: Text(
@@ -67,7 +67,7 @@ class _CourseListScreenState extends State<CourseListScreen> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            course.description ?? "",
+                            course?.description ?? "",
                             style: TextStyle(
                               color: Colors.black.withOpacity(0.6),
                             ),

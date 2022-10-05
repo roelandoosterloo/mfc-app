@@ -124,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _firstNameController.text = state.profile?.firstName ?? "";
             _lastNameController.text = state.profile?.lastName ?? "";
             _birthDateController.text =
-                Formatter.formatDate(state.profile!.birthDate) ?? "";
+                Formatter.formatTemporalDate(state.profile!.birthDate) ?? "";
             _lengthController.text =
                 Formatter.formatDecimal(state.profile?.length, decimals: 2) ??
                     "";

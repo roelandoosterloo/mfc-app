@@ -19,20 +19,22 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Measurement type in your schema. */
+/** This is an auto generated class representing the Course type in your schema. */
 @immutable
-class Measurement extends Model {
-  static const classType = const _MeasurementModelType();
+class Course extends Model {
+  static const classType = const _CourseModelType();
   final String id;
-  final TemporalDate? _date;
-  final double? _weight;
-  final String? _owner;
-  final String? _note;
-  final String? _type;
+  final String? _accessGroup;
+  final String? _name;
+  final String? _description;
+  final String? _coverImage;
+  final List<Module>? _modules;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -44,9 +46,9 @@ class Measurement extends Model {
     return id;
   }
   
-  TemporalDate get date {
+  String get accessGroup {
     try {
-      return _date!;
+      return _accessGroup!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -57,9 +59,9 @@ class Measurement extends Model {
     }
   }
   
-  double get weight {
+  String get name {
     try {
-      return _weight!;
+      return _name!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -70,34 +72,16 @@ class Measurement extends Model {
     }
   }
   
-  String get owner {
-    try {
-      return _owner!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  String? get description {
+    return _description;
   }
   
-  String? get note {
-    return _note;
+  String? get coverImage {
+    return _coverImage;
   }
   
-  String get type {
-    try {
-      return _type!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  List<Module>? get modules {
+    return _modules;
   }
   
   TemporalDateTime? get createdAt {
@@ -108,16 +92,16 @@ class Measurement extends Model {
     return _updatedAt;
   }
   
-  const Measurement._internal({required this.id, required date, required weight, required owner, note, required type, createdAt, updatedAt}): _date = date, _weight = weight, _owner = owner, _note = note, _type = type, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Course._internal({required this.id, required accessGroup, required name, description, coverImage, modules, createdAt, updatedAt}): _accessGroup = accessGroup, _name = name, _description = description, _coverImage = coverImage, _modules = modules, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Measurement({String? id, required TemporalDate date, required double weight, required String owner, String? note, required String type}) {
-    return Measurement._internal(
+  factory Course({String? id, required String accessGroup, required String name, String? description, String? coverImage, List<Module>? modules}) {
+    return Course._internal(
       id: id == null ? UUID.getUUID() : id,
-      date: date,
-      weight: weight,
-      owner: owner,
-      note: note,
-      type: type);
+      accessGroup: accessGroup,
+      name: name,
+      description: description,
+      coverImage: coverImage,
+      modules: modules != null ? List<Module>.unmodifiable(modules) : modules);
   }
   
   bool equals(Object other) {
@@ -127,13 +111,13 @@ class Measurement extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Measurement &&
+    return other is Course &&
       id == other.id &&
-      _date == other._date &&
-      _weight == other._weight &&
-      _owner == other._owner &&
-      _note == other._note &&
-      _type == other._type;
+      _accessGroup == other._accessGroup &&
+      _name == other._name &&
+      _description == other._description &&
+      _coverImage == other._coverImage &&
+      DeepCollectionEquality().equals(_modules, other._modules);
   }
   
   @override
@@ -143,13 +127,12 @@ class Measurement extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Measurement {");
+    buffer.write("Course {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("date=" + (_date != null ? _date!.format() : "null") + ", ");
-    buffer.write("weight=" + (_weight != null ? _weight!.toString() : "null") + ", ");
-    buffer.write("owner=" + "$_owner" + ", ");
-    buffer.write("note=" + "$_note" + ", ");
-    buffer.write("type=" + "$_type" + ", ");
+    buffer.write("accessGroup=" + "$_accessGroup" + ", ");
+    buffer.write("name=" + "$_name" + ", ");
+    buffer.write("description=" + "$_description" + ", ");
+    buffer.write("coverImage=" + "$_coverImage" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -157,45 +140,52 @@ class Measurement extends Model {
     return buffer.toString();
   }
   
-  Measurement copyWith({String? id, TemporalDate? date, double? weight, String? owner, String? note, String? type}) {
-    return Measurement._internal(
+  Course copyWith({String? id, String? accessGroup, String? name, String? description, String? coverImage, List<Module>? modules}) {
+    return Course._internal(
       id: id ?? this.id,
-      date: date ?? this.date,
-      weight: weight ?? this.weight,
-      owner: owner ?? this.owner,
-      note: note ?? this.note,
-      type: type ?? this.type);
+      accessGroup: accessGroup ?? this.accessGroup,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      coverImage: coverImage ?? this.coverImage,
+      modules: modules ?? this.modules);
   }
   
-  Measurement.fromJson(Map<String, dynamic> json)  
+  Course.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _date = json['date'] != null ? TemporalDate.fromString(json['date']) : null,
-      _weight = (json['weight'] as num?)?.toDouble(),
-      _owner = json['owner'],
-      _note = json['note'],
-      _type = json['type'],
+      _accessGroup = json['accessGroup'],
+      _name = json['name'],
+      _description = json['description'],
+      _coverImage = json['coverImage'],
+      _modules = json['modules'] is List
+        ? (json['modules'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Module.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'date': _date?.format(), 'weight': _weight, 'owner': _owner, 'note': _note, 'type': _type, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'accessGroup': _accessGroup, 'name': _name, 'description': _description, 'coverImage': _coverImage, 'modules': _modules?.map((Module? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField DATE = QueryField(fieldName: "date");
-  static final QueryField WEIGHT = QueryField(fieldName: "weight");
-  static final QueryField OWNER = QueryField(fieldName: "owner");
-  static final QueryField NOTE = QueryField(fieldName: "note");
-  static final QueryField TYPE = QueryField(fieldName: "type");
+  static final QueryField ACCESSGROUP = QueryField(fieldName: "accessGroup");
+  static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField COVERIMAGE = QueryField(fieldName: "coverImage");
+  static final QueryField MODULES = QueryField(
+    fieldName: "modules",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Module).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Measurement";
-    modelSchemaDefinition.pluralName = "Measurements";
+    modelSchemaDefinition.name = "Course";
+    modelSchemaDefinition.pluralName = "Courses";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
-        authStrategy: AuthStrategy.OWNER,
-        ownerField: "owner",
-        identityClaim: "cognito:username",
+        authStrategy: AuthStrategy.GROUPS,
+        groupClaim: "cognito:groups",
+        groups: [ "admin" ],
         provider: AuthRuleProvider.USERPOOLS,
         operations: [
           ModelOperation.CREATE,
@@ -213,52 +203,43 @@ class Measurement extends Model {
           ModelOperation.READ
         ]),
       AuthRule(
-        authStrategy: AuthStrategy.GROUPS,
-        groupClaim: "cognito:groups",
-        groups: [ "admin" ],
-        provider: AuthRuleProvider.USERPOOLS,
+        authStrategy: AuthStrategy.PRIVATE,
         operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
           ModelOperation.READ
         ])
-    ];
-    
-    modelSchemaDefinition.indexes = [
-      ModelIndex(fields: const ["type", "date"], name: "byDate")
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.DATE,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.WEIGHT,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.double)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.OWNER,
+      key: Course.ACCESSGROUP,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.NOTE,
+      key: Course.NAME,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Course.DESCRIPTION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.TYPE,
-      isRequired: true,
+      key: Course.COVERIMAGE,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Course.MODULES,
+      isRequired: true,
+      ofModelName: (Module).toString(),
+      associatedKey: Module.COURSEID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -277,11 +258,11 @@ class Measurement extends Model {
   });
 }
 
-class _MeasurementModelType extends ModelType<Measurement> {
-  const _MeasurementModelType();
+class _CourseModelType extends ModelType<Course> {
+  const _CourseModelType();
   
   @override
-  Measurement fromJson(Map<String, dynamic> jsonData) {
-    return Measurement.fromJson(jsonData);
+  Course fromJson(Map<String, dynamic> jsonData) {
+    return Course.fromJson(jsonData);
   }
 }

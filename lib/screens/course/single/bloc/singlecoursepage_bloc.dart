@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
-import 'package:mfc_app/models/course/ModuleProgress.dart';
+import 'package:mfc_app/models/Enrollment.dart';
+import 'package:mfc_app/models/ModuleProgress.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -48,7 +48,7 @@ class SingleCoursePageBloc
     Emitter<SingleCoursePageState> emit,
   ) {
     if (event.module.startedAt == null) {
-      _courseRepository.setModuleStartedAt(event.module.id);
+      _courseRepository.setModuleStartedAt(event.module);
     }
     _navBloc.add(NavigatedToModule(event.module.id));
   }

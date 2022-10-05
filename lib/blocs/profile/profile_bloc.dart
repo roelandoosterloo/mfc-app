@@ -1,3 +1,4 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/models/Profile.dart';
@@ -144,11 +145,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
 
     try {
-      DateTime? birthDate = Parser.readDateLocal(event.birthDate ?? "");
+      TemporalDate? birthDate = Parser.readDateLocalToTemporal(event.birthDate);
       double? length = Parser.readDouble(event.length);
       double? targetWeight = Parser.readDouble(event.targetWeight);
 
-      bool success = await _profileRepo.submitProfile(profile.update(
+      bool success = await _profileRepo.submitProfile(profile.copyWith(
         firstName: event.firstName,
         lastName: event.lastName,
         birthDate: birthDate,

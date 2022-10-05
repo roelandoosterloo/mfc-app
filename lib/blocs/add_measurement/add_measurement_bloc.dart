@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mfc_app/models/measurement.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
-import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
 import 'package:mfc_app/utils/parser.dart';
 import 'package:mfc_app/utils/validators.dart';
@@ -78,12 +76,7 @@ class AddMeasurementBloc
     try {
       String userName = await _userRepo.getUsername();
       await _measureRepo.addMeasurement(
-          Measurement(
-            date: event.date,
-            weight: event.weight,
-            note: event.note,
-          ),
-          userName);
+          event.date, event.weight, event.note, userName);
       emit(AddMeasurementState.success());
     } catch (_) {
       emit(AddMeasurementState.failure());

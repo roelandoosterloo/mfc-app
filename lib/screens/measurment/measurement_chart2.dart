@@ -5,7 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mfc_app/constants/colors.dart';
 import 'package:mfc_app/models/Profile.dart';
-import 'package:mfc_app/models/measurement.dart';
+import 'package:mfc_app/models/Measurement.dart';
 import 'package:mfc_app/utils/formatter.dart';
 
 class MeasurementChart2 extends StatefulWidget {
@@ -48,8 +48,8 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
     widget._measurements.sort((m1, m2) => m1.date.compareTo(m2.date));
     setState(() {
       _values = widget._measurements
-          .map(
-              (e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.weight))
+          .map((e) => FlSpot(
+              e.date.getDateTime().millisecondsSinceEpoch.toDouble(), e.weight))
           .toList();
 
       _maxX = _values
@@ -114,7 +114,7 @@ class _MeasurementChart2State extends State<MeasurementChart2> {
       getTitles: (value) {
         final DateTime date =
             DateTime.fromMillisecondsSinceEpoch(value.toInt());
-        return "${Formatter.formatDate(date, datePattern: "MMM")}\n${Formatter.formatDate(date, datePattern: 'd')}";
+        return "${Formatter.formatDateTime(date, datePattern: "MMM")}\n${Formatter.formatDateTime(date, datePattern: 'd')}";
       },
       margin: 8,
       interval: max(1000 * 60 * 60 * 24, (_maxX - _minX) / _bottomLabelCount),

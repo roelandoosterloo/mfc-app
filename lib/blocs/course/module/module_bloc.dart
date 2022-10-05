@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Answer.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
-import 'package:mfc_app/models/course/ModuleProgress.dart';
-import 'package:mfc_app/models/course/Question.dart';
+import 'package:mfc_app/models/Answer.dart';
+import 'package:mfc_app/models/Enrollment.dart';
+import 'package:mfc_app/models/ModuleProgress.dart';
+import 'package:mfc_app/models/Question.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
+import 'package:mfc_app/utils/helpers.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'module_event.dart';
@@ -53,13 +54,13 @@ class ModuleProgressBloc
     try {
       if (event.answer == null) {
         await _courseRepo.createAnswer(
-          event.question.id,
+          event.question,
           event.progress.id,
           event.value,
         );
       } else {
         await _courseRepo.updateAnswer(
-          event.answer!.id,
+          event.answer!,
           event.value,
         );
       }
@@ -73,8 +74,8 @@ class ModuleProgressBloc
     Enrollment? enrollment = await _courseRepo.getEnrollment(enrollmentId);
     if (enrollment != null &&
         enrollment.moduleSchedule != null &&
-        enrollment.isCourseDone()) {
-      return await _courseRepo.completeCourse(enrollmentId);
+        isEnrollmentCourseDone(enrollment)) {
+      return await _courseRepo.completeCourse(enrollment);
     }
     return false;
   }
@@ -84,7 +85,7 @@ class ModuleProgressBloc
     Emitter<ModuleProgressState> emit,
   ) async {
     try {
-      _courseRepo.completeModule(event.moduleProgressId);
+      await _courseRepo.completeModule(event.moduleProgress);
       ModuleProgress mp = event.moduleProgress;
       String enrollmentId = mp.enrollmentId;
       await completeCourseWhenDone(enrollmentId);

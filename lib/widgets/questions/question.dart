@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mfc_app/models/course/Answer.dart';
-import 'package:mfc_app/models/course/Option.dart';
-import 'package:mfc_app/models/course/Question.dart';
-import 'package:mfc_app/models/course/QuestionType.dart';
+import 'package:mfc_app/models/Answer.dart';
+import 'package:mfc_app/models/Option.dart';
+import 'package:mfc_app/models/Question.dart';
+import 'package:mfc_app/models/QuestionType.dart';
 
 part "short_text.dart";
 part "long_text.dart";

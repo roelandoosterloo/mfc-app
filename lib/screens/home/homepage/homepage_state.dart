@@ -17,8 +17,13 @@ class HomePageLoaded extends HomePageState {
   final Profile profile;
   final String? loadingCourse;
 
-  HomePageLoaded(this._courses, this._enrollments, this.profile,
-      {this.loadingCourse});
+  HomePageLoaded(
+      List<Course> courses, List<Enrollment?> enrollments, Profile profile,
+      {String? loadingCourse})
+      : _courses = courses,
+        _enrollments = enrollments.whereType<Enrollment>().toList(),
+        profile = profile,
+        loadingCourse = loadingCourse;
 
   HomePageLoaded setCourseLoading(String? loadingCourse) {
     return HomePageLoaded(
@@ -31,11 +36,12 @@ class HomePageLoaded extends HomePageState {
 
   List<Course> get courses {
     List<Course> courses = _enrollments
-        .where((element) => !element.isCourseDone())
+        .whereNot(isEnrollmentCourseDone)
         .map((e) => e.course)
+        .whereType<Course>()
         .toList();
     courses.addAll(_courses.where((element) =>
-        !_enrollments.map((e) => e.course.id).contains(element.id)));
+        !_enrollments.map((e) => e.course?.id).contains(element.id)));
     return courses;
   }
 
@@ -45,13 +51,14 @@ class HomePageLoaded extends HomePageState {
     if (currentCourseId == null) return _enrollments[0];
 
     return _enrollments
-        .firstWhereOrNull((element) => element.course.id == currentCourseId);
+        .firstWhereOrNull((element) => element.course?.id == currentCourseId);
   }
 
   List<Course> get completedCourses {
     return _enrollments
-        .where((element) => element.isCourseDone())
+        .where(isEnrollmentCourseDone)
         .map((e) => e.course)
+        .whereType<Course>()
         .toList();
   }
 

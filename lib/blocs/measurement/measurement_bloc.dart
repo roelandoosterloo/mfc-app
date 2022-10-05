@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mfc_app/models/measurement.dart';
+import 'package:mfc_app/models/Measurement.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
@@ -36,15 +36,15 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
     try {
       String username = await _userRepo.getUsername();
       Profile p = await _profileRepo.getProfile(username);
-      Stream<List<Measurement>> measurementsStream =
-          _measureRepo.listMeasurements();
-      await measurementsStream.forEach((measurements) {
-        if (measurements.isEmpty) {
-          emit(NoMeasurementsAvailable());
-        } else {
-          emit(MeasurementsAvailable(measurements: measurements, profile: p));
-        }
-      });
+      List<Measurement> measurements = await _measureRepo.listMeasurements();
+      measurements.sort(
+        (a, b) => a.date.compareTo(b.date),
+      );
+      if (measurements.isEmpty) {
+        emit(NoMeasurementsAvailable());
+      } else {
+        emit(MeasurementsAvailable(measurements: measurements, profile: p));
+      }
     } catch (e, stack) {
       await Sentry.captureException(e, stackTrace: stack);
       emit(MeasurementsFailed(error: e.toString()));

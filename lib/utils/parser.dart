@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:intl/intl.dart';
 
 class Parser {
@@ -20,6 +21,13 @@ class Parser {
       return f.parse(value);
     }
     return null;
+  }
+
+  static TemporalDate? readDateLocalToTemporal(Object? value) {
+    DateTime? date = readDateLocal(value);
+    if (date == null) return null;
+
+    return TemporalDate(date);
   }
 
   static double? readDouble(Object? value) {

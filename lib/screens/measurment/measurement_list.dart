@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mfc_app/models/measurement.dart';
+import 'package:mfc_app/models/Measurement.dart';
 import 'package:mfc_app/utils/formatter.dart';
 
 class MeasurementList extends StatelessWidget {
@@ -39,7 +39,7 @@ class MeasurementList extends StatelessWidget {
           ),
           child: Card(
             child: ListTile(
-              title: Text(Formatter.formatDate(m.date) ?? "Geen datum"),
+              title: Text(Formatter.formatTemporalDate(m.date) ?? "Geen datum"),
               subtitle: m.note != null ? Text(m.note!) : null,
               leading: CircleAvatar(
                   radius: 25,
