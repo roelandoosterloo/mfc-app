@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart' show Page;
@@ -11,6 +13,7 @@ import 'package:mfc_app/screens/measurment/add_measurement/add_measurement_page.
 import 'package:mfc_app/screens/measurment/measurement_page.dart';
 import 'package:mfc_app/screens/module/single/module_single_page.dart';
 import 'package:mfc_app/screens/password_reset/password_reset_page.dart';
+import 'package:mfc_app/screens/pdf_viewer/pdf_viewer_page.dart';
 import 'package:mfc_app/screens/profile/profile_page.dart';
 import 'package:mfc_app/screens/program/list/list_program_page.dart';
 import 'package:mfc_app/screens/register/register_page.dart';
@@ -34,6 +37,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<NavigatedToCourseList>(_onNavigatedToCourseList);
     on<NavigatedToProfile>(_onNavigatedToProfile);
     on<NavigatedToPrograms>(_onNavigatedToPrograms);
+    on<NavigatedToPdf>(_onNavigatedToPdf);
   }
 
   void _onNavigatedBack(
@@ -137,5 +141,16 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     Emitter<NavigationState> emit,
   ) {
     emit(state.goTo(ListProgramPage()));
+  }
+
+  void _onNavigatedToPdf(
+    NavigatedToPdf event,
+    Emitter<NavigationState> emit,
+  ) {
+    emit(state.goTo(PdfViewerPage(
+      event.file,
+      event.name,
+      event.url,
+    )));
   }
 }
