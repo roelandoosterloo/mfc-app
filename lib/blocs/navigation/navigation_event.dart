@@ -57,3 +57,14 @@ class NavigatedToModule extends NavigationEvent {
 }
 
 class NavigatedToPrograms extends NavigationEvent {}
+
+class NavigatedToPdf extends NavigationEvent {
+  final File file;
+  final String name;
+  final String url;
+
+  NavigatedToPdf(this.file, this.name, this.url);
+
+  @override
+  List<Object> get props => [file, name, url];
+}

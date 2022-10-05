@@ -1,7 +1,9 @@
-import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/course/module/module_bloc.dart';
+import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/constants/colors.dart';
 import 'package:mfc_app/models/course/Answer.dart';
 import 'package:mfc_app/models/course/Downloadable.dart';
@@ -11,10 +13,12 @@ import 'package:mfc_app/models/course/Question.dart';
 import 'package:mfc_app/widgets/MySliverPersistentHeaderDelegate.dart';
 import 'package:mfc_app/widgets/questions/question.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:http/http.dart' as http;
 
 part 'info_tab.dart';
 part 'video_tab.dart';
