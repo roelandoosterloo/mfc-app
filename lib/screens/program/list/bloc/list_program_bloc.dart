@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:mfc_app/models/course/Membership.dart';
-import 'package:mfc_app/models/course/Program.dart';
+import 'package:mfc_app/models/Membership.dart';
+import 'package:mfc_app/models/Program.dart';
 import 'package:mfc_app/repositories/program_repository.dart';
 import 'package:mfc_app/repositories/store_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';

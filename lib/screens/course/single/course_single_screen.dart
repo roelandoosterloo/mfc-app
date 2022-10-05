@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
-import 'package:mfc_app/models/course/Module.dart';
-import 'package:mfc_app/models/course/Course.dart';
-import 'package:mfc_app/models/course/ModuleProgress.dart';
+import 'package:mfc_app/models/Enrollment.dart';
+import 'package:mfc_app/models/Module.dart';
+import 'package:mfc_app/models/Course.dart';
+import 'package:mfc_app/models/ModuleProgress.dart';
 import 'package:mfc_app/screens/course/single/bloc/singlecoursepage_bloc.dart';
 import 'package:mfc_app/screens/course/single/course_single_page.dart';
+import 'package:mfc_app/utils/helpers.dart';
 import 'package:mfc_app/utils/formatter.dart';
 import 'package:mfc_app/widgets/loading.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
@@ -54,9 +55,9 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
               );
             } else if (state is SingleCoursePageLoaded) {
               Enrollment enrollment = state.enrollment!;
-              Course course = enrollment.course;
+              Course? course = enrollment.course;
               List<ModuleProgress> modules = enrollment.moduleSchedule ?? [];
-              modules.sort((a, b) => a.compareTo(b));
+              modules.sort(moduleCompareTo);
 
               return Container(
                 height: double.infinity,
@@ -69,7 +70,7 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
                       width: double.infinity,
                       height: 250,
                       child: S3Image(
-                        course.coverImage!,
+                        course?.coverImage!,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -97,7 +98,7 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
                             width: double.infinity,
                           ),
                           Text(
-                            course.name.toUpperCase(),
+                            (course?.name ?? "Niet gevonden").toUpperCase(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
@@ -108,7 +109,7 @@ class _CourseSingleScreenState extends State<CourseSingleScreen> {
                           ),
                           SizedBox(height: 16),
                           Text(
-                            course.description ?? "",
+                            course?.description ?? "",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,

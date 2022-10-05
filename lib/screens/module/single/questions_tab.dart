@@ -47,7 +47,7 @@ class _ModuleQuestionsTabState extends State<ModuleQuestionsTab> {
   Answer? answer(int page) {
     try {
       return widget.answers.firstWhere(
-        (element) => element.questionId == widget.questions[page].id,
+        (element) => element.question?.id == widget.questions[page].id,
         orElse: null,
       );
     } catch (ex) {

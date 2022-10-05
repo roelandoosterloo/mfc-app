@@ -19,20 +19,19 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Measurement type in your schema. */
+/** This is an auto generated class representing the Answer type in your schema. */
 @immutable
-class Measurement extends Model {
-  static const classType = const _MeasurementModelType();
+class Answer extends Model {
+  static const classType = const _AnswerModelType();
   final String id;
-  final TemporalDate? _date;
-  final double? _weight;
-  final String? _owner;
-  final String? _note;
-  final String? _type;
+  final String? _moduleProgressId;
+  final String? _answer;
+  final Question? _question;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -44,9 +43,9 @@ class Measurement extends Model {
     return id;
   }
   
-  TemporalDate get date {
+  String get moduleProgressId {
     try {
-      return _date!;
+      return _moduleProgressId!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -57,9 +56,9 @@ class Measurement extends Model {
     }
   }
   
-  double get weight {
+  String get answer {
     try {
-      return _weight!;
+      return _answer!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -70,34 +69,8 @@ class Measurement extends Model {
     }
   }
   
-  String get owner {
-    try {
-      return _owner!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
-  }
-  
-  String? get note {
-    return _note;
-  }
-  
-  String get type {
-    try {
-      return _type!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  Question? get question {
+    return _question;
   }
   
   TemporalDateTime? get createdAt {
@@ -108,16 +81,14 @@ class Measurement extends Model {
     return _updatedAt;
   }
   
-  const Measurement._internal({required this.id, required date, required weight, required owner, note, required type, createdAt, updatedAt}): _date = date, _weight = weight, _owner = owner, _note = note, _type = type, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Answer._internal({required this.id, required moduleProgressId, required answer, question, createdAt, updatedAt}): _moduleProgressId = moduleProgressId, _answer = answer, _question = question, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Measurement({String? id, required TemporalDate date, required double weight, required String owner, String? note, required String type}) {
-    return Measurement._internal(
+  factory Answer({String? id, required String moduleProgressId, required String answer, Question? question}) {
+    return Answer._internal(
       id: id == null ? UUID.getUUID() : id,
-      date: date,
-      weight: weight,
-      owner: owner,
-      note: note,
-      type: type);
+      moduleProgressId: moduleProgressId,
+      answer: answer,
+      question: question);
   }
   
   bool equals(Object other) {
@@ -127,13 +98,11 @@ class Measurement extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Measurement &&
+    return other is Answer &&
       id == other.id &&
-      _date == other._date &&
-      _weight == other._weight &&
-      _owner == other._owner &&
-      _note == other._note &&
-      _type == other._type;
+      _moduleProgressId == other._moduleProgressId &&
+      _answer == other._answer &&
+      _question == other._question;
   }
   
   @override
@@ -143,13 +112,11 @@ class Measurement extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Measurement {");
+    buffer.write("Answer {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("date=" + (_date != null ? _date!.format() : "null") + ", ");
-    buffer.write("weight=" + (_weight != null ? _weight!.toString() : "null") + ", ");
-    buffer.write("owner=" + "$_owner" + ", ");
-    buffer.write("note=" + "$_note" + ", ");
-    buffer.write("type=" + "$_type" + ", ");
+    buffer.write("moduleProgressId=" + "$_moduleProgressId" + ", ");
+    buffer.write("answer=" + "$_answer" + ", ");
+    buffer.write("question=" + (_question != null ? _question!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -157,61 +124,39 @@ class Measurement extends Model {
     return buffer.toString();
   }
   
-  Measurement copyWith({String? id, TemporalDate? date, double? weight, String? owner, String? note, String? type}) {
-    return Measurement._internal(
+  Answer copyWith({String? id, String? moduleProgressId, String? answer, Question? question}) {
+    return Answer._internal(
       id: id ?? this.id,
-      date: date ?? this.date,
-      weight: weight ?? this.weight,
-      owner: owner ?? this.owner,
-      note: note ?? this.note,
-      type: type ?? this.type);
+      moduleProgressId: moduleProgressId ?? this.moduleProgressId,
+      answer: answer ?? this.answer,
+      question: question ?? this.question);
   }
   
-  Measurement.fromJson(Map<String, dynamic> json)  
+  Answer.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _date = json['date'] != null ? TemporalDate.fromString(json['date']) : null,
-      _weight = (json['weight'] as num?)?.toDouble(),
-      _owner = json['owner'],
-      _note = json['note'],
-      _type = json['type'],
+      _moduleProgressId = json['moduleProgressId'],
+      _answer = json['answer'],
+      _question = json['question']?['serializedData'] != null
+        ? Question.fromJson(new Map<String, dynamic>.from(json['question']['serializedData']))
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'date': _date?.format(), 'weight': _weight, 'owner': _owner, 'note': _note, 'type': _type, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'moduleProgressId': _moduleProgressId, 'answer': _answer, 'question': _question?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField DATE = QueryField(fieldName: "date");
-  static final QueryField WEIGHT = QueryField(fieldName: "weight");
-  static final QueryField OWNER = QueryField(fieldName: "owner");
-  static final QueryField NOTE = QueryField(fieldName: "note");
-  static final QueryField TYPE = QueryField(fieldName: "type");
+  static final QueryField MODULEPROGRESSID = QueryField(fieldName: "moduleProgressId");
+  static final QueryField ANSWER = QueryField(fieldName: "answer");
+  static final QueryField QUESTION = QueryField(
+    fieldName: "question",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Question).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Measurement";
-    modelSchemaDefinition.pluralName = "Measurements";
+    modelSchemaDefinition.name = "Answer";
+    modelSchemaDefinition.pluralName = "Answers";
     
     modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.OWNER,
-        ownerField: "owner",
-        identityClaim: "cognito:username",
-        provider: AuthRuleProvider.USERPOOLS,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
-      AuthRule(
-        authStrategy: AuthStrategy.PRIVATE,
-        provider: AuthRuleProvider.IAM,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
       AuthRule(
         authStrategy: AuthStrategy.GROUPS,
         groupClaim: "cognito:groups",
@@ -222,43 +167,44 @@ class Measurement extends Model {
           ModelOperation.UPDATE,
           ModelOperation.DELETE,
           ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.OWNER,
+        ownerField: "owner",
+        identityClaim: "cognito:username",
+        provider: AuthRuleProvider.USERPOOLS,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
         ])
     ];
     
     modelSchemaDefinition.indexes = [
-      ModelIndex(fields: const ["type", "date"], name: "byDate")
+      ModelIndex(fields: const ["questionId"], name: "ofQuestion"),
+      ModelIndex(fields: const ["moduleProgressId"], name: "ofWorkbook")
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.DATE,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.WEIGHT,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.double)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.OWNER,
+      key: Answer.MODULEPROGRESSID,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.NOTE,
+      key: Answer.ANSWER,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Answer.QUESTION,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.TYPE,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      targetName: "questionId",
+      ofModelName: (Question).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -277,11 +223,11 @@ class Measurement extends Model {
   });
 }
 
-class _MeasurementModelType extends ModelType<Measurement> {
-  const _MeasurementModelType();
+class _AnswerModelType extends ModelType<Answer> {
+  const _AnswerModelType();
   
   @override
-  Measurement fromJson(Map<String, dynamic> jsonData) {
-    return Measurement.fromJson(jsonData);
+  Answer fromJson(Map<String, dynamic> jsonData) {
+    return Answer.fromJson(jsonData);
   }
 }

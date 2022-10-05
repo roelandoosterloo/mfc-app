@@ -23,16 +23,14 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Measurement type in your schema. */
+/** This is an auto generated class representing the RecipeStep type in your schema. */
 @immutable
-class Measurement extends Model {
-  static const classType = const _MeasurementModelType();
+class RecipeStep extends Model {
+  static const classType = const _RecipeStepModelType();
   final String id;
-  final TemporalDate? _date;
-  final double? _weight;
-  final String? _owner;
-  final String? _note;
-  final String? _type;
+  final String? _recipeId;
+  final int? _index;
+  final String? _instructionText;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -44,9 +42,9 @@ class Measurement extends Model {
     return id;
   }
   
-  TemporalDate get date {
+  String get recipeId {
     try {
-      return _date!;
+      return _recipeId!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -57,9 +55,9 @@ class Measurement extends Model {
     }
   }
   
-  double get weight {
+  int get index {
     try {
-      return _weight!;
+      return _index!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -70,26 +68,9 @@ class Measurement extends Model {
     }
   }
   
-  String get owner {
+  String get instructionText {
     try {
-      return _owner!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
-  }
-  
-  String? get note {
-    return _note;
-  }
-  
-  String get type {
-    try {
-      return _type!;
+      return _instructionText!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -108,16 +89,14 @@ class Measurement extends Model {
     return _updatedAt;
   }
   
-  const Measurement._internal({required this.id, required date, required weight, required owner, note, required type, createdAt, updatedAt}): _date = date, _weight = weight, _owner = owner, _note = note, _type = type, _createdAt = createdAt, _updatedAt = updatedAt;
+  const RecipeStep._internal({required this.id, required recipeId, required index, required instructionText, createdAt, updatedAt}): _recipeId = recipeId, _index = index, _instructionText = instructionText, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Measurement({String? id, required TemporalDate date, required double weight, required String owner, String? note, required String type}) {
-    return Measurement._internal(
+  factory RecipeStep({String? id, required String recipeId, required int index, required String instructionText}) {
+    return RecipeStep._internal(
       id: id == null ? UUID.getUUID() : id,
-      date: date,
-      weight: weight,
-      owner: owner,
-      note: note,
-      type: type);
+      recipeId: recipeId,
+      index: index,
+      instructionText: instructionText);
   }
   
   bool equals(Object other) {
@@ -127,13 +106,11 @@ class Measurement extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Measurement &&
+    return other is RecipeStep &&
       id == other.id &&
-      _date == other._date &&
-      _weight == other._weight &&
-      _owner == other._owner &&
-      _note == other._note &&
-      _type == other._type;
+      _recipeId == other._recipeId &&
+      _index == other._index &&
+      _instructionText == other._instructionText;
   }
   
   @override
@@ -143,13 +120,11 @@ class Measurement extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Measurement {");
+    buffer.write("RecipeStep {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("date=" + (_date != null ? _date!.format() : "null") + ", ");
-    buffer.write("weight=" + (_weight != null ? _weight!.toString() : "null") + ", ");
-    buffer.write("owner=" + "$_owner" + ", ");
-    buffer.write("note=" + "$_note" + ", ");
-    buffer.write("type=" + "$_type" + ", ");
+    buffer.write("recipeId=" + "$_recipeId" + ", ");
+    buffer.write("index=" + (_index != null ? _index!.toString() : "null") + ", ");
+    buffer.write("instructionText=" + "$_instructionText" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -157,61 +132,35 @@ class Measurement extends Model {
     return buffer.toString();
   }
   
-  Measurement copyWith({String? id, TemporalDate? date, double? weight, String? owner, String? note, String? type}) {
-    return Measurement._internal(
+  RecipeStep copyWith({String? id, String? recipeId, int? index, String? instructionText}) {
+    return RecipeStep._internal(
       id: id ?? this.id,
-      date: date ?? this.date,
-      weight: weight ?? this.weight,
-      owner: owner ?? this.owner,
-      note: note ?? this.note,
-      type: type ?? this.type);
+      recipeId: recipeId ?? this.recipeId,
+      index: index ?? this.index,
+      instructionText: instructionText ?? this.instructionText);
   }
   
-  Measurement.fromJson(Map<String, dynamic> json)  
+  RecipeStep.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _date = json['date'] != null ? TemporalDate.fromString(json['date']) : null,
-      _weight = (json['weight'] as num?)?.toDouble(),
-      _owner = json['owner'],
-      _note = json['note'],
-      _type = json['type'],
+      _recipeId = json['recipeId'],
+      _index = (json['index'] as num?)?.toInt(),
+      _instructionText = json['instructionText'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'date': _date?.format(), 'weight': _weight, 'owner': _owner, 'note': _note, 'type': _type, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'recipeId': _recipeId, 'index': _index, 'instructionText': _instructionText, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField DATE = QueryField(fieldName: "date");
-  static final QueryField WEIGHT = QueryField(fieldName: "weight");
-  static final QueryField OWNER = QueryField(fieldName: "owner");
-  static final QueryField NOTE = QueryField(fieldName: "note");
-  static final QueryField TYPE = QueryField(fieldName: "type");
+  static final QueryField RECIPEID = QueryField(fieldName: "recipeId");
+  static final QueryField INDEX = QueryField(fieldName: "index");
+  static final QueryField INSTRUCTIONTEXT = QueryField(fieldName: "instructionText");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Measurement";
-    modelSchemaDefinition.pluralName = "Measurements";
+    modelSchemaDefinition.name = "RecipeStep";
+    modelSchemaDefinition.pluralName = "RecipeSteps";
     
     modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.OWNER,
-        ownerField: "owner",
-        identityClaim: "cognito:username",
-        provider: AuthRuleProvider.USERPOOLS,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
-      AuthRule(
-        authStrategy: AuthStrategy.PRIVATE,
-        provider: AuthRuleProvider.IAM,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ]),
       AuthRule(
         authStrategy: AuthStrategy.GROUPS,
         groupClaim: "cognito:groups",
@@ -222,41 +171,34 @@ class Measurement extends Model {
           ModelOperation.UPDATE,
           ModelOperation.DELETE,
           ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.PRIVATE,
+        operations: [
+          ModelOperation.READ
         ])
     ];
     
     modelSchemaDefinition.indexes = [
-      ModelIndex(fields: const ["type", "date"], name: "byDate")
+      ModelIndex(fields: const ["recipeId"], name: "forRecipe")
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.DATE,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.WEIGHT,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.double)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.OWNER,
+      key: RecipeStep.RECIPEID,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.NOTE,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      key: RecipeStep.INDEX,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Measurement.TYPE,
+      key: RecipeStep.INSTRUCTIONTEXT,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -277,11 +219,11 @@ class Measurement extends Model {
   });
 }
 
-class _MeasurementModelType extends ModelType<Measurement> {
-  const _MeasurementModelType();
+class _RecipeStepModelType extends ModelType<RecipeStep> {
+  const _RecipeStepModelType();
   
   @override
-  Measurement fromJson(Map<String, dynamic> jsonData) {
-    return Measurement.fromJson(jsonData);
+  RecipeStep fromJson(Map<String, dynamic> jsonData) {
+    return RecipeStep.fromJson(jsonData);
   }
 }

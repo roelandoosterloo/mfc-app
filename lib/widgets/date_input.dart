@@ -52,7 +52,7 @@ class DateInput extends StatelessWidget {
             initialDate: _initialDate ?? DateTime.now(),
           ).then((value) {
             if (value != null) {
-              _controller.text = Formatter.formatDate(value) ?? "";
+              _controller.text = Formatter.formatDateTime(value) ?? "";
               if (_onDateSelected != null) {
                 _onDateSelected!(value);
               }

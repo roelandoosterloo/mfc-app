@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Program.dart';
+import 'package:mfc_app/models/Program.dart';
 import 'package:mfc_app/screens/program/list/bloc/list_program_bloc.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
@@ -107,14 +107,14 @@ class _ListProgramScreenState extends State<ListProgramScreen> {
                           ButtonBar(
                             alignment: MainAxisAlignment.start,
                             children: [
-                              if (state.memberships
-                                  .any((element) => element.programId == p.id))
+                              if (state.memberships.any(
+                                  (element) => element.program?.id == p.id))
                                 TextButton(
                                   onPressed: null,
                                   child: Text("Al gekocht"),
                                 ),
-                              if (!state.memberships
-                                  .any((element) => element.programId == p.id))
+                              if (!state.memberships.any(
+                                  (element) => element.program?.id == p.id))
                                 TextButton(
                                   onPressed: !(state is PaymentPending)
                                       ? () {

@@ -1,123 +1,47 @@
 import 'dart:convert';
 
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:mfc_app/models/Profile.dart';
+import 'package:mfc_app/utils/api_helper.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class ProfileRepository {
   Future<Profile> createProfile(String cognitoId) async {
-    String graphQLDocument = '''
-    mutation createProfile {
-      createProfile(input: {
-        cognitoId: "$cognitoId"
-      }) {
-        id
-        firstName
-        lastName
-        birthDate
-        length
-        targetWeight
-        currentCourseId
-      }
+    Profile profile = Profile(cognitoId: cognitoId);
+    final request = ModelMutations.create(profile);
+    Profile? result = await ModelHelpers.create(request);
+
+    if (result == null) {
+      throw Exception("Unexpected failure");
     }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    try {
-      GraphQLResponse response = await op.response;
-      Map<String, dynamic> json = jsonDecode(response.data);
-      return Profile.fromJson(json['createProfile']);
-    } catch (ex) {
-      await Sentry.captureException(ex);
-      print(ex);
-      throw ex;
-    }
+
+    return result;
   }
 
   Future<Profile> getProfile(String cognitoId) async {
-    String graphQLDocument = '''
-    query MyQuery {
-      listProfiles(filter: {cognitoId: {eq: "$cognitoId"}}) {
-        items {
-          id
-          firstName
-          lastName
-          birthDate
-          length
-          targetWeight
-          currentCourseId
-        }
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse response = await op.response;
-    Map<String, dynamic> json = jsonDecode(response.data);
-    List<dynamic> items = json['listProfiles']['items'];
-    if (items.isEmpty) {
+    final request = ModelQueries.list(Profile.classType);
+    List<Profile> profiles =
+        (await ModelHelpers.listAll(request)).whereType<Profile>().toList();
+
+    if (profiles.isEmpty) {
       return createProfile(cognitoId);
     }
-    List<Profile> profiles = items.map((it) => Profile.fromJson(it)).toList();
+
     return profiles.first;
   }
 
   Future<bool> submitProfile(Profile p) async {
-    String graphQLDocument = '''
-    mutation updateProfile {
-      updateProfile(input: {
-        id: "${p.id}",
-        firstName: "${p.firstName}",
-        lastName: "${p.lastName}",
-        birthDate: ${p.formattedBirthdate != null ? '"${p.formattedBirthdate}"' : null},
-        length: ${p.length},
-        targetWeight: ${p.targetWeight}
-      }) {
-        id
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    try {
-      GraphQLResponse result = await op.response;
-      print(result.errors);
-    } catch (ex) {
-      await Sentry.captureException(ex);
-    }
-    return true;
+    final request = ModelMutations.update(p);
+    final result = await ModelHelpers.update(request);
+
+    return result;
   }
 
-  Future<bool> setCurrentCourse(String profileId, String courseId) async {
-    String graphQLDocument = '''
-    mutation setCurrentCourse {
-      updateProfile(input: {
-        id: "$profileId",
-        currentCourseId: "$courseId",
-      }) {
-        id
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    try {
-      GraphQLResponse result = await op.response;
-    } catch (ex) {
-      await Sentry.captureException(ex);
-    }
-    return true;
+  Future<bool> setCurrentCourse(Profile profile, String courseId) async {
+    Profile changed = profile.copyWith(currentCourseId: courseId);
+    final request = ModelMutations.update(changed);
+    final result = await ModelHelpers.update(request);
+    return result;
   }
 }

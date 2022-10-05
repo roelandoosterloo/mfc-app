@@ -10,6 +10,7 @@ import 'package:mfc_app/amplifyconfiguration.dart';
 import 'package:mfc_app/blocs/authentication/authentication_event.dart';
 import 'package:mfc_app/blocs/enrollment/enrollment_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
+import 'package:mfc_app/models/ModelProvider.dart';
 import 'package:mfc_app/navigation/router_delegate.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:mfc_app/repositories/measurement_repository.dart';
@@ -108,7 +109,8 @@ class _MainPageState extends State<MainPage> {
   bool _isLoading = true;
 
   final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
-  final AmplifyAPI _apiPlugin = AmplifyAPI();
+  final AmplifyAPI _apiPlugin =
+      AmplifyAPI(modelProvider: ModelProvider.instance);
   final AmplifyStorageS3 _storagePlugin = AmplifyStorageS3();
 
   @override

@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:mfc_app/models/course/Membership.dart';
-import 'package:mfc_app/models/course/Program.dart';
+import 'package:mfc_app/models/Membership.dart';
+import 'package:mfc_app/models/Program.dart';
 
 class ProgramRepository {
   List<Program> _programCache = [];

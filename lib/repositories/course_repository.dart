@@ -1,358 +1,102 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:mfc_app/models/course/Course.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
-import 'package:mfc_app/models/course/ModuleProgress.dart';
+import 'package:mfc_app/models/ModelProvider.dart';
+import 'package:mfc_app/repositories/queries.dart';
+import 'package:mfc_app/utils/api_helper.dart';
 
 class CourseRepository {
   Future<List<Course>> listSubscribedCourses() async {
-    String graphQLDocument = '''
-    query ListSubscribedCourses {
-      listMemberships {
-        items {
-          program {
-            courses {
-              items {
-                course {
-                  id
-                  name
-                  description
-                  coverImage
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse response = await op.response;
-    Map<String, dynamic> json = jsonDecode(response.data);
-    List<dynamic> memberships = json["listMemberships"]["items"];
-    List<dynamic> courses = memberships
-        .map((item) => item["program"]["courses"]["items"])
-        .expand((element) => element)
-        .where((element) => element != null)
-        .map((item) => item["course"])
+    // final request = ModelQueries.list(Membership.classType);
+    final request = Queries.listSubscribedCourses();
+    List<Membership?> memberships = await ModelHelpers.listAll(request);
+
+    return memberships
+        .expand(
+          (e) => e?.program?.courses ?? <ProgramCourse>[],
+        )
+        .map((e) => e.course)
         .toList();
-    List<Course> enrolledCourses =
-        courses.map((it) => Course.fromJson(it)).toList();
-    return enrolledCourses;
   }
 
-  Future<List<Course>> listCourses() async {
-    String graphQLDocument = ''' 
-    query ListCourses {
-      listCourses {
-        items {
-          id
-          name
-          description
-          coverImage
-        }
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse response = await op.response;
-    Map<String, dynamic> json = jsonDecode(response.data);
-    List<dynamic> items = json["listCourses"]["items"];
-    List<Course> enrolledCourses =
-        items.map((it) => Course.fromJson(it)).toList();
-    return enrolledCourses;
+  Future<List<Course?>> listCourses() async {
+    final request = ModelQueries.list(Course.classType, limit: 1000);
+    List<Course?> courses = await ModelHelpers.listAll(request);
+    return courses;
   }
 
-  Future<List<Enrollment>> listEnrolledCourses() async {
-    String graphQLDocument = ''' 
-    query ListEnrolledCourses {
-      listEnrollments {
-        items {
-          id
-          enrolledAt
-          startedAt
-          completedAt
-          moduleSchedule {
-            items {
-              id
-              enrollmentId
-              availableAt
-              completedAt
-            }
-          }
-          course {
-            id
-            name
-            description
-            coverImage
-          }
-        }
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse response = await op.response;
-    Map<String, dynamic> json = jsonDecode(response.data);
-    List<dynamic> items = json["listEnrollments"]["items"];
-    List<Enrollment> enrolledCourses =
-        items.map((it) => Enrollment.fromJson(it)).toList();
-    return enrolledCourses;
+  Future<List<Enrollment?>> listEnrolledCourses() async {
+    // final request = ModelQueries.list(Enrollment.classType, limit: 1000);
+    final request = Queries.listEnrolledCourses();
+    List<Enrollment?> enrollments = await ModelHelpers.listAll(request);
+    return enrollments;
   }
 
-  Future<bool> setCourseStartedAt(String id) async {
-    String graphQLDocument = '''
-    mutation setStartedAt {
-      updateEnrollment(input: {
-        id: "$id",
-        startedAt: "${DateTime.now().toUtc().toIso8601String()}",
-      }) {
-        id
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse result = await op.response;
-    return true;
+  Future<bool> setCourseStartedAt(Enrollment e) async {
+    final change = e.copyWith(startedAt: TemporalDateTime.now());
+    final request = ModelMutations.update(change);
+
+    final result = await ModelHelpers.update(request);
+    return result;
   }
 
-  Future<bool> setModuleStartedAt(String id) async {
-    String graphQLDocument = '''
-    mutation setModuleStartedAt {
-      updateModuleProgress(input: {
-        id: "$id",
-        startedAt: "${DateTime.now().toUtc().toIso8601String()}",
-      }) {
-        id
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse result = await op.response;
-    return true;
+  Future<bool> setModuleStartedAt(ModuleProgress progress) async {
+    final change = progress.copyWith(startedAt: TemporalDateTime.now());
+    final request = ModelMutations.update(change);
+
+    final result = await ModelHelpers.update(request);
+    return result;
   }
 
   Future<Enrollment?> getEnrollment(String id) async {
-    String graphQLDocument = '''
-    query MyQuery {
-      getEnrollment(id: "$id") {
-        id
-        enrolledAt
-        startedAt
-        completedAt
-        course {
-          id
-          name
-          description
-          coverImage
-        }
-        moduleSchedule {
-          items {
-            id
-            enrollmentId
-            availableAt
-            startedAt
-            completedAt
-            module {
-              index
-              courseId
-              name
-              id
-              coverImage
-              description
-              videoUrl
-              delayNumber
-              delayUOM
-            }
-          }
-        }
-      }
-    }
-      ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse response = await op.response;
-    Map<String, dynamic> json = jsonDecode(response.data);
-    Enrollment enrolledCourse = Enrollment.fromJson(json['getEnrollment']);
-    return enrolledCourse;
+    // final request = ModelQueries.get(Enrollment.classType, id);
+    final request = Queries.getEnrollment(id);
+    Enrollment? result = await ModelHelpers.get(request);
+    return result;
   }
 
   Future<ModuleProgress?> getModuleProgress(String progressId) async {
-    String graphQLDocument = '''
-    query GetModuleProgress {
-      getModuleProgress(id: "$progressId") {
-        id
-        enrollmentId
-        availableAt
-        module {
-          coverImage
-          description
-          courseId
-          id
-          name
-          videoUrl
-          index
-          delayNumber
-          delayUOM
-          assignments {
-            items {
-              id
-              moduleId
-              type
-              introduction
-              question
-              index
-              options {
-                items {
-                  id
-                  questionId
-                  label
-                  index
-                }
-              }
-            }
-          }
-          tools {
-            items {
-              id
-              moduleId
-              name
-              url
-              index
-            }
-          }
-        }
-        workbook {
-          items {
-            id
-            questionId
-            moduleProgressId
-            answer
-          }
-        }
-      }
-    }
-      ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    GraphQLResponse response = await op.response;
-    Map<String, dynamic> json = jsonDecode(response.data);
-    ModuleProgress module = ModuleProgress.fromJson(json['getModuleProgress']);
-    return module;
+    // final request = ModelQueries.get(ModuleProgress.classType, progressId);
+    final request = Queries.getModuleProgress(progressId);
+    ModuleProgress? result = await ModelHelpers.get(request);
+    return result;
   }
 
-  Future<bool> completeModule(String moduleProgressId) async {
-    String graphQLDocument = '''
-    mutation completeModule {
-      updateModuleProgress(input: {
-        id: "$moduleProgressId",
-        completedAt: "${DateTime.now().toUtc().toIso8601String()}"
-      }) {
-        id    
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    var result = await op.response;
-    return true;
+  Future<bool> completeModule(ModuleProgress progress) async {
+    final change = progress.copyWith(completedAt: TemporalDateTime.now());
+    final request = ModelMutations.update(change);
+
+    final result = await ModelHelpers.update(request);
+    return result;
   }
 
-  Future<bool> completeCourse(String enrollmentId) async {
-    String graphQLDocument = '''
-    mutation completeCourse {
-      updateEnrollment(input: {
-        id: "$enrollmentId",
-        completedAt: "${DateTime.now().toUtc().toIso8601String()}"
-      }) {
-        id    
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(
-        document: graphQLDocument,
-      ),
-    );
-    var result = await op.response;
-    return true;
+  Future<bool> completeCourse(Enrollment enrollment) async {
+    final change = enrollment.copyWith(completedAt: TemporalDateTime.now());
+    final request = ModelMutations.update(change);
+
+    final result = await ModelHelpers.update(request);
+    return result;
   }
 
-  Future<bool> createAnswer(
-    String questionId,
+  Future<Answer?> createAnswer(
+    Question question,
     String moduleProgressId,
     String value,
   ) async {
-    String graphQLDocument = '''
-    mutation submitAnswer(\$questionId: ID!, \$moduleProgressId: ID!, \$answer: String!) {
-      createAnswer(input: {
-        questionId: \$questionId,
-        moduleProgressId: \$moduleProgressId,
-        answer: \$answer
-      }) {
-        id
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(document: graphQLDocument, variables: {
-        "questionId": questionId,
-        "moduleProgressId": moduleProgressId,
-        "answer": value,
-      }),
-    );
-    var result = await op.response;
-    return true;
+    Answer answer = Answer(
+        moduleProgressId: moduleProgressId, question: question, answer: value);
+    final request = ModelMutations.create(answer);
+    Answer? result = await ModelHelpers.create(request);
+    return result;
   }
 
-  Future<bool> updateAnswer(String answerId, String value) async {
-    String graphQLDocument = '''
-    mutation submitAnswer(\$id: ID!, \$answer: String!) {
-      updateAnswer(input: {
-        id: \$id
-        answer: \$answer
-      }) {
-        id
-      }
-    }
-    ''';
-    GraphQLOperation op = Amplify.API.query(
-      request: GraphQLRequest(document: graphQLDocument, variables: {
-        "id": answerId,
-        "answer": value,
-      }),
-    );
-    var result = await op.response;
-    return true;
+  Future<bool> updateAnswer(Answer answer, String value) async {
+    final change = answer.copyWith(answer: value);
+    final request = ModelMutations.update(change);
+
+    final result = await ModelHelpers.update(request);
+    return result;
   }
 
   Future<bool> generateCourseSchedule(

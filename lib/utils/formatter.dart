@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:mfc_app/constants/values.dart';
 
@@ -13,7 +14,22 @@ class Formatter {
   static NumberFormat _doubleDecimal =
       new NumberFormat(DOUBLE_DECIMAL_FORMAT, locale);
 
-  static String? formatDate(DateTime? date, {String? datePattern}) {
+  static String? formatTemporalDateTime(TemporalDateTime? date,
+      {String? datePattern}) {
+    if (date == null) {
+      return null;
+    }
+    return formatDateTime(date.getDateTimeInUtc());
+  }
+
+  static String? formatTemporalDate(TemporalDate? date, {String? datePattern}) {
+    if (date == null) {
+      return null;
+    }
+    return formatDateTime(date.getDateTime());
+  }
+
+  static String? formatDateTime(DateTime? date, {String? datePattern}) {
     if (date == null) {
       return null;
     }

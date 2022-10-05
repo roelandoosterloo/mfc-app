@@ -2,11 +2,12 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
 import 'package:mfc_app/models/Profile.dart';
-import 'package:mfc_app/models/course/Course.dart';
-import 'package:mfc_app/models/course/Enrollment.dart';
+import 'package:mfc_app/models/Course.dart';
+import 'package:mfc_app/models/Enrollment.dart';
 import 'package:mfc_app/repositories/course_repository.dart';
 import 'package:mfc_app/repositories/profile_repository.dart';
 import 'package:mfc_app/repositories/user_repository.dart';
+import 'package:mfc_app/utils/helpers.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:collection/collection.dart';
 
@@ -38,7 +39,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     Emitter<HomePageState> emit,
   ) async {
     try {
-      List<Enrollment> enrollments = await _courseRepo.listEnrolledCourses();
+      List<Enrollment?> enrollments = await _courseRepo.listEnrolledCourses();
       List<Course> courses = await _courseRepo.listSubscribedCourses();
       String username = await _userRepo.getUsername();
       Profile profile = await _profileRepo.getProfile(username);
@@ -61,11 +62,11 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         return;
       }
       emit((state as HomePageLoaded).setCourseLoading(event.courseId));
-      // await Future.delayed(Duration(seconds: 10));
+
       Enrollment? enrollment;
       try {
         enrollment = hplState.enrollments.firstWhere(
-          (enrollment) => enrollment.course.id == event.courseId,
+          (enrollment) => enrollment.course?.id == event.courseId,
           orElse: null,
         );
       } catch (ex) {
@@ -81,7 +82,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
       if (enrollment.startedAt == null) {
         try {
-          await _courseRepo.setCourseStartedAt(enrollment.id);
+          await _courseRepo.setCourseStartedAt(enrollment);
         } catch (ex) {
           await Sentry.captureException(ex);
         }
@@ -90,7 +91,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           hplState.profile.currentCourseId != event.courseId) {
         try {
           await _profileRepo.setCurrentCourse(
-            hplState.profile.id,
+            hplState.profile,
             event.courseId,
           );
         } catch (ex) {

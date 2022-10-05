@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mfc_app/blocs/navigation/navigation_bloc.dart';
-import 'package:mfc_app/models/course/Course.dart';
+import 'package:mfc_app/models/Course.dart';
+import 'package:mfc_app/models/Enrollment.dart';
 import 'package:mfc_app/screens/home/home_page.dart';
+import 'package:mfc_app/utils/helpers.dart';
 import 'package:mfc_app/widgets/s3_image.dart';
 
-import '../../models/course/Enrollment.dart';
 import 'homepage/homepage_bloc.dart';
 
 part 'course_card.dart';
@@ -32,8 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     if (loadingCourse != null) return false;
     if (currentEnrollment == null) return true;
-    if (currentEnrollment.isCourseDone()) return true;
-    if (selected.id == currentEnrollment.course.id) return true;
+    if (isEnrollmentCourseDone(currentEnrollment)) return true;
+    if (selected.id == currentEnrollment.course?.id) return true;
 
     return false;
   }
@@ -44,8 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
       HomePageLoaded st = bloc.state as HomePageLoaded;
       if (st.loadingCourse != null) return;
       if (st.currentEnrollment == null ||
-          st.currentEnrollment!.isCourseDone() ||
-          st.currentEnrollment!.course.id == course.id ||
+          isEnrollmentCourseDone(st.currentEnrollment!) ||
+          st.currentEnrollment!.course?.id == course.id ||
           st.isCourseDone(course.id))
         return BlocProvider.of<HomePageBloc>(context)
             .add(CourseSelected(course.id));
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ..showSnackBar(
           SnackBar(
             content: Text(
-              "Rond eerst \"${st.currentEnrollment!.course.name}\" af om verder te gaan.",
+              "Rond eerst \"${st.currentEnrollment!.course?.name}\" af om verder te gaan.",
             ),
           ),
         );
@@ -67,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (bloc.state is HomePageLoaded) {
       HomePageLoaded st = bloc.state as HomePageLoaded;
       if (st.currentEnrollment != null &&
-          course != st.currentEnrollment!.course &&
-          !st.currentEnrollment!.isCourseDone()) {
+          course.id != st.currentEnrollment!.course?.id &&
+          !isEnrollmentCourseDone(st.currentEnrollment!)) {
         return CourseState.locked;
       } else {
         return CourseState.availble;
@@ -168,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             firstName: state.profile.firstName,
                             highlightCourse: state.currentEnrollment?.course,
                             loading: state.loadingCourse ==
-                                state.currentEnrollment?.course.id,
+                                state.currentEnrollment?.course?.id,
                           ),
                           ...(state.courses.isNotEmpty ||
                                   state.completedCourses.isNotEmpty
@@ -232,8 +233,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               .add(NavigatedToPrograms()),
                                           child: Text("BEKIJK PROGRAMMA'S"),
                                         ),
-                                        if (!state
-                                            .profile.isProfileComplete) ...[
+                                        if (!isProfileComplete(
+                                            state.profile)) ...[
                                           Text("Of"),
                                           ElevatedButton(
                                             onPressed: () => _navBloc
